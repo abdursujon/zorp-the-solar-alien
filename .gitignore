@@ -1,0 +1,25 @@
+# Compiled class files and build output
+target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# LibreOffice lock files
+.~lock.*#
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log

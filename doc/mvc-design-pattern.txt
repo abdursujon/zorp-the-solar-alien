@@ -1,0 +1,183 @@
+// MVCApp.java
+package uos.mvcapp;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+public class MVCApp extends Application {
+
+    Model model;
+    View view;
+    Controller controller;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("MVC App");
+        Pane root = new Pane();
+        primaryStage.setScene(new Scene(root, 800, 400));
+        primaryStage.show();
+        model = new Model();
+        view = new View(root, model);
+        controller = new Controller(model, view);
+    }
+}
+
+
+// Model.java
+package uos.mvcapp;
+
+import java.util.ArrayList;
+
+public class Model {
+
+    ArrayList<Customer> customers = new ArrayList<Customer>();
+
+    public void addCustomer(String name, int age, double balance) {
+        customers.add(new Customer(name, age, balance));
+    }
+}
+
+
+// Customer.java
+package uos.mvcapp;
+
+public class Customer {
+
+    String name;
+    int age;
+    double balance;
+
+    public Customer(String name, int age, double balance) {
+        super();
+        this.name = name;
+        this.age = age;
+        Design Patterns – Dr Ian Drumm
+        10
+        this.balance = balance;
+    }
+}
+
+
+// View.java
+package uos.mvcapp;
+
+import java.util.ArrayList;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+
+public class View {
+
+    Pane root;
+    Model model;
+    Button submitButton;
+    TextField nameTF;
+    TextField ageTF;
+    TextField balanceTF;
+    TextArea customersTA;
+    NumberAxis xAxis = new NumberAxis();
+    NumberAxis yAxis = new NumberAxis();
+    ScatterChart<Number, Number> chart
+            = new ScatterChart<Number, Number>(xAxis, yAxis);
+
+    public View(Pane root, Model model) {
+        super();
+        this.root = root;
+        this.model = model;
+        submitButton = new Button("Submit");
+        submitButton.setLayoutX(10);
+        submitButton.setLayoutY(10);
+        nameTF = new TextField();
+        nameTF.setLayoutX(10);
+        nameTF.setLayoutY(50);
+        ageTF = new TextField();
+        ageTF.setLayoutX(10);
+        ageTF.setLayoutY(100);
+        balanceTF = new TextField();
+        balanceTF.setLayoutX(10);
+        balanceTF.setLayoutY(150);
+        customersTA = new TextArea();
+        customersTA.setLayoutX(200);
+        customersTA.setLayoutY(10);
+        customersTA.setPrefSize(50, 350);
+        root.getChildren().addAll(submitButton, nameTF, ageTF, balanceTF, customersTA);
+        root.getChildren().add(chart);
+        xAxis.setLabel("Age");
+        yAxis.setLabel("Balance");
+        chart.setTitle("Chart of customers");
+        Design Patterns – Dr Ian Drumm
+        11
+        chart.setLayoutX(260);
+        chart.setLayoutY(10);
+    }
+
+    public void updateView() {
+        String text = "";
+        for (Customer c : model.customers)
+            text = text + c.name + "\n";
+        customersTA.setText(text);
+    }
+
+    void drawChart(ArrayList<Customer> customers) {
+        chart.getData().clear();
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Model Data");
+        for (Customer c : customers)
+            series.getData().add(new XYChart.Data(c.age, c.balance));
+        chart.getData().add(series);
+    }
+}
+
+
+// Controller.java
+package uos.mvcapp;
+
+import javafx.event.Event;
+import javafx.event.EventHandler;
+
+public class Controller implements EventHandler {
+
+    Model model;
+    View view;
+
+    public Controller(Model model, View view) {
+        super();
+        this.model = model;
+        this.view = view;
+        this.view.submitButton.setOnAction(this);
+    }
+
+    @Override
+    public void handle(Event event) {
+        if (event.getSource() == this.view.submitButton) {
+            addCustomer(
+                    view.nameTF.getText(),
+                    Integer.parseInt(view.ageTF.getText()),
+                    Double.parseDouble(view.balanceTF.getText())
+            );
+            updateView();
+            view.drawChart(model.customers);
+        }
+    }
+
+    public void addCustomer(String name, int age, double balance) {
+        model.addCustomer(name, age, balance);
+    }
+
+    Design Patterns – Dr Ian Drumm
+    12
+
+    public void updateView() {
+        view.updateView();
+    }
+}

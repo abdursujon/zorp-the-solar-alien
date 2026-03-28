@@ -1,0 +1,99 @@
+// StrategyApp.java
+package Uos.StrategyApp;
+
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+public class StrategyApp extends Application {
+
+    Pane root;
+    Scene scene;
+    Canvas canvas;
+    GraphicsContext gc;
+    Robot r;
+
+    AnimationTimer at = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            r.execute();
+        }
+    };
+
+    ConcreteStrategyA strategyA = new ConcreteStrategyA();
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        root = new Pane();
+        scene = new Scene(root, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        canvas = new Canvas(800, 600);
+        gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.YELLOW);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        root.getChildren().add(canvas);
+        r = new Robot(100, 100, gc);
+        r.setStrategy(strategyA);
+        at.start();
+    }
+}
+
+class ConcreteStrategyA implements StrategyInterface {
+
+    public void execute(Robot r) {
+        r.x += r.dx;
+        r.gc.drawImage(r.image, r.x, r.y, 50, 50);
+    }
+}
+
+
+// Robot.java
+package Uos.StrategyApp;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+
+public class Robot {
+
+    public Image image;
+    public int x, y;
+    GraphicsContext gc;
+    int dx = 1, dy = 1;
+    private StrategyInterface strategy;
+
+    public Robot(int x, int y, GraphicsContext gc) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.gc = gc;
+        image = new Image(getClass().getResourceAsStream("robot.png"));
+        //gc.drawImage(image, x, y);
+    }
+
+    public void setStrategy(StrategyInterface strategy) {
+        this.strategy = strategy;
+    }
+
+    public void execute() {
+        this.strategy.execute(this);
+    }
+}
+
+
+// StrategyInterface.java
+package Uos.StrategyApp;
+
+public interface StrategyInterface {
+    public void execute(Robot r);
+}
