@@ -4,18 +4,21 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import zorp_the_solar_alien.controller.PlayController;
 import zorp_the_solar_alien.model.HomeModel;
+import zorp_the_solar_alien.model.PlayModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.controller.HomeController;
+import zorp_the_solar_alien.view.PlayView;
 
 /**
  * 
  * The main application which launches zorp the solar alien 
  */
 public class ZorpTheSolarAlienApp extends Application {
-	HomeModel model;
-	HomeView view;
-	HomeController controller;
+	HomeModel homeModel;
+	HomeView playView;
+	HomeController homeController;
 
 	@Override
 	public void start(Stage stage) {
@@ -26,9 +29,15 @@ public class ZorpTheSolarAlienApp extends Application {
 		stage.setTitle("Zorp The Solar Alien");
 		stage.show();
 
-		model = new HomeModel();
-		view = new HomeView(root, model);
-		controller = new HomeController(model, view);
+		HomeModel homeModel = new HomeModel();
+		PlayModel playModel = new PlayModel();
+
+		HomeView homeView = new HomeView(root, homeModel);
+		PlayView playView = new PlayView(root, playModel);
+		playView.hide();
+
+		HomeController homeController = new HomeController(homeModel, homeView, playView);
+		PlayController playController = new PlayController(playModel, playView);
 	}
 
 	public static void main(String[] args) {

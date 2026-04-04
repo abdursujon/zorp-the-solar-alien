@@ -1,0 +1,1 @@
+convert jpg to png: convert src/main/resources/assets/home/solar-system.jpg src/main/resources/assets/home/solar-system.png
