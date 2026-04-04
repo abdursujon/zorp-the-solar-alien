@@ -1,26 +1,9 @@
-Requirments 
+Requirements 
 1. A local primary school wishes to use computer applications to help teach very young children to learn. You are required to create a single interactive game that teaches primary school children some aspect of science in a very colourful and fun way.
 2. To use only Eclipse, Maven and javafx archetype as demonstrated in module.
 3. Key objects to be drawn to the screen should be instances of subclasses of the following unedited GameObject class.
-class GameObject {
-protected Image img;
-protected double x, y;
-protected GraphicsContext gc;
-	
-public GameObject(GraphicsContext gc, double x, double y)
-{
-this.gc=gc;
-this.x=x;
-this.y=y;
-}
-	
-public void update()
-{
-if(img!=null)
-	gc.drawImage(img, x, y, 30, 30);
-}
-}
-4. Required to implement two or more design patterns presented in the module (e.g. Delegation, Factory, Command, Singleton, MVC, Builder, etc)
+
+4. Required to implement two or more design patterns presented in the module (Factory, Singleton, MVC)
 5. Demonstrate thoughtful ‘responsibility driven design’, for example with ‘use case’ and sequence diagrams. Provide one or more class diagrams.
 6. Do not use SceneBuilder, fxml or other third-party coding tools to assist in the creation of the application. Do not use third party libraries.
 7. Do not present anything that’s obviously from a textbook, a youtube tutorial or demonstrating a lack of imagination and independent coding ability. Note any coding cynically taken from or generated on the web and presented as yours will be considered as plagiarism and the maximum penalty for unfair means will be recommended.

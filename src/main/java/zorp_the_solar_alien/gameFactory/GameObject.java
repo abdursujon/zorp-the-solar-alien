@@ -1,4 +1,4 @@
-package zorp_the_solar_alien;
+package zorp_the_solar_alien.gameFactory;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -18,5 +18,4 @@ public class GameObject {
 		if (img != null)
 			gc.drawImage(img, x, y, 30, 30);
 	}
-
 }
