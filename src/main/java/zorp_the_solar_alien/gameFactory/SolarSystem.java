@@ -21,77 +21,77 @@ public class SolarSystem extends GameObject {
         planetLayers = new Image[10][];
 
         // Sun
-        planetLayers[0] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[0] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Mercury
-        planetLayers[1] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[1] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Venus
-        planetLayers[2] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[2] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Earth
-        planetLayers[3] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[3] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Mars
-        planetLayers[4] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[4] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Jupiter
-        planetLayers[5] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[5] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Saturn
-        planetLayers[6] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[6] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Uranus
-        planetLayers[7] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[7] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Neptune
-        planetLayers[8] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[8] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
         // Pluto
-        planetLayers[9] = new Image[] {
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/assets/levels/sun/sun-bg3.png").toExternalForm()),
+        planetLayers[9] = new Image[]{
+                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
+                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
         };
 
-        scrollSpeeds = new double[] { 0.5, 0.7, 1.0, 0.8, 1.5, 1.2, 2.0, 1.8 };
-        offsets = new double[] { 400, 900, 200, 700, 100, 500, 300, 800 };
+        scrollSpeeds = new double[]{0.5, 0.7, 1.0, 0.8, 1.5, 1.2, 2.0, 1.8};
+        offsets = new double[]{400, 900, 200, 700, 100, 500, 300, 800};
     }
 
     public static SolarSystem getInstance(GraphicsContext gc, double x, double y) {
@@ -129,9 +129,9 @@ public class SolarSystem extends GameObject {
 
         Image[] layers = planetLayers[currentPlanet];
 
-        double[] sizes = { 100, 80, 150, 120, 200, 160, 280, 220 };
-        double[] opacities = { 1.0, 0.8, 0.6, 0.7, 0.4, 0.5, 0.3, 0.35 };
-        double[] yPositions = { h * 0.2, h * 0.7, h * 0.5, h * 0.3, h * 0.6, h * 0.15, h * 0.4, h * 0.8 };
+        double[] sizes = {100, 80, 150, 120, 200, 160, 280, 220};
+        double[] opacities = {1.0, 0.8, 0.6, 0.7, 0.4, 0.5, 0.3, 0.35};
+        double[] yPositions = {h * 0.2, h * 0.7, h * 0.5, h * 0.3, h * 0.6, h * 0.15, h * 0.4, h * 0.8};
 
         for (int i = 0; i < offsets.length; i++) {
             offsets[i] -= scrollSpeeds[i];
