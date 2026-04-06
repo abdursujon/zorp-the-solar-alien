@@ -1,29 +1,30 @@
 package zorp_the_solar_alien.controller;
 
-import zorp_the_solar_alien.gameFactory.AudioManager;
+
+import zorp_the_solar_alien.SingletonObject.AudioManager;
 import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.view.PlayView;
-import zorp_the_solar_alien.view.HowToPlayView;
+import zorp_the_solar_alien.controller.HowToPlayController;
 
 public class HomeController {
 	private HomeModel model;
 	private HomeView view;
 	private PlayView playView;
-	private HowToPlayView howToPlayView;
+	private HowToPlayController howToPlayController;
 
-	public HomeController(HomeModel model, HomeView view, PlayView playView, HowToPlayView howToPlayView) {
+	public HomeController(HomeModel model, HomeView view, PlayView playView, HowToPlayController howToPlayController) {
 		this.model = model;
 		this.view = view;
 		this.playView = playView;
-		this.howToPlayView = howToPlayView;
+		this.howToPlayController = howToPlayController;
 
 		view.updateHomeView();
 		AudioManager.getInstance().playHomeMusic();
 
 		view.homeBtn.setOnAction(e -> {
 			playView.hide();
-			howToPlayView.hideHowToPlayView();
+			howToPlayController.hide();
 			view.zorpImageView.setVisible(true);
 			view.updateHomeView();
 			syncMusicBtn();
@@ -43,7 +44,7 @@ public class HomeController {
 
 		view.playBtn.setOnAction(e -> {
 			playView.show();
-			howToPlayView.hideHowToPlayView();
+			howToPlayController.hide();
 			view.zorpImageView.setVisible(false);
 			syncMusicBtn();
 		});
@@ -64,7 +65,7 @@ public class HomeController {
 	// Switch the screen display to how to play screen content. 
 	private void handleHowToPlay() {
 		playView.hide();
-		howToPlayView.showHowToPlayView();
+		howToPlayController.show();
 		view.zorpImageView.setVisible(false);
 	}
 	

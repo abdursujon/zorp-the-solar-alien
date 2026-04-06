@@ -1,4 +1,4 @@
-package zorp_the_solar_alien.gameFactory;
+package zorp_the_solar_alien.SingletonObject;
 
 import java.io.File;
 import java.io.PrintWriter;

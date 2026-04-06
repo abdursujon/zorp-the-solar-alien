@@ -1,24 +1,41 @@
 package zorp_the_solar_alien.model;
 
 public class PlayModel {
-    private String[] levelNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
+    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
             "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
 
-    private boolean[] unlockedLevels = new boolean[10];
+    private int currentPlanet = 0;
+    private int factsCollected = 0;
 
-    public PlayModel(){
-        unlockedLevels[0] = true;
+    public String[] getPlanetNames() {
+        return planetNames;
     }
 
-    public String[] getLevelNames() {
-            return levelNames;
+    public String getCurrentPlanetName() {
+        return planetNames[currentPlanet];
     }
 
-    public void unlockedLevel(int index){
-        unlockedLevels[index] = true;
+    public int getCurrentPlanet() {
+        return currentPlanet;
     }
 
-    public boolean isLevelUnlocked(int index) {
-        return unlockedLevels[index];
+    public void nextPlanet() {
+        if (currentPlanet < planetNames.length - 1) {
+            currentPlanet++;
+            factsCollected = 0;
+        }
+    }
+
+    public void collectFact() {
+        factsCollected++;
+    }
+
+    public int getFactsCollected() {
+        return factsCollected;
+    }
+
+    public void reset() {
+        currentPlanet = 0;
+        factsCollected = 0;
     }
 }

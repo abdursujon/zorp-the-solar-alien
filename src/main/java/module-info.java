@@ -4,4 +4,5 @@ module zorp_the_solar_alien {
     requires javafx.media;
     exports zorp_the_solar_alien;
     exports zorp_the_solar_alien.gameFactory;
+    exports zorp_the_solar_alien.SingletonObject;
 }

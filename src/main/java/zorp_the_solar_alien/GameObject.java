@@ -1,4 +1,4 @@
-package zorp_the_solar_alien.gameFactory;
+package zorp_the_solar_alien;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

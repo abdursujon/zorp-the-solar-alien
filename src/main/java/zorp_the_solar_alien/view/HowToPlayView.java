@@ -77,8 +77,8 @@ public class HowToPlayView {
         gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 28));
         gc.fillText("Objectives", width * 0.15, nextY);
         gc.setFont(javafx.scene.text.Font.font("Arial", 18));
-        nextY = drawWrappedText(gc, "Your mission is to explore the solar system." +
-                " Gather secret location details then build a factory to launch your own rocket to " +
+        nextY = drawWrappedText(gc, "Your mission is to explore all the planets in the solar system." +
+                " Gather knowledge about them, and learn how to process materials to build and launch your own rocket to " +
                 "reach your home!",  width * 0.15, nextY + 30, width * 0.7, 25);
 
         nextY += 50;
