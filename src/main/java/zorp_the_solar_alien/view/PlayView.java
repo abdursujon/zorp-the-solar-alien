@@ -16,10 +16,10 @@ import zorp_the_solar_alien.model.PlayModel;
 public class PlayView {
     Pane root;
     PlayModel model;
-    Canvas canvas;
-    GraphicsContext gc;
+    public Canvas canvas;
+    public GraphicsContext gc;
     Image backgroundView;
-    GridPane levelGrid;
+    public GridPane levelGrid;
     public Button[] levelButtons;
 
     public PlayView(Pane root, PlayModel model) {
@@ -33,7 +33,7 @@ public class PlayView {
         canvas.widthProperty().addListener((obs, o, n) -> drawBackground());
         canvas.heightProperty().addListener((obs, o, n) -> drawBackground());
 
-        backgroundView = new Image(getClass().getResource("/assets/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/assets/levels/sun/sun-bg.jpg").toExternalForm(), 1920, 1080, true, true);
 
         levelGrid = new GridPane();
         levelGrid.setHgap(20);
@@ -52,7 +52,7 @@ public class PlayView {
             nameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;");
 
             StackPane card = new StackPane();
-            card.setPrefSize(150, 120);
+            card.setPrefSize(300, 200);
             card.setStyle(
                     "-fx-background-color: rgba(0,0,0,0.5);" +
                             "-fx-border-color: white;" +

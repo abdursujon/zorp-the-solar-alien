@@ -20,11 +20,12 @@ public class HomeView {
     Canvas canvas;
     GraphicsContext gc;
     Image backgroundView;
-    public ImageView zorpImageView;
 
+    public ImageView zorpImageView;
     public Button homeBtn;
     public Button settingsBtn;
     public Button howToPlayBtn;
+    public Button musicBtn;
     public Button playBtn;
     public Button quitBtn;
     public HBox menuBar;
@@ -48,8 +49,8 @@ public class HomeView {
         canvas.heightProperty().addListener((obs, oldValue, newValue) -> updateHomeView());
 
         homeBtn = new Button("HOME");
-        settingsBtn = new Button("SETTINGS");
-        howToPlayBtn = new Button("HELP");
+        howToPlayBtn = new Button("HOW TO PLAY");
+        musicBtn = new Button("🔊");
         playBtn = new Button("PLAY");
         quitBtn = new Button("QUIT");
 
@@ -58,14 +59,14 @@ public class HomeView {
                         "-fx-text-fill: black;" +
                         "-fx-font-size: 30px;" +
                         "-fx-font-weight: bold;" +
-                        "-fx-padding: 12 30 12 30;" +
+                        "-fx-padding: 10; " +
                         "-fx-cursor: hand;" +
-                        "-fx-shape: 'M 5,0 L 95,2 Q 100,1 100,5 L 98,95 Q 99,100 95,100 L 3,98 Q 0,99 0,95 L 2,5 Q 1,0 5,0 Z';" +
+                        "-fx-shape: 'M 10,0 L 90,5 Q 100,2 100,10 L 95,90 Q 98,100 90,100 L 8,95 Q 0,98 0,90 L 5,10 Q 2,0 10,0 Z';" +
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);";
 
         homeBtn.setStyle(buttonStyle);
-        settingsBtn.setStyle(buttonStyle);
         howToPlayBtn.setStyle(buttonStyle);
+        musicBtn.setStyle(buttonStyle);
         playBtn.setStyle(buttonStyle);
         quitBtn.setStyle(buttonStyle);
         playBtn.setStyle(buttonStyle.replace("linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e)", "#34A853")
@@ -74,7 +75,7 @@ public class HomeView {
 
 
         // HBox allows us to draw the menu items like a website navbar.
-        menuBar = new HBox(20, homeBtn, settingsBtn, howToPlayBtn);
+        menuBar = new HBox(20, homeBtn, howToPlayBtn, musicBtn);
         menuBar.setLayoutX(10);
         menuBar.setLayoutY(10);
 
@@ -93,7 +94,7 @@ public class HomeView {
         zorpImageView.setPreserveRatio(true);
         zorpImageView.setSmooth(true);
 
-        root.getChildren().addAll(canvas, menuBar, playBtn, quitBtn, zorpImageView);
+        root.getChildren().addAll(canvas, zorpImageView);
     }
 
 
@@ -107,8 +108,10 @@ public class HomeView {
         gc.clearRect(0, 0, width, height);
         gc.drawImage(backgroundView, 0, 0, width, height);
 
-        zorpImageView.setLayoutX((width - zorpImageView.getFitWidth()) / 2);
-        zorpImageView.setLayoutY((height - zorpImageView.getFitHeight()) / 2);
+        if (zorpImageView != null) {
+            zorpImageView.setLayoutX((width - zorpImageView.getFitWidth()) / 2);
+            zorpImageView.setLayoutY((height - zorpImageView.getFitHeight()) / 2);
+        }
     }
 
 }

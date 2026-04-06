@@ -10,6 +10,7 @@ import zorp_the_solar_alien.model.PlayModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.controller.HomeController;
 import zorp_the_solar_alien.view.PlayView;
+import zorp_the_solar_alien.view.HowToPlayView;
 
 /**
  * 
@@ -35,9 +36,12 @@ public class ZorpTheSolarAlienApp extends Application {
 		HomeView homeView = new HomeView(root, homeModel);
 		PlayView playView = new PlayView(root, playModel);
 		playView.hide();
+		HowToPlayView howToPlayView = new HowToPlayView(root);
+		howToPlayView.hideHowToPlayView();
 
-		HomeController homeController = new HomeController(homeModel, homeView, playView);
+		HomeController homeController = new HomeController(homeModel, homeView, playView, howToPlayView);
 		PlayController playController = new PlayController(playModel, playView);
+		root.getChildren().addAll(homeView.menuBar, homeView.playBtn, homeView.quitBtn);
 	}
 
 	public static void main(String[] args) {
