@@ -18,6 +18,7 @@ public class Enemy extends GameObject {
     private static final long SHOOT_COOLDOWN_NS = 2_000_000_000L;
 
     private double sinePhase;
+    private double targetX, targetY;
 
     public Enemy(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
@@ -30,17 +31,27 @@ public class Enemy extends GameObject {
         speed = 1.5 + Math.random() * 1.5;
         sinePhase = Math.random() * Math.PI * 2;
         sprite = sharedSprites[(int) (Math.random() * TOTAL_TYPES)];
+        targetX = x;
+        targetY = y;
+    }
+
+    public void setChaseTarget(double tx, double ty) {
+        this.targetX = tx;
+        this.targetY = ty;
     }
 
     @Override
     public void update() {
-        x -= speed;
+        double dx = targetX - getCenterX();
+        double dy = targetY - getCenterY();
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 5) {
+            x += (dx / dist) * speed;
+            y += (dy / dist) * speed;
+        }
+
         y += Math.sin(sinePhase) * 0.5;
         sinePhase += 0.03;
-
-        if (x < -DRAW_SIZE) {
-            active = false;
-        }
 
         gc.drawImage(sprite, x, y, DRAW_SIZE, DRAW_SIZE);
     }

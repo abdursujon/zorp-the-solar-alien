@@ -27,12 +27,12 @@ public class HomeView {
     public Button howToPlayBtn;
     public Button musicBtn;
     public Button playBtn;
+    public Button newGameBtn;
     public Button quitBtn;
     public HBox menuBar;
-
     Image zorpAnimation;
 
-    // Constructor
+
     public HomeView(Pane root, HomeModel model) {
         this.root = root;
         this.model = model;
@@ -40,11 +40,11 @@ public class HomeView {
         canvas = new Canvas();
         gc = canvas.getGraphicsContext2D();
 
-        // Canvas responsive based on the window size of the screen.
+
         canvas.widthProperty().bind(root.widthProperty());
         canvas.heightProperty().bind(root.heightProperty());
 
-        // Redraw the canvas when widow resized by user.
+
         canvas.widthProperty().addListener((obs, oldValue, newValue) -> updateHomeView());
         canvas.heightProperty().addListener((obs, oldValue, newValue) -> updateHomeView());
 
@@ -52,6 +52,7 @@ public class HomeView {
         howToPlayBtn = new Button("HOW TO PLAY");
         musicBtn = new Button("🔊");
         playBtn = new Button("PLAY");
+        newGameBtn = new Button("START NEW GAME");
         quitBtn = new Button("QUIT");
 
         String buttonStyle =
@@ -68,26 +69,33 @@ public class HomeView {
         howToPlayBtn.setStyle(buttonStyle);
         musicBtn.setStyle(buttonStyle);
         playBtn.setStyle(buttonStyle);
+        newGameBtn.setStyle(buttonStyle);
         quitBtn.setStyle(buttonStyle);
         playBtn.setStyle(buttonStyle.replace("linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e)", "#34A853")
                 .replace("-fx-text-fill: black;", "-fx-text-fill: white;")
                 .replace("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);", ""));
+        newGameBtn.setStyle(buttonStyle.replace("linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e)", "#DC2626")
+                .replace("-fx-text-fill: black;", "-fx-text-fill: white;")
+                .replace("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);", ""));
 
 
-        // HBox allows us to draw the menu items like a website navbar.
+
         menuBar = new HBox(20, homeBtn, howToPlayBtn, musicBtn);
         menuBar.setLayoutX(10);
         menuBar.setLayoutY(10);
 
-        playBtn.layoutXProperty().bind(root.widthProperty().divide(2).subtract(playBtn.widthProperty().divide(2)));
+        playBtn.layoutXProperty().bind(root.widthProperty().divide(2).subtract(playBtn.widthProperty()).subtract(10));
         playBtn.setLayoutY(10);
+
+        newGameBtn.layoutXProperty().bind(root.widthProperty().divide(2).add(10));
+        newGameBtn.setLayoutY(10);
 
         quitBtn.layoutXProperty().bind(root.widthProperty().subtract(quitBtn.widthProperty()).subtract(10));
         quitBtn.setLayoutY(10);
 
-        backgroundView = new Image(getClass().getResource("/assets/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
 
-        zorpAnimation = new Image(getClass().getResource("/assets/home/zorp-sequence.gif").toExternalForm());
+        zorpAnimation = new Image(getClass().getResource("/home/zorp-sequence.gif").toExternalForm());
         zorpImageView = new ImageView(zorpAnimation);
         zorpImageView.setFitWidth(400);
         zorpImageView.setFitHeight(340);

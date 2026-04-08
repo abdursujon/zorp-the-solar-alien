@@ -1,0 +1,125 @@
+package zorp_the_solar_alien.gameFactory;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import zorp_the_solar_alien.GameObject;
+
+public class Boss extends GameObject {
+    private boolean active = true;
+    private int hp;
+    private int maxHp;
+    private double speed = 1.2;
+    private static final int DRAW_SIZE = 120;
+
+    private Image sprite;
+    private Image ammoImage;
+    private double sinePhase;
+
+    private long lastShotTime = 0;
+    private static final long SHOOT_COOLDOWN_NS = 1_200_000_000L;
+
+    private double targetX, targetY;
+
+    private static final String[] BOSS_SPRITES = {
+            "/enemies/boss/boss1.png",
+            "/enemies/boss/boss2.png",
+            "/enemies/boss/boss3.png",
+            "/enemies/boss/boss4.png",
+            "/enemies/boss/boss5.png",
+            "/enemies/boss/boss6.png",
+            "/enemies/boss/boss8.png",
+            "/enemies/boss/boss9.png",
+            "/enemies/boss/boss10.png",
+            "/enemies/boss/boss10.png"
+    };
+
+    private static final String[] BOSS_AMMO = {
+            "/enemies/boss/ammo1.png",
+            "/enemies/boss/ammo1.png",
+            "/enemies/boss/ammo2.png",
+            "/enemies/boss/ammo3.png",
+            "/enemies/boss/ammo1.png",
+            "/enemies/boss/ammo2.png",
+            "/enemies/boss/ammo2.png",
+            "/enemies/boss/ammo1.png",
+            "/enemies/boss/ammo2.png"
+    };
+
+    public Boss(GraphicsContext gc, double x, double y, int planetIndex) {
+        super(gc, x, y);
+        planetIndex = Math.min(planetIndex, BOSS_SPRITES.length - 1);
+        sprite = new Image(getClass().getResource(BOSS_SPRITES[planetIndex]).toExternalForm());
+        ammoImage = new Image(getClass().getResource(BOSS_AMMO[planetIndex]).toExternalForm());
+        sinePhase = Math.random() * Math.PI * 2;
+        targetX = x;
+        targetY = y;
+        maxHp = 10;
+        hp = maxHp;
+    }
+
+    public void setChaseTarget(double tx, double ty) {
+        this.targetX = tx;
+        this.targetY = ty;
+    }
+
+    @Override
+    public void update() {
+
+        double dx = targetX - getCenterX();
+        double dy = targetY - getCenterY();
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 5) {
+            x += (dx / dist) * speed;
+            y += (dy / dist) * speed;
+        }
+
+        y += Math.sin(sinePhase) * 0.8;
+        sinePhase += 0.02;
+
+        gc.drawImage(sprite, x, y, DRAW_SIZE, DRAW_SIZE);
+
+        double barWidth = DRAW_SIZE;
+        double barHeight = 8;
+        double barX = x;
+        double barY = y - 15;
+        gc.setFill(Color.DARKRED);
+        gc.fillRect(barX, barY, barWidth, barHeight);
+        gc.setFill(Color.RED);
+        gc.fillRect(barX, barY, barWidth * ((double) hp / maxHp), barHeight);
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(barX, barY, barWidth, barHeight);
+
+
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        gc.setFill(Color.RED);
+        gc.fillText("BOSS", x + DRAW_SIZE / 2.0 - 20, barY - 4);
+    }
+
+    public boolean canShoot(long now) {
+        return now - lastShotTime > SHOOT_COOLDOWN_NS;
+    }
+
+    public void markShot(long now) {
+        lastShotTime = now;
+    }
+
+    public void takeDamage() {
+        hp--;
+        if (hp <= 0) active = false;
+    }
+
+    public Image getAmmoImage() {
+        return ammoImage;
+    }
+
+    public boolean isActive() { return active; }
+    public double getX() { return x; }
+    public double getY() { return y; }
+    public double getWidth() { return DRAW_SIZE; }
+    public double getHeight() { return DRAW_SIZE; }
+    public double getCenterX() { return x + DRAW_SIZE / 2.0; }
+    public double getCenterY() { return y + DRAW_SIZE / 2.0; }
+}

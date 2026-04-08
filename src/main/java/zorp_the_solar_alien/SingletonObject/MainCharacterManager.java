@@ -2,40 +2,71 @@ package zorp_the_solar_alien.SingletonObject;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import zorp_the_solar_alien.GameObject;
 
 public class MainCharacterManager extends GameObject {
     private static MainCharacterManager instance;
 
-    private Image horizontalSheet;
+    private Image idleImage;
+    private Image shootImage;
+    private ImageView imageView;
+    private Pane root;
+
     private double speed = 5;
-    private int frame = 0;
-    private int frameCounter = 0;
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private boolean shooting;
     private boolean melee;
     private boolean jumping;
+    private boolean facingRight = true;
 
-    private static final int FRAMES = 8;
-    private static final int H_FRAME_W = 348;
-    private static final int H_FRAME_H = 209;
+    private boolean jumpPlaying = false;
+    private double jumpVelocity = 0;
+    private double groundY;
+    private static final double GRAVITY = 0.5;
+    private static final double JUMP_FORCE = -12;
     private static final int DRAW_SIZE = 80;
 
-    private MainCharacterManager(GraphicsContext gc) {
+    private static final int MELEE_FRAMES = 3;
+    private Image[] meleeFrames;
+    private int meleeFrame = 0;
+    private int meleeCounter = 0;
+    private boolean meleePlaying = false;
+
+    private MainCharacterManager(GraphicsContext gc, Pane root) {
         super(gc, 200, 400);
-        horizontalSheet = new Image(getClass().getResource("/assets/levels/sun/zorp-1.png").toExternalForm());
+        this.root = root;
+        idleImage = new Image(getClass().getResource("/zorp/shoot.png").toExternalForm());
+        shootImage = new Image(getClass().getResource("/zorp/shoot.png").toExternalForm());
+
+        meleeFrames = new Image[] {
+                new Image(getClass().getResource("/zorp/img.png").toExternalForm()),
+                new Image(getClass().getResource("/zorp/img_1.png").toExternalForm()),
+                new Image(getClass().getResource("/zorp/img_2.png").toExternalForm()),
+        };
+
         x = 200;
         y = 400;
+        groundY = y;
+
+        imageView = new ImageView(idleImage);
+        imageView.setFitWidth(DRAW_SIZE);
+        imageView.setFitHeight(DRAW_SIZE);
+        imageView.setPreserveRatio(true);
+        imageView.setLayoutX(x);
+        imageView.setLayoutY(y);
+        root.getChildren().add(imageView);
     }
 
-    public static MainCharacterManager getInstance() {
+    public static MainCharacterManager getInstance(GraphicsContext gc, Pane root) {
+        if (instance == null) {
+            instance = new MainCharacterManager(gc, root);
+        }
         return instance;
     }
 
-    public static MainCharacterManager getInstance(GraphicsContext gc) {
-        if (instance == null) {
-            instance = new MainCharacterManager(gc);
-        }
+    public static MainCharacterManager getInstance() {
         return instance;
     }
 
@@ -46,19 +77,65 @@ public class MainCharacterManager extends GameObject {
 
         if (movingLeft) x -= speed;
         if (movingRight) x += speed;
-        if (movingUp) y -= speed;
-        if (movingDown) y += speed;
+
+        if (jumping && !jumpPlaying) {
+            jumpPlaying = true;
+            jumpVelocity = JUMP_FORCE;
+        }
+
+        if (jumpPlaying) {
+            y += jumpVelocity;
+            jumpVelocity += GRAVITY;
+            if (y >= groundY) {
+                y = groundY;
+                jumpPlaying = false;
+                jumpVelocity = 0;
+            }
+        } else {
+            if (movingUp) y -= speed;
+            if (movingDown) y += speed;
+        }
 
         x = Math.max(0, Math.min(x, w - DRAW_SIZE));
         y = Math.max(60, Math.min(y, h - DRAW_SIZE));
 
+        if (melee && !meleePlaying) {
+            meleePlaying = true;
+            meleeFrame = 0;
+            meleeCounter = 0;
+        }
 
-        boolean isMoving = movingLeft || movingRight || movingUp || movingDown;
-        gc.drawImage(horizontalSheet,
-                frame * H_FRAME_W, 0, H_FRAME_W, H_FRAME_H,
-                x, y, DRAW_SIZE, DRAW_SIZE);
+        if (meleePlaying) {
+            meleeCounter++;
+            if (meleeCounter % 5 == 0) {
+                meleeFrame++;
+                if (meleeFrame >= MELEE_FRAMES) {
+                    meleePlaying = false;
+                    meleeFrame = 0;
+                }
+            }
+            if (meleePlaying) {
+                imageView.setImage(meleeFrames[meleeFrame]);
+            } else {
+                imageView.setImage(idleImage);
+            }
+        } else if (shooting) {
+            if (imageView.getImage() != shootImage) imageView.setImage(shootImage);
+        } else {
+            if (imageView.getImage() != idleImage) imageView.setImage(idleImage);
+        }
+
+        if (movingLeft) {
+            facingRight = false;
+            imageView.setScaleX(-1);
+        } else if (movingRight) {
+            facingRight = true;
+            imageView.setScaleX(1);
+        }
+
+        imageView.setLayoutX(x);
+        imageView.setLayoutY(y);
     }
-
 
     public void setInput(String key, boolean state) {
         switch (key) {
@@ -80,10 +157,12 @@ public class MainCharacterManager extends GameObject {
     public boolean isShooting() { return shooting; }
     public boolean isMelee() { return melee; }
     public boolean isJumping() { return jumping; }
+    public boolean isFacingRight() { return facingRight; }
 
     public void reset() {
         x = 200;
         y = 400;
+        groundY = y;
         movingLeft = false;
         movingRight = false;
         movingUp = false;
@@ -91,8 +170,14 @@ public class MainCharacterManager extends GameObject {
         shooting = false;
         melee = false;
         jumping = false;
-        frame = 0;
-        frameCounter = 0;
+        jumpPlaying = false;
+        meleePlaying = false;
+        meleeFrame = 0;
+        meleeCounter = 0;
+        jumpVelocity = 0;
+        imageView.setImage(idleImage);
+        imageView.setLayoutX(x);
+        imageView.setLayoutY(y);
     }
 
     public double getX() { return x; }

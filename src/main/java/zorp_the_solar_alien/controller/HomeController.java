@@ -1,7 +1,11 @@
 package zorp_the_solar_alien.controller;
 
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import zorp_the_solar_alien.SingletonObject.AudioManager;
+import zorp_the_solar_alien.SingletonObject.ScoreManager;
+import zorp_the_solar_alien.controller.PlayController;
 import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.view.PlayView;
@@ -11,15 +15,18 @@ public class HomeController {
 	private HomeModel model;
 	private HomeView view;
 	private PlayView playView;
+	private PlayController playController;
 	private HowToPlayController howToPlayController;
 
-	public HomeController(HomeModel model, HomeView view, PlayView playView, HowToPlayController howToPlayController) {
+	public HomeController(HomeModel model, HomeView view, PlayView playView, PlayController playController, HowToPlayController howToPlayController) {
 		this.model = model;
 		this.view = view;
 		this.playView = playView;
+		this.playController = playController;
 		this.howToPlayController = howToPlayController;
 
 		view.updateHomeView();
+		updatePlayButtonText();
 		AudioManager.getInstance().playHomeMusic();
 
 		view.homeBtn.setOnAction(e -> {
@@ -27,6 +34,7 @@ public class HomeController {
 			howToPlayController.hide();
 			view.zorpImageView.setVisible(true);
 			view.updateHomeView();
+			updatePlayButtonText();
 			syncMusicBtn();
 		});
 
@@ -43,18 +51,61 @@ public class HomeController {
 		});
 
 		view.playBtn.setOnAction(e -> {
+			playController.stopGame();
+			playController.loadSavedGame(false);
 			playView.show();
 			howToPlayController.hide();
 			view.zorpImageView.setVisible(false);
 			syncMusicBtn();
 		});
 
+		view.newGameBtn.setOnAction(e -> {
+			boolean hasProgress = ScoreManager.getInstance().getHighestLevelUnlocked() > 0
+					|| ScoreManager.getInstance().getHighScore() > 0
+					|| playView.canvas.isVisible();
+			if (hasProgress) {
+				Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+				confirm.setTitle("Start New Game");
+				confirm.setHeaderText("Are you sure?");
+				confirm.setContentText("All your progress and scores will be lost!");
+				confirm.showAndWait().ifPresent(response -> {
+					if (response == ButtonType.OK) {
+						startNewGame();
+					}
+				});
+			} else {
+				startNewGame();
+			}
+		});
+
 		view.quitBtn.setOnAction(e -> handleQuit());
 	}
 	
-	// Starts in home screen  
+
 	private void handleHome() {
 		
+	}
+
+	private void startNewGame() {
+		ScoreManager.getInstance().resetProgress();
+		playController.stopGame();
+		playController.loadSavedGame(true);
+		playView.show();
+		howToPlayController.hide();
+		view.zorpImageView.setVisible(false);
+		syncMusicBtn();
+	}
+
+	private void updatePlayButtonText() {
+		boolean hasSave = ScoreManager.getInstance().getHighestLevelUnlocked() > 0;
+		if (hasSave) {
+			view.playBtn.setText("CONTINUE");
+			view.playBtn.setVisible(true);
+			view.newGameBtn.setText("START NEW GAME");
+		} else {
+			view.playBtn.setVisible(false);
+			view.newGameBtn.setText("START NEW GAME");
+		}
 	}
 
 	private void syncMusicBtn() {
@@ -62,7 +113,7 @@ public class HomeController {
 	}
 	
 	
-	// Switch the screen display to how to play screen content. 
+
 	private void handleHowToPlay() {
 		playView.hide();
 		howToPlayController.show();
@@ -70,12 +121,10 @@ public class HomeController {
 	}
 	
 
-	// Switch to play screen when play button is clicked. 
 	private void handlePlay() {
 
 	}
 
-	// Exit the game
 	private void handleQuit() {
 		System.exit(0);
 	}

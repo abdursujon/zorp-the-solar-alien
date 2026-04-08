@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 
 public class PlayView {
-    Pane root;
+    public Pane root;
     public Canvas canvas;
     public GraphicsContext gc;
 

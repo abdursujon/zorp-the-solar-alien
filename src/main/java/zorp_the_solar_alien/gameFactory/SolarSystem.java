@@ -2,15 +2,25 @@ package zorp_the_solar_alien.gameFactory;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.transform.Rotate;
 import zorp_the_solar_alien.GameObject;
 
 public class SolarSystem extends GameObject {
     private static SolarSystem instance = null;
 
-    private Image[][] planetLayers;
+    private Image[] planetImages;
     private int currentPlanet = 0;
-    private double[] scrollSpeeds;
-    private double[] offsets;
+    private int factsCollected = 0;
+    private int maxFacts = 10;
+
+    private double currentScale = 0.0;
+    private double targetScale = 0.0;
+    private static final double MIN_SCALE = 0.08;
+    private static final double MAX_SCALE = 0.6;
+    private static final double SCALE_LERP_SPEED = 0.02;
+
+    private double rotationAngle = 0.0;
+    private static final double ROTATION_SPEED = 0.15;
 
     private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
             "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
@@ -18,80 +28,16 @@ public class SolarSystem extends GameObject {
     private SolarSystem(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
 
-        planetLayers = new Image[10][];
+        planetImages = new Image[10];
+        planetImages[0] = new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm());
 
-        // Sun
-        planetLayers[0] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
 
-        // Mercury
-        planetLayers[1] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
+        for (int i = 1; i < 10; i++) {
+            planetImages[i] = planetImages[0];
+        }
 
-        // Venus
-        planetLayers[2] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Earth
-        planetLayers[3] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Mars
-        planetLayers[4] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Jupiter
-        planetLayers[5] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Saturn
-        planetLayers[6] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Uranus
-        planetLayers[7] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Neptune
-        planetLayers[8] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        // Pluto
-        planetLayers[9] = new Image[]{
-                new Image(getClass().getResource("/sun/sun-bg1.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg2.png").toExternalForm()),
-                new Image(getClass().getResource("/sun/sun-bg3.png").toExternalForm()),
-        };
-
-        scrollSpeeds = new double[]{0.5, 0.7, 1.0, 0.8, 1.5, 1.2, 2.0, 1.8};
-        offsets = new double[]{400, 900, 200, 700, 100, 500, 300, 800};
+        currentScale = MIN_SCALE;
+        targetScale = MIN_SCALE;
     }
 
     public static SolarSystem getInstance(GraphicsContext gc, double x, double y) {
@@ -101,10 +47,26 @@ public class SolarSystem extends GameObject {
         return instance;
     }
 
+    public void setFactsCollected(int facts) {
+        this.factsCollected = facts;
+        double progress = Math.min(1.0, (double) factsCollected / maxFacts);
+        targetScale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * progress;
+    }
+
     public void nextPlanet() {
         if (currentPlanet < planetNames.length - 1) {
             currentPlanet++;
+            factsCollected = 0;
+            currentScale = MIN_SCALE;
+            targetScale = MIN_SCALE;
         }
+    }
+
+    public void setCurrentPlanet(int planet) {
+        this.currentPlanet = Math.min(planet, planetNames.length - 1);
+        factsCollected = 0;
+        currentScale = MIN_SCALE;
+        targetScale = MIN_SCALE;
     }
 
     public int getCurrentPlanet() {
@@ -117,6 +79,9 @@ public class SolarSystem extends GameObject {
 
     public void reset() {
         currentPlanet = 0;
+        factsCollected = 0;
+        currentScale = MIN_SCALE;
+        targetScale = MIN_SCALE;
     }
 
     @Override
@@ -127,20 +92,27 @@ public class SolarSystem extends GameObject {
         gc.setFill(javafx.scene.paint.Color.BLACK);
         gc.fillRect(0, 0, w, h);
 
-        Image[] layers = planetLayers[currentPlanet];
 
-        double[] sizes = {100, 80, 150, 120, 200, 160, 280, 220};
-        double[] opacities = {1.0, 0.8, 0.6, 0.7, 0.4, 0.5, 0.3, 0.35};
-        double[] yPositions = {h * 0.2, h * 0.7, h * 0.5, h * 0.3, h * 0.6, h * 0.15, h * 0.4, h * 0.8};
+        currentScale += (targetScale - currentScale) * SCALE_LERP_SPEED;
 
-        for (int i = 0; i < offsets.length; i++) {
-            offsets[i] -= scrollSpeeds[i];
-            if (offsets[i] <= -sizes[i]) {
-                offsets[i] = w;
-            }
-            gc.setGlobalAlpha(opacities[i]);
-            gc.drawImage(layers[i % layers.length], offsets[i], yPositions[i] - sizes[i] / 2, sizes[i], sizes[i]);
-        }
+
+        rotationAngle += ROTATION_SPEED;
+        if (rotationAngle >= 360) rotationAngle -= 360;
+
+        Image img = planetImages[currentPlanet];
+        double size = Math.max(w, h) * currentScale;
+        double centerX = w / 2;
+        double centerY = h / 2;
+
+        double opacity = 0.3 + 0.7 * ((currentScale - MIN_SCALE) / (MAX_SCALE - MIN_SCALE));
+        gc.setGlobalAlpha(opacity);
+
+        gc.save();
+        Rotate r = new Rotate(rotationAngle, centerX, centerY);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+        gc.drawImage(img, centerX - size / 2, centerY - size / 2, size, size);
+        gc.restore();
+
         gc.setGlobalAlpha(1.0);
     }
 }

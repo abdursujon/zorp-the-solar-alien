@@ -43,23 +43,27 @@ public class ZorpTheSolarAlienApp extends Application {
 		HowToPlayController howToPlayController = new HowToPlayController(howToPlayView);
 		howToPlayController.hide();
 
-		HomeController homeController = new HomeController(homeModel, homeView, playView, howToPlayController);
 		PlayController playController = new PlayController(playModel, playView);
-		root.getChildren().addAll(homeView.menuBar, homeView.playBtn, homeView.quitBtn);
+		HomeController homeController = new HomeController(homeModel, homeView, playView, playController, howToPlayController);
+		root.getChildren().addAll(homeView.menuBar, homeView.playBtn, homeView.newGameBtn, homeView.quitBtn);
 
-		MainCharacterManager.getInstance(playView.gc);
-		scene.setOnKeyPressed(e -> {
+		MainCharacterManager.getInstance(playView.gc, root);
+		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
 			MainCharacterManager.getInstance().setInput(e.getCode().toString(), true);
+			if (e.getCode() == javafx.scene.input.KeyCode.SPACE) {
+				e.consume();
+			}
 		});
-
-		scene.setOnKeyReleased(e -> {
+		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_RELEASED, e -> {
 			MainCharacterManager.getInstance().setInput(e.getCode().toString(), false);
+			if (e.getCode() == javafx.scene.input.KeyCode.SPACE) {
+				e.consume();
+			}
 		});
-
+		root.setOnMouseClicked(e -> root.requestFocus());
 		scene.setOnMousePressed(e -> {
 			MainCharacterManager.getInstance().setMouseInput(e.getButton().toString(), true);
 		});
-
 		scene.setOnMouseReleased(e -> {
 			MainCharacterManager.getInstance().setMouseInput(e.getButton().toString(), false);
 		});

@@ -21,7 +21,7 @@ public class HowToPlayView {
         canvas.widthProperty().addListener((obs, o, n) -> updateView());
         canvas.heightProperty().addListener((obs, o, n) -> updateView());
 
-        backgroundView = new Image(getClass().getResource("/assets/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
 
         root.getChildren().add(canvas);
     }

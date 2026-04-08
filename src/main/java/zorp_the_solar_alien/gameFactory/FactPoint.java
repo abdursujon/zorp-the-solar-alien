@@ -8,7 +8,9 @@ import zorp_the_solar_alien.GameObject;
 
 public class FactPoint extends GameObject {
     private boolean active = true;
+    private boolean locked = true;
     private String factText;
+    private int factNumber = 1;
     private static final double RADIUS = 15;
     private double bobPhase = 0;
     private double baseY;
@@ -22,6 +24,10 @@ public class FactPoint extends GameObject {
         this.factText = fact;
     }
 
+    public void setFactNumber(int number) {
+        this.factNumber = number;
+    }
+
     public String getFactText() {
         return factText;
     }
@@ -31,11 +37,33 @@ public class FactPoint extends GameObject {
         bobPhase += 0.05;
         y = baseY + Math.sin(bobPhase) * 5;
 
-        gc.setFill(Color.GOLD);
-        gc.fillOval(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2);
-        gc.setFill(Color.BLACK);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        gc.fillText("!", x - 3, y + 5);
+        String label = "Fact " + factNumber;
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        gc.setFill(locked ? Color.GRAY : Color.GOLD);
+        double labelWidth = label.length() * 8;
+        gc.fillText(label, x - labelWidth / 2, y - RADIUS - 8);
+
+        if (locked) {
+            gc.setFill(Color.GRAY);
+            gc.fillOval(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2);
+            gc.setFill(Color.DARKGRAY);
+            gc.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            gc.fillText("🔒", x - 8, y + 5);
+        } else {
+            gc.setFill(Color.GOLD);
+            gc.fillOval(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2);
+            gc.setFill(Color.BLACK);
+            gc.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            gc.fillText("!", x - 3, y + 5);
+        }
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void unlock() {
+        this.locked = false;
     }
 
     public boolean isActive() {

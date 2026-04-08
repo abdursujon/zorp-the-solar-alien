@@ -7,9 +7,13 @@ import java.util.Scanner;
 public class ScoreManager {
     private static ScoreManager instance = null;
     private int currentScore = 0;
+    private int highScore = 0;
     private int[] levelHighScores = new int[10];
+    private int highestLevelUnlocked = 0;
 
-    private ScoreManager() {}
+    private ScoreManager() {
+        loadFromFile();
+    }
 
     public static ScoreManager getInstance() {
         if (instance == null) {
@@ -32,19 +36,53 @@ public class ScoreManager {
         return levelHighScores[levelIndex];
     }
 
+    public void saveScore(int score) {
+        if (score > highScore) {
+            highScore = score;
+        }
+        saveToFile();
+    }
+
+    public int getHighScore() { return highScore; }
+
+    public void unlockLevel(int levelIndex) {
+        if (levelIndex > highestLevelUnlocked) {
+            highestLevelUnlocked = levelIndex;
+            saveToFile();
+        }
+    }
+
+    public int getHighestLevelUnlocked() {
+        return highestLevelUnlocked;
+    }
+
+    public void resetProgress() {
+        highScore = 0;
+        highestLevelUnlocked = 0;
+        for (int i = 0; i < 10; i++) {
+            levelHighScores[i] = 0;
+        }
+        saveToFile();
+    }
+
     public void saveToFile() {
-        try (PrintWriter writer = new PrintWriter("scores.txt")) {
+        new File("cache").mkdirs();
+        try (PrintWriter writer = new PrintWriter("cache/save-game.txt")) {
+            writer.println(highScore);
             for (int i = 0; i < 10; i++) {
                 writer.println(levelHighScores[i]);
             }
+            writer.println(highestLevelUnlocked);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     public void loadFromFile() {
-        try (Scanner scanner = new Scanner(new File("scores.txt"))) {
+        try (Scanner scanner = new Scanner(new File("cache/save-game.txt"))) {
+            if (scanner.hasNextInt()) highScore = scanner.nextInt();
             for (int i = 0; i < 10; i++) {
                 if (scanner.hasNextInt()) levelHighScores[i] = scanner.nextInt();
             }
+            if (scanner.hasNextInt()) highestLevelUnlocked = scanner.nextInt();
         } catch (Exception e) { }
     }
 }

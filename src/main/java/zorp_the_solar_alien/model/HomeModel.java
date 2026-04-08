@@ -1,7 +1,7 @@
 package zorp_the_solar_alien.model;
 
 public class HomeModel {
-    public enum Screen {HOME, PLAY, SETTINGS, HELP};
+    public enum Screen {HOME, PLAY, SETTINGS, HELP}
 
     private Screen currentScreen = Screen.HOME;
 
@@ -9,7 +9,7 @@ public class HomeModel {
         return currentScreen;
     }
 
-    public void setCurrentScreen(Screen screen){
+    public void setCurrentScreen(Screen screen) {
         currentScreen = screen;
     }
 }
