@@ -5,10 +5,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
-import zorp_the_solar_alien.model.PlayModel;
 
 public class GameInfoBar extends GameObject {
-    private PlayModel model;
+    private int hp, maxHp, score;
+    private String planetName;
+    private int currentWave, totalWaves, waveEnemiesKilled, enemiesPerWave;
+
     private String currentFactPopup = null;
     private int popupTimer = 0;
     private static final int POPUP_DURATION = 180;
@@ -17,8 +19,16 @@ public class GameInfoBar extends GameObject {
         super(gc, 0, 0);
     }
 
-    public void setModel(PlayModel model) {
-        this.model = model;
+    public void setData(int hp, int maxHp, int score, String planetName,
+                        int currentWave, int totalWaves, int waveEnemiesKilled, int enemiesPerWave) {
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.score = score;
+        this.planetName = planetName;
+        this.currentWave = currentWave;
+        this.totalWaves = totalWaves;
+        this.waveEnemiesKilled = waveEnemiesKilled;
+        this.enemiesPerWave = enemiesPerWave;
     }
 
     public void showFactPopup(String factText) {
@@ -28,36 +38,30 @@ public class GameInfoBar extends GameObject {
 
     @Override
     public void update() {
-        if (model == null) return;
         double w = gc.getCanvas().getWidth();
         double topY = 70;
-
 
         gc.setFill(Color.rgb(0, 0, 0, 0.5));
         gc.fillRect(0, topY, w, 55);
 
-
         gc.setFill(Color.DARKRED);
         gc.fillRect(10, topY + 10, 200, 20);
         gc.setFill(Color.LIMEGREEN);
-        gc.fillRect(10, topY + 10, 200 * (model.getHp() / (double) model.getMaxHp()), 20);
+        gc.fillRect(10, topY + 10, 200 * (hp / (double) maxHp), 20);
         gc.setStroke(Color.WHITE);
         gc.strokeRect(10, topY + 10, 200, 20);
 
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         gc.setFill(Color.WHITE);
-        gc.fillText("HP: " + model.getHp() + "/" + model.getMaxHp(), 10, topY + 48);
+        gc.fillText("HP: " + hp + "/" + maxHp, 10, topY + 48);
 
-        gc.fillText("Score: " + model.getScore(), w / 2 - 50, topY + 25);
+        gc.fillText("Score: " + score, w / 2 - 50, topY + 25);
 
+        gc.fillText(planetName, w / 2 - 30, topY + 45);
 
-        gc.fillText(model.getCurrentPlanetName(), w / 2 - 30, topY + 45);
+        gc.fillText("Wave: " + (currentWave + 1) + "/" + totalWaves, w - 200, topY + 25);
 
-
-        gc.fillText("Wave: " + (model.getCurrentWave() + 1) + "/" + model.getTotalWaves(), w - 200, topY + 25);
-
-        gc.fillText("Enemies: " + model.getWaveEnemiesKilled() + "/" + model.getEnemiesPerWave(), w - 200, topY + 45);
-
+        gc.fillText("Enemies: " + waveEnemiesKilled + "/" + enemiesPerWave, w - 200, topY + 45);
 
         if (popupTimer > 0 && currentFactPopup != null) {
             double boxW = 500;

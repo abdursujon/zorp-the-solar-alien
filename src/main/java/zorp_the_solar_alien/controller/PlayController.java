@@ -5,14 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
 import zorp_the_solar_alien.SingletonObject.ScoreManager;
 import zorp_the_solar_alien.gameFactory.*;
@@ -37,10 +29,6 @@ public class PlayController {
     private static final long BULLET_COOLDOWN = 200_000_000L;
 
     private static final double PLAYER_SIZE = 80;
-    private Button restartBtn;
-
-    private VBox introCard;
-    private VBox factCard;
 
     public PlayController(PlayModel model, PlayView view) {
         this.model = model;
@@ -48,22 +36,10 @@ public class PlayController {
         this.solarSystem = SolarSystem.getInstance(view.gc, 0, 0);
         this.factory = new ZorpTheSolarAlienFactory(view.gc);
         this.gameInfoBar = (GameInfoBar) factory.createProduct("gameInfoBar", 0, 0);
-        this.gameInfoBar.setModel(model);
 
-        restartBtn = new Button("RESTART");
-        restartBtn.setStyle(
-                "-fx-background-color: #34A853;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 24px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 10 30;" +
-                "-fx-cursor: hand;");
-        restartBtn.setVisible(false);
-        view.root.getChildren().add(restartBtn);
-        restartBtn.setOnAction(e -> restartGame());
-
-        buildIntroCard();
-        buildFactCard();
+        view.setOnStartGame(() -> startGame());
+        view.setOnDoneReading(() -> onDoneReading());
+        view.setOnRestart(() -> restartGame());
 
         view.canvas.visibleProperty().addListener((obs, wasVisible, isVisible) -> {
             if (!isVisible) {
@@ -83,144 +59,10 @@ public class PlayController {
         model.setCurrentPlanet(savedLevel);
         solarSystem.setCurrentPlanet(savedLevel);
         MainCharacterManager.getInstance().reset();
-        showIntroCard();
-    }
-
-    private void buildIntroCard() {
-        introCard = new VBox(20);
-        introCard.setAlignment(Pos.CENTER);
-        introCard.setPadding(new Insets(40));
-        introCard.setMaxWidth(500);
-        introCard.setMaxHeight(300);
-        introCard.setStyle(
-                "-fx-background-color: #DC2626;" +
-                "-fx-background-radius: 15;");
-
-        Label titleLabel = new Label();
-        titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        titleLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        titleLabel.setTextAlignment(TextAlignment.CENTER);
-        titleLabel.setWrapText(true);
-
-        Label descLabel = new Label();
-        descLabel.setFont(Font.font("Arial", 18));
-        descLabel.setTextFill(javafx.scene.paint.Color.WHITE);
-        descLabel.setTextAlignment(TextAlignment.CENTER);
-        descLabel.setWrapText(true);
-        descLabel.setMaxWidth(420);
-
-        Button startBtn = new Button("START");
-        startBtn.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-text-fill: #DC2626;" +
-                "-fx-font-size: 20px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 10 40;" +
-                "-fx-cursor: hand;" +
-                "-fx-background-radius: 8;");
-        startBtn.setOnAction(e -> {
-            introCard.setVisible(false);
-            startGame();
-        });
-
-        introCard.getChildren().addAll(titleLabel, descLabel, startBtn);
-        introCard.setVisible(false);
-        view.root.getChildren().add(introCard);
-    }
-
-    private void showIntroCard() {
-        int level = model.getCurrentPlanet() + 1;
-        String planetName = model.getCurrentPlanetName();
-
-        Label titleLabel = (Label) introCard.getChildren().get(0);
-        Label descLabel = (Label) introCard.getChildren().get(1);
-        titleLabel.setText("Level " + level + ": " + planetName);
-        descLabel.setText(model.getCurrentPlanetDescription());
-
-
-        introCard.setVisible(true);
-        introCard.toFront();
-        introCard.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
-            double w = view.root.getWidth();
-            double h = view.root.getHeight();
-            introCard.setLayoutX((w - newB.getWidth()) / 2);
-            introCard.setLayoutY((h - newB.getHeight()) / 2);
-        });
-        javafx.application.Platform.runLater(() -> {
-            double w = view.root.getWidth();
-            double h = view.root.getHeight();
-            introCard.setLayoutX((w - introCard.getBoundsInLocal().getWidth()) / 2);
-            introCard.setLayoutY((h - introCard.getBoundsInLocal().getHeight()) / 2);
-        });
-    }
-
-    private void buildFactCard() {
-        factCard = new VBox(15);
-        factCard.setAlignment(Pos.CENTER);
-        factCard.setPadding(new Insets(30));
-        factCard.setMaxWidth(550);
-        factCard.setMaxHeight(350);
-        factCard.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #DC2626;" +
-                "-fx-border-width: 6;" +
-                "-fx-border-radius: 10;" +
-                "-fx-background-radius: 10;");
-
-        Label factTitle = new Label();
-        factTitle.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-        factTitle.setTextFill(javafx.scene.paint.Color.web("#DC2626"));
-        factTitle.setTextAlignment(TextAlignment.CENTER);
-
-        Label factContent = new Label();
-        factContent.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        factContent.setTextFill(javafx.scene.paint.Color.web("#1E40AF"));
-        factContent.setTextAlignment(TextAlignment.CENTER);
-        factContent.setWrapText(true);
-        factContent.setMaxWidth(480);
-
-        Label separator = new Label("─────────────────────────────────");
-        separator.setTextFill(javafx.scene.paint.Color.web("#333333"));
-
-        Button doneBtn = new Button("Done Reading");
-        doneBtn.setStyle(
-                "-fx-background-color: #DC2626;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 18px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 10 30;" +
-                "-fx-cursor: hand;" +
-                "-fx-background-radius: 8;");
-        doneBtn.setOnAction(e -> {
-            factCard.setVisible(false);
-            if (model.isLevelComplete()) {
-                showLevelComplete();
-            } else {
-                gameLoop.start();
-            }
-        });
-
-        factCard.getChildren().addAll(factTitle, factContent, separator, doneBtn);
-        factCard.setVisible(false);
-        view.root.getChildren().add(factCard);
-    }
-
-    private void showFactCard(String factText, int factNumber) {
-        gameLoop.stop();
-
-        Label factTitle = (Label) factCard.getChildren().get(0);
-        Label factContent = (Label) factCard.getChildren().get(1);
-        factTitle.setText("Fact " + factNumber);
-        factContent.setText(factText);
-
-        factCard.setVisible(true);
-        factCard.toFront();
-        javafx.application.Platform.runLater(() -> {
-            double w = view.root.getWidth();
-            double h = view.root.getHeight();
-            factCard.setLayoutX((w - factCard.getBoundsInLocal().getWidth()) / 2);
-            factCard.setLayoutY((h - factCard.getBoundsInLocal().getHeight()) / 2);
-        });
+        view.showIntroCard(
+                "Level " + (model.getCurrentPlanet() + 1) + ": " + model.getCurrentPlanetName(),
+                model.getCurrentPlanetDescription()
+        );
     }
 
     public void startGame() {
@@ -251,8 +93,14 @@ public class PlayController {
                 updateEnemyBullets();
                 MainCharacterManager.getInstance().update();
                 checkCollisions(now);
+                gameInfoBar.setData(
+                        model.getHp(), model.getMaxHp(), model.getScore(),
+                        model.getCurrentPlanetName(), model.getCurrentWave(),
+                        model.getTotalWaves(), model.getWaveEnemiesKilled(),
+                        model.getEnemiesPerWave()
+                );
                 gameInfoBar.update();
-                checkGameState(w, h);
+                checkGameState();
             }
         };
         gameLoop.start();
@@ -273,12 +121,10 @@ public class PlayController {
         currentObjective.setFactNumber(model.getCurrentWave() + 1);
 
         if (model.isBossWave()) {
-
             double bossX = w * 0.65;
             double bossY = h * 0.35;
             currentBoss = new Boss(view.gc, bossX, bossY, model.getCurrentPlanet());
         } else {
-
             for (int i = 0; i < model.getEnemiesPerWave(); i++) {
                 double spawnX = w * 0.55 + Math.random() * (w * 0.25);
                 double spawnY = 60 + (i * ((h - 160) / model.getEnemiesPerWave())) + Math.random() * 40;
@@ -291,6 +137,16 @@ public class PlayController {
     public void stopGame() {
         if (gameLoop != null) {
             gameLoop.stop();
+        }
+    }
+
+    private void onDoneReading() {
+        if (model.isLevelComplete()) {
+            ScoreManager.getInstance().saveScore(model.getScore());
+            ScoreManager.getInstance().unlockLevel(model.getCurrentPlanet() + 1);
+            view.showLevelComplete(model.getCurrentPlanetName(), model.getScore());
+        } else {
+            gameLoop.start();
         }
     }
 
@@ -310,7 +166,6 @@ public class PlayController {
             double cx = player.getX() + PLAYER_SIZE / 2;
             double cy = player.getY() + PLAYER_SIZE / 2;
             Bullet b = (Bullet) factory.createProduct("bullet", cx, cy);
-
 
             double dx = player.isFacingRight() ? 1 : -1;
             b.setTarget(cx + dx * 500, cy);
@@ -386,7 +241,8 @@ public class PlayController {
         model.collectFact();
         model.completeWave();
 
-        showFactCard(factText, factNum);
+        gameLoop.stop();
+        view.showFactCard(factText, factNum);
     }
 
     private void updateEnemyBullets() {
@@ -421,7 +277,6 @@ public class PlayController {
         }
         bullets.removeIf(b -> !b.isActive());
 
-
         if (player.isMelee()) {
             double meleeX = px + PLAYER_SIZE;
             double meleeY = py;
@@ -440,7 +295,6 @@ public class PlayController {
             }
         }
 
-
         if (currentBoss != null && currentBoss.isActive()) {
             Iterator<Bullet> bbit = bullets.iterator();
             while (bbit.hasNext()) {
@@ -455,7 +309,6 @@ public class PlayController {
                 }
             }
             bullets.removeIf(b -> !b.isActive());
-
 
             if (player.isMelee()) {
                 double meleeX = px + PLAYER_SIZE;
@@ -472,7 +325,6 @@ public class PlayController {
                 }
             }
         }
-
 
         Iterator<EnemyBullet> ebit = enemyBullets.iterator();
         while (ebit.hasNext()) {
@@ -496,71 +348,34 @@ public class PlayController {
                 String factText = currentObjective.getFactText();
                 model.completeWave();
 
-
                 if (!model.isLevelComplete()) {
                     spawnWave();
                 }
 
-                showFactCard(factText, factNum);
+                gameLoop.stop();
+                view.showFactCard(factText, factNum);
             }
         }
     }
 
-    private void checkGameState(double w, double h) {
+    private void checkGameState() {
         if (model.isGameOver()) {
             gameLoop.stop();
             ScoreManager.getInstance().saveScore(model.getScore());
-
-            view.gc.setFill(javafx.scene.paint.Color.rgb(0, 0, 0, 0.7));
-            view.gc.fillRect(0, 0, w, h);
-            view.gc.setFill(javafx.scene.paint.Color.RED);
-            view.gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 48));
-            view.gc.fillText("GAME OVER", w / 2 - 150, h / 2);
-            view.gc.setFill(javafx.scene.paint.Color.WHITE);
-            view.gc.setFont(javafx.scene.text.Font.font("Arial", 20));
-            view.gc.fillText("Score: " + model.getScore(), w / 2 - 50, h / 2 + 40);
-            view.gc.fillText("High Score: " + ScoreManager.getInstance().getHighScore(), w / 2 - 60, h / 2 + 70);
-
-            restartBtn.setLayoutX(w / 2 - 80);
-            restartBtn.setLayoutY(h / 2 + 90);
-            restartBtn.setVisible(true);
-            restartBtn.toFront();
+            view.showGameOver(model.getScore(), ScoreManager.getInstance().getHighScore());
         }
     }
 
-    private void showLevelComplete() {
-        ScoreManager.getInstance().saveScore(model.getScore());
-        ScoreManager.getInstance().unlockLevel(model.getCurrentPlanet() + 1);
-        double w = view.canvas.getWidth();
-        double h = view.canvas.getHeight();
-
-        view.gc.setFill(javafx.scene.paint.Color.rgb(0, 0, 0, 0.7));
-        view.gc.fillRect(0, 0, w, h);
-        view.gc.setFill(javafx.scene.paint.Color.GOLD);
-        view.gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 48));
-        view.gc.fillText("CONGRATULATIONS!", w / 2 - 230, h / 2 - 20);
-        view.gc.setFill(javafx.scene.paint.Color.WHITE);
-        view.gc.setFont(javafx.scene.text.Font.font("Arial", 24));
-        view.gc.fillText("You completed " + model.getCurrentPlanetName() + "!", w / 2 - 120, h / 2 + 30);
-        view.gc.setFont(javafx.scene.text.Font.font("Arial", 20));
-        view.gc.fillText("Score: " + model.getScore(), w / 2 - 50, h / 2 + 65);
-
-        restartBtn.setText("NEXT LEVEL");
-        restartBtn.setLayoutX(w / 2 - 80);
-        restartBtn.setLayoutY(h / 2 + 90);
-        restartBtn.setVisible(true);
-        restartBtn.toFront();
-    }
-
     private void restartGame() {
-        restartBtn.setVisible(false);
-        restartBtn.setText("RESTART");
         if (model.isLevelComplete()) {
             solarSystem.nextPlanet();
             model.nextPlanet();
             model.resetForNextLevel();
             MainCharacterManager.getInstance().reset();
-            showIntroCard();
+            view.showIntroCard(
+                    "Level " + (model.getCurrentPlanet() + 1) + ": " + model.getCurrentPlanetName(),
+                    model.getCurrentPlanetDescription()
+            );
         } else {
             model.resetForNextLevel();
             MainCharacterManager.getInstance().reset();
