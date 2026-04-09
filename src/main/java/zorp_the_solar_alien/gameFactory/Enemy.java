@@ -7,7 +7,7 @@ import zorp_the_solar_alien.GameObject;
 public class Enemy extends GameObject {
     private double speed;
     private boolean active = true;
-    private int hp = 2;
+    private int hp = 30;
     private static final int DRAW_SIZE = 50;
 
     private static Image[] sharedSprites = null;
@@ -105,8 +105,8 @@ public class Enemy extends GameObject {
         lastShotTime = now;
     }
 
-    public void takeDamage() {
-        hp--;
+    public void takeDamage(int damage) {
+        hp -= damage;
         if (hp <= 0) active = false;
     }
 

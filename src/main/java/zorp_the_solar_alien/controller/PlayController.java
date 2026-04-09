@@ -58,11 +58,16 @@ public class PlayController {
 
     public void loadSavedGame(boolean isNewGame) {
         stopGame();
-        int savedLevel = ScoreManager.getInstance().getHighestLevelUnlocked();
+        ScoreManager sm = ScoreManager.getInstance();
+        int savedLevel = sm.getHighestLevelUnlocked();
         if (isNewGame) {
             model.reset();
+            sm.saveWaveProgress(0, 0);
         } else {
             model.resetForNextLevel();
+            model.setCurrentWave(sm.getSavedWave());
+            model.setFactsCollected(sm.getSavedWave());
+            model.setScore(sm.getSavedScore());
         }
         model.setCurrentPlanet(savedLevel);
         solarSystem.setCurrentPlanet(savedLevel);
@@ -160,6 +165,7 @@ public class PlayController {
         if (model.isLevelComplete()) {
             ScoreManager.getInstance().saveScore(model.getScore());
             ScoreManager.getInstance().unlockLevel(model.getCurrentPlanet() + 1);
+            ScoreManager.getInstance().saveWaveProgress(0, model.getScore());
             if (model.isLastLevel()) {
                 view.showGameComplete(model.getScore());
             } else {
@@ -271,6 +277,7 @@ public class PlayController {
     private void onBossDefeated() {
         AudioManager.getInstance().stopBossMusic();
         AudioManager.getInstance().playBossBiten();
+        AudioManager.getInstance().playHomeMusic();
 
         ImageView explosionView = new ImageView(new Image(getClass().getResource("/enemies/boss/explosion.gif").toExternalForm()));
         explosionView.setFitWidth(180);
@@ -318,7 +325,7 @@ public class PlayController {
                 if (circleIntersectsRect(b.getX(), b.getY(), b.getRadius(),
                         e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
                     b.setActive(false);
-                    e.takeDamage();
+                    e.takeDamage(10);
                     if (!e.isActive()) {
                         model.registerKill();
                         AudioManager.getInstance().playEnemyDied();
@@ -338,8 +345,7 @@ public class PlayController {
                 if (!e.isActive()) continue;
                 if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
                         e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
-                    e.takeDamage();
-                    e.takeDamage();
+                    e.takeDamage(15);
                     if (!e.isActive()) {
                         model.registerKill();
                         AudioManager.getInstance().playEnemyDied();
@@ -382,7 +388,7 @@ public class PlayController {
                 if (circleIntersectsRect(b.getX(), b.getY(), b.getRadius(),
                         currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
                     b.setActive(false);
-                    currentBoss.takeDamage();
+                    currentBoss.takeDamage(10);
                     if (!currentBoss.isActive()) {
                         onBossDefeated();
                         break;
@@ -398,8 +404,7 @@ public class PlayController {
                 double meleeH = PLAYER_SIZE;
                 if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
                         currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
-                    currentBoss.takeDamage();
-                    currentBoss.takeDamage();
+                    currentBoss.takeDamage(15);
                     if (!currentBoss.isActive()) {
                         onBossDefeated();
                     }
@@ -430,6 +435,7 @@ public class PlayController {
                 int factNum = model.getCurrentWave() + 1;
                 String factText = currentObjective.getFactText();
                 model.completeWave();
+                ScoreManager.getInstance().saveWaveProgress(model.getCurrentWave(), model.getScore());
 
                 if (!model.isLevelComplete()) {
                     spawnWave();

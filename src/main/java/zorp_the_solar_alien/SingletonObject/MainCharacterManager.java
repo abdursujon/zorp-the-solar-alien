@@ -81,6 +81,7 @@ public class MainCharacterManager extends GameObject {
         if (jumping && !jumpPlaying) {
             jumpPlaying = true;
             jumpVelocity = JUMP_FORCE;
+            groundY = y;
         }
 
         if (jumpPlaying) {
@@ -184,4 +185,5 @@ public class MainCharacterManager extends GameObject {
     public double getY() { return y; }
     public void setX(double x) { this.x = x; }
     public void setY(double y) { this.y = y; }
+    public void setVisible(boolean visible) { imageView.setVisible(visible); }
 }

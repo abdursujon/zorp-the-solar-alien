@@ -26,8 +26,8 @@ public class Boss extends GameObject {
     private static final String[] BOSS_SPRITES = {
             "/enemies/boss/boss1.png",
             "/enemies/boss/boss2.png",
-            "/enemies/boss/boss4.png",
             "/enemies/boss/boss3.png",
+            "/enemies/boss/boss4.png",
             "/enemies/boss/boss5.png",
             "/enemies/boss/boss6.png",
             "/enemies/boss/boss8.png",
@@ -55,7 +55,7 @@ public class Boss extends GameObject {
         sinePhase = Math.random() * Math.PI * 2;
         targetX = x;
         targetY = y;
-        maxHp = 10;
+        maxHp = 200 + (planetIndex * 100);
         hp = maxHp;
     }
 
@@ -105,8 +105,8 @@ public class Boss extends GameObject {
         lastShotTime = now;
     }
 
-    public void takeDamage() {
-        hp--;
+    public void takeDamage(int damage) {
+        hp -= damage;
         if (hp <= 0) active = false;
     }
 

@@ -4,6 +4,7 @@ package zorp_the_solar_alien.controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import zorp_the_solar_alien.SingletonObject.AudioManager;
+import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
 import zorp_the_solar_alien.SingletonObject.ScoreManager;
 import zorp_the_solar_alien.controller.PlayController;
 import zorp_the_solar_alien.model.HomeModel;
@@ -33,6 +34,7 @@ public class HomeController {
 		view.homeBtn.setOnAction(e -> {
 			playView.hide();
 			howToPlayController.hide();
+			MainCharacterManager.getInstance().setVisible(false);
 			view.zorpImageView.setVisible(true);
 			view.startAnimation();
 			updatePlayButtonText();
@@ -62,6 +64,7 @@ public class HomeController {
 			playView.show();
 			howToPlayController.hide();
 			view.zorpImageView.setVisible(false);
+			MainCharacterManager.getInstance().setVisible(true);
 			syncMusicBtn();
 		});
 
@@ -100,6 +103,7 @@ public class HomeController {
 		playView.show();
 		howToPlayController.hide();
 		view.zorpImageView.setVisible(false);
+		MainCharacterManager.getInstance().setVisible(true);
 		syncMusicBtn();
 	}
 

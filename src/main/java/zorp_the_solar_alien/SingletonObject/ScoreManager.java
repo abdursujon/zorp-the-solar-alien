@@ -10,6 +10,8 @@ public class ScoreManager {
     private int highScore = 0;
     private int[] levelHighScores = new int[10];
     private int highestLevelUnlocked = 0;
+    private int savedWave = 0;
+    private int savedScore = 0;
 
     private ScoreManager() {
         loadFromFile();
@@ -56,9 +58,20 @@ public class ScoreManager {
         return highestLevelUnlocked;
     }
 
+    public void saveWaveProgress(int wave, int score) {
+        this.savedWave = wave;
+        this.savedScore = score;
+        saveToFile();
+    }
+
+    public int getSavedWave() { return savedWave; }
+    public int getSavedScore() { return savedScore; }
+
     public void resetProgress() {
         highScore = 0;
         highestLevelUnlocked = 0;
+        savedWave = 0;
+        savedScore = 0;
         for (int i = 0; i < 10; i++) {
             levelHighScores[i] = 0;
         }
@@ -73,6 +86,8 @@ public class ScoreManager {
                 writer.println(levelHighScores[i]);
             }
             writer.println(highestLevelUnlocked);
+            writer.println(savedWave);
+            writer.println(savedScore);
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -83,6 +98,8 @@ public class ScoreManager {
                 if (scanner.hasNextInt()) levelHighScores[i] = scanner.nextInt();
             }
             if (scanner.hasNextInt()) highestLevelUnlocked = scanner.nextInt();
+            if (scanner.hasNextInt()) savedWave = scanner.nextInt();
+            if (scanner.hasNextInt()) savedScore = scanner.nextInt();
         } catch (Exception e) { }
     }
 }

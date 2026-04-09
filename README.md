@@ -40,7 +40,7 @@ mvn clean javafx:run
 
 
 To do
-1. Finish each level facts 
+1. Finish each level facts x
 2. Final review of each line of code twice and comment all method 
 3. Create UML and write report 
 4. Final review of everything in the project and delete all extra file 
