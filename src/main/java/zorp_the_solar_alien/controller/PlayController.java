@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+import zorp_the_solar_alien.SingletonObject.AudioManager;
 import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
 import zorp_the_solar_alien.SingletonObject.ScoreManager;
 import zorp_the_solar_alien.gameFactory.*;
@@ -30,12 +35,15 @@ public class PlayController {
 
     private static final double PLAYER_SIZE = 80;
 
+    private Image explosionImage;
+
     public PlayController(PlayModel model, PlayView view) {
         this.model = model;
         this.view = view;
         this.solarSystem = SolarSystem.getInstance(view.gc, 0, 0);
         this.factory = new ZorpTheSolarAlienFactory(view.gc);
         this.gameInfoBar = (GameInfoBar) factory.createProduct("gameInfoBar", 0, 0);
+        this.explosionImage = new Image(getClass().getResource("/enemies/boss/explosion.gif").toExternalForm());
 
         view.setOnStartGame(() -> startGame());
         view.setOnDoneReading(() -> onDoneReading());
@@ -112,6 +120,13 @@ public class PlayController {
 
         model.startWave();
         currentBoss = null;
+        enemies.clear();
+        enemyBullets.clear();
+        bullets.clear();
+
+        MainCharacterManager player = MainCharacterManager.getInstance();
+        player.setX(50);
+        player.setY(h / 2 - PLAYER_SIZE / 2);
 
         String fact = model.getWaveFact();
         double objX = w * 0.9;
@@ -124,10 +139,11 @@ public class PlayController {
             double bossX = w * 0.65;
             double bossY = h * 0.35;
             currentBoss = new Boss(view.gc, bossX, bossY, model.getCurrentPlanet());
+            AudioManager.getInstance().playBossMusic();
         } else {
             for (int i = 0; i < model.getEnemiesPerWave(); i++) {
-                double spawnX = w * 0.55 + Math.random() * (w * 0.25);
-                double spawnY = 60 + (i * ((h - 160) / model.getEnemiesPerWave())) + Math.random() * 40;
+                double spawnX = w * 0.3 + Math.random() * (w * 0.5);
+                double spawnY = 80 + Math.random() * (h - 200);
                 Enemy e = (Enemy) factory.createProduct("enemy", spawnX, spawnY);
                 enemies.add(e);
             }
@@ -144,7 +160,11 @@ public class PlayController {
         if (model.isLevelComplete()) {
             ScoreManager.getInstance().saveScore(model.getScore());
             ScoreManager.getInstance().unlockLevel(model.getCurrentPlanet() + 1);
-            view.showLevelComplete(model.getCurrentPlanetName(), model.getScore());
+            if (model.isLastLevel()) {
+                view.showGameComplete(model.getScore());
+            } else {
+                view.showLevelComplete(model.getCurrentPlanetName(), model.getScore());
+            }
         } else {
             gameLoop.start();
         }
@@ -172,6 +192,7 @@ public class PlayController {
 
             bullets.add(b);
             lastBulletTime = now;
+            AudioManager.getInstance().playLaser();
         }
     }
 
@@ -205,6 +226,26 @@ public class PlayController {
                 e.markShot(now);
             }
         }
+
+        for (int i = 0; i < enemies.size(); i++) {
+            for (int j = i + 1; j < enemies.size(); j++) {
+                Enemy a = enemies.get(i);
+                Enemy b = enemies.get(j);
+                double dx = a.getCenterX() - b.getCenterX();
+                double dy = a.getCenterY() - b.getCenterY();
+                double dist = Math.sqrt(dx * dx + dy * dy);
+                double minDist = (a.getWidth() + b.getWidth()) / 2.0;
+                if (dist < minDist && dist > 0) {
+                    double overlap = (minDist - dist) / 2.0;
+                    double nx = dx / dist;
+                    double ny = dy / dist;
+                    a.setX(a.getX() + nx * overlap);
+                    a.setY(a.getY() + ny * overlap);
+                    b.setX(b.getX() - nx * overlap);
+                    b.setY(b.getY() - ny * overlap);
+                }
+            }
+        }
     }
 
     private void updateBoss(long now) {
@@ -228,21 +269,31 @@ public class PlayController {
     }
 
     private void onBossDefeated() {
+        AudioManager.getInstance().stopBossMusic();
+        AudioManager.getInstance().playBossBiten();
+
+        ImageView explosionView = new ImageView(new Image(getClass().getResource("/enemies/boss/explosion.gif").toExternalForm()));
+        explosionView.setFitWidth(180);
+        explosionView.setFitHeight(180);
+        explosionView.setPreserveRatio(true);
+        explosionView.setLayoutX(currentBoss.getCenterX() - 90);
+        explosionView.setLayoutY(currentBoss.getCenterY() - 90);
+        view.root.getChildren().add(explosionView);
+        explosionView.toFront();
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(e -> view.root.getChildren().remove(explosionView));
+        pause.play();
+
         model.registerKill();
         model.addScore(1000);
         model.heal(100);
         enemyBullets.clear();
+        currentBoss = null;
 
         if (currentObjective != null) {
-            currentObjective.setActive(false);
+            currentObjective.unlock();
         }
-        String factText = currentObjective.getFactText();
-        int factNum = model.getCurrentWave() + 1;
-        model.collectFact();
-        model.completeWave();
-
-        gameLoop.stop();
-        view.showFactCard(factText, factNum);
     }
 
     private void updateEnemyBullets() {
@@ -270,6 +321,7 @@ public class PlayController {
                     e.takeDamage();
                     if (!e.isActive()) {
                         model.registerKill();
+                        AudioManager.getInstance().playEnemyDied();
                     }
                     break;
                 }
@@ -290,7 +342,35 @@ public class PlayController {
                     e.takeDamage();
                     if (!e.isActive()) {
                         model.registerKill();
+                        AudioManager.getInstance().playEnemyDied();
                     }
+                }
+            }
+        }
+
+        for (Enemy e : enemies) {
+            if (!e.isActive()) continue;
+            if (rectsOverlap(px, py, PLAYER_SIZE, PLAYER_SIZE,
+                    e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+                if (e.canContactDamage(now)) {
+                    if (model.takeDamage(e.getContactDamage(), now)) {
+                        AudioManager.getInstance().playDamageTaken();
+                    }
+                    e.markContactDamage(now);
+                }
+                double pcx = px + PLAYER_SIZE / 2;
+                double pcy = py + PLAYER_SIZE / 2;
+                double ecx = e.getCenterX();
+                double ecy = e.getCenterY();
+                double pushDx = pcx - ecx;
+                double pushDy = pcy - ecy;
+                double pushDist = Math.sqrt(pushDx * pushDx + pushDy * pushDy);
+                if (pushDist > 0) {
+                    double pushStrength = 6;
+                    player.setX(px + (pushDx / pushDist) * pushStrength);
+                    player.setY(py + (pushDy / pushDist) * pushStrength);
+                    px = player.getX();
+                    py = player.getY();
                 }
             }
         }
@@ -305,12 +385,13 @@ public class PlayController {
                     currentBoss.takeDamage();
                     if (!currentBoss.isActive()) {
                         onBossDefeated();
+                        break;
                     }
                 }
             }
             bullets.removeIf(b -> !b.isActive());
 
-            if (player.isMelee()) {
+            if (currentBoss != null && currentBoss.isActive() && player.isMelee()) {
                 double meleeX = px + PLAYER_SIZE;
                 double meleeY = py;
                 double meleeW = 40;
@@ -332,7 +413,9 @@ public class PlayController {
             if (circleIntersectsRect(eb.getX(), eb.getY(), eb.getRadius(),
                     px, py, PLAYER_SIZE, PLAYER_SIZE)) {
                 eb.setActive(false);
-                model.takeDamage(10, now);
+                if (model.takeDamage(10, now)) {
+                    AudioManager.getInstance().playDamageTaken();
+                }
             }
         }
         enemyBullets.removeIf(eb -> !eb.isActive());
@@ -361,13 +444,23 @@ public class PlayController {
     private void checkGameState() {
         if (model.isGameOver()) {
             gameLoop.stop();
+            AudioManager.getInstance().stop();
+            AudioManager.getInstance().playGameOver();
             ScoreManager.getInstance().saveScore(model.getScore());
             view.showGameOver(model.getScore(), ScoreManager.getInstance().getHighScore());
         }
     }
 
     private void restartGame() {
-        if (model.isLevelComplete()) {
+        if (model.isLevelComplete() && model.isLastLevel()) {
+            model.reset();
+            solarSystem.reset();
+            MainCharacterManager.getInstance().reset();
+            view.showIntroCard(
+                    "Level 1: " + model.getCurrentPlanetName(),
+                    model.getCurrentPlanetDescription()
+            );
+        } else if (model.isLevelComplete()) {
             solarSystem.nextPlanet();
             model.nextPlanet();
             model.resetForNextLevel();
@@ -377,7 +470,7 @@ public class PlayController {
                     model.getCurrentPlanetDescription()
             );
         } else {
-            model.resetForNextLevel();
+            model.resetForRetry();
             MainCharacterManager.getInstance().reset();
             startGame();
         }

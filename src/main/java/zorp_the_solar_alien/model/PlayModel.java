@@ -2,7 +2,7 @@ package zorp_the_solar_alien.model;
 
 public class PlayModel {
     private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
-            "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
+            "Jupiter", "Saturn", "Uranus", "Neptune"};
 
     private int currentPlanet = 0;
     private int factsCollected = 0;
@@ -18,7 +18,7 @@ public class PlayModel {
 
     private int currentWave = 0;
     private int waveEnemiesKilled = 0;
-    private static final int ENEMIES_PER_WAVE = 5;
+    private int currentWaveEnemyCount = 5;
     private static final int TOTAL_WAVES = 10;
     private boolean waveActive = false;
     private boolean objectiveUnlocked = false;
@@ -69,10 +69,6 @@ public class PlayModel {
 
             {
                     "Neptune"
-            },
-
-            {
-                    "Pluto"
             }
 
     };
@@ -86,8 +82,7 @@ public class PlayModel {
             "Whoa, Jupiter is HUGE! It's the biggest planet and has a giant swirly storm that's been spinning for hundreds of years!",
             "Ooh la la, Saturn has the prettiest rings! They're made of ice and rocks floating around like a sparkly hula hoop!",
             "Uranus is a silly planet that rolls around on its side! It's super cold and has a blueish-green colour. Brrr!",
-            "Neptune is the windiest planet ever! The winds blow so fast they could whoosh you away like a leaf in a tornado!",
-            "Say hi to Pluto, the tiny adventurer at the edge of our solar system! It may be small but it has a big heart shape on it!"
+            "Neptune is the windiest planet ever! The winds blow so fast they could whoosh you away like a leaf in a tornado!"
     };
 
     public String getCurrentPlanetDescription() {
@@ -108,6 +103,10 @@ public class PlayModel {
 
     public void setCurrentPlanet(int planet) {
         this.currentPlanet = Math.min(planet, planetNames.length - 1);
+    }
+
+    public boolean isLastLevel() {
+        return currentPlanet >= planetNames.length - 1;
     }
 
     public void nextPlanet() {
@@ -168,7 +167,7 @@ public class PlayModel {
     }
 
     public void checkWaveCleared() {
-        if (waveEnemiesKilled >= ENEMIES_PER_WAVE) {
+        if (waveEnemiesKilled >= currentWaveEnemyCount) {
             objectiveUnlocked = true;
         }
     }
@@ -181,6 +180,11 @@ public class PlayModel {
         waveActive = true;
         waveEnemiesKilled = 0;
         objectiveUnlocked = false;
+        if (!isBossWave()) {
+            currentWaveEnemyCount = 5 + (int) (Math.random() * 4);
+        } else {
+            currentWaveEnemyCount = 1;
+        }
     }
 
     public void completeWave() {
@@ -201,7 +205,7 @@ public class PlayModel {
     }
 
     public int getEnemiesPerWave() {
-        return isBossWave() ? 1 : ENEMIES_PER_WAVE;
+        return currentWaveEnemyCount;
     }
 
     public int getWaveEnemiesKilled() {
@@ -230,6 +234,7 @@ public class PlayModel {
         killCount = 0;
         currentWave = 0;
         waveEnemiesKilled = 0;
+        currentWaveEnemyCount = 5;
         waveActive = false;
         objectiveUnlocked = false;
         levelComplete = false;
@@ -243,6 +248,19 @@ public class PlayModel {
         killCount = 0;
         currentWave = 0;
         waveEnemiesKilled = 0;
+        currentWaveEnemyCount = 5;
+        waveActive = false;
+        objectiveUnlocked = false;
+        levelComplete = false;
+        gameOver = false;
+        lastDamageTime = 0;
+    }
+
+    public void resetForRetry() {
+        hp = maxHp;
+        killCount = 0;
+        waveEnemiesKilled = 0;
+        currentWaveEnemyCount = 5;
         waveActive = false;
         objectiveUnlocked = false;
         levelComplete = false;

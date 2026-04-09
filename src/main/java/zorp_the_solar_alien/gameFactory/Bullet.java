@@ -1,7 +1,7 @@
 package zorp_the_solar_alien.gameFactory;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import zorp_the_solar_alien.GameObject;
 
 public class Bullet extends GameObject {
@@ -9,11 +9,16 @@ public class Bullet extends GameObject {
     private double speed = 8;
     private boolean active = true;
     private static final double RADIUS = 6;
+    private static final double DRAW_SIZE = 20;
+    private static Image bulletImage = null;
 
     public Bullet(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
         vx = speed;
         vy = 0;
+        if (bulletImage == null) {
+            bulletImage = new Image(getClass().getResource("/enemies/zorp-bullet.png").toExternalForm());
+        }
     }
 
     public void setTarget(double targetX, double targetY) {
@@ -35,8 +40,7 @@ public class Bullet extends GameObject {
         if (x < -20 || x > w + 20 || y < -20 || y > h + 20) {
             active = false;
         }
-        gc.setFill(Color.ORANGE);
-        gc.fillOval(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2);
+        gc.drawImage(bulletImage, x - DRAW_SIZE / 2, y - DRAW_SIZE / 2, DRAW_SIZE, DRAW_SIZE);
     }
 
     public boolean isActive() {

@@ -26,6 +26,7 @@ public class HomeController {
 		this.howToPlayController = howToPlayController;
 
 		view.updateHomeView();
+		view.startAnimation();
 		updatePlayButtonText();
 		AudioManager.getInstance().playHomeMusic();
 
@@ -33,7 +34,7 @@ public class HomeController {
 			playView.hide();
 			howToPlayController.hide();
 			view.zorpImageView.setVisible(true);
-			view.updateHomeView();
+			view.startAnimation();
 			updatePlayButtonText();
 			syncMusicBtn();
 		});
@@ -50,7 +51,12 @@ public class HomeController {
 			syncMusicBtn();
 		});
 
+		view.skipBtn.setOnAction(e -> {
+			AudioManager.getInstance().skipTrack();
+		});
+
 		view.playBtn.setOnAction(e -> {
+			view.stopAnimation();
 			playController.stopGame();
 			playController.loadSavedGame(false);
 			playView.show();
@@ -87,6 +93,7 @@ public class HomeController {
 	}
 
 	private void startNewGame() {
+		view.stopAnimation();
 		ScoreManager.getInstance().resetProgress();
 		playController.stopGame();
 		playController.loadSavedGame(true);
@@ -115,6 +122,7 @@ public class HomeController {
 	
 
 	private void handleHowToPlay() {
+		view.stopAnimation();
 		playView.hide();
 		howToPlayController.show();
 		view.zorpImageView.setVisible(false);

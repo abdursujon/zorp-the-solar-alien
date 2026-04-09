@@ -248,4 +248,31 @@ public class PlayView {
         restartBtn.setVisible(true);
         restartBtn.toFront();
     }
+
+    public void showGameComplete(int score) {
+        double w = canvas.getWidth();
+        double h = canvas.getHeight();
+
+        gc.setFill(Color.rgb(0, 0, 0, 0.85));
+        gc.fillRect(0, 0, w, h);
+
+        gc.setFill(Color.GOLD);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 56));
+        gc.fillText("YOU BEAT THE GAME!", w / 2 - 280, h / 2 - 80);
+
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        gc.fillText("Congratulations, Zorp has explored", w / 2 - 230, h / 2 - 20);
+        gc.fillText("the entire Solar System!", w / 2 - 160, h / 2 + 20);
+
+        gc.setFill(Color.CYAN);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        gc.fillText("Final Score: " + score, w / 2 - 90, h / 2 + 70);
+
+        restartBtn.setText("PLAY AGAIN");
+        restartBtn.setLayoutX(w / 2 - 80);
+        restartBtn.setLayoutY(h / 2 + 100);
+        restartBtn.setVisible(true);
+        restartBtn.toFront();
+    }
 }

@@ -2,7 +2,7 @@
 
 A JavaFX game that teaches primary school kids about the solar system.
 
-Players control Zorp, an alien exploring the solar system. Each level covers a planet (plus the Sun and Pluto). Kill enemies, collect facts, and beat the boss to move on. 10 levels, 10 facts per level, 1 boss per level.
+Players control Zorp, an alien exploring the solar system. Each level covers a planet (plus the Sun). Kill enemies, collect facts, and beat the boss to move on. 9 levels, 10 facts per level, 1 boss per level.
 
 ## How to run
 
@@ -24,7 +24,7 @@ mvn clean javafx:run
 3. Kill 5 enemies per wave to unlock the fact objective
 4. Collect the objective and read the fact
 5. Wave 10 is a boss fight — beat the boss to complete the level
-6. 10 levels total: Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto
+6. 9 levels total: Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune
 
 ## Design patterns used
 
@@ -37,3 +37,16 @@ mvn clean javafx:run
 - Java
 - JavaFX
 - Maven
+
+
+To do
+1. Finish each level facts 
+2. Final review of each line of code twice and comment all method 
+3. Create UML and write report 
+4. Final review of everything in the project and delete all extra file 
+5. Build Jar 
+6. Build Zip 
+7. Record video
+8. Double check everything 
+8. Submit 
+

@@ -11,9 +11,17 @@ public class EnemyBullet extends GameObject {
     private boolean active = true;
     private static final double RADIUS = 5;
     private Image ammoImage = null;
+    private static Image[] enemyBulletImages = null;
 
     public EnemyBullet(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
+        if (enemyBulletImages == null) {
+            enemyBulletImages = new Image[] {
+                new Image(getClass().getResource("/enemies/bullet1.png").toExternalForm()),
+                new Image(getClass().getResource("/enemies/bullet2.png").toExternalForm())
+            };
+        }
+        ammoImage = enemyBulletImages[(int)(Math.random() * 2)];
     }
 
     public void setAmmoImage(Image image) {

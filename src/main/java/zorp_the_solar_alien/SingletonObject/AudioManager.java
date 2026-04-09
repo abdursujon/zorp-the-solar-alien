@@ -2,6 +2,8 @@ package zorp_the_solar_alien.SingletonObject;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AudioManager {
@@ -10,12 +12,32 @@ public class AudioManager {
     private MediaPlayer currentPlayer;
     private int currentIndex = 0;
 
+    private Media laserSound;
+    private Media enemyDiedSound;
+    private Media damageTakenSound;
+    private Media gameOverSound;
+    private Media bossBitenSound;
+    private Media[] bossFightMusic;
+
     private AudioManager(){
-        homeTracks = List.of(
-                new Media(getClass().getResource("/audio/dragon-studio-alien-song-323613.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/alien_i_trust-hypnotic-rominimal-line-by-alien-i-trust-125_bpm-275023.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/fnx_sound-alien-underworld-sound-287342.mp3").toExternalForm())
-        );
+        homeTracks = new ArrayList<>(List.of(
+                new Media(getClass().getResource("/audio/song1.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/song2.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/song3.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/song4.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/song5.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/song6.mp3").toExternalForm())
+        ));
+
+        laserSound = new Media(getClass().getResource("/audio/cartoon-laser.mp3").toExternalForm());
+        enemyDiedSound = new Media(getClass().getResource("/audio/enemy-died.mp3").toExternalForm());
+        damageTakenSound = new Media(getClass().getResource("/audio/damage-taken.mp3").toExternalForm());
+        gameOverSound = new Media(getClass().getResource("/audio/gameover.mp3").toExternalForm());
+        bossBitenSound = new Media(getClass().getResource("/audio/boss-biten.mp3").toExternalForm());
+        bossFightMusic = new Media[] {
+                new Media(getClass().getResource("/audio/boss-fight1.mp3").toExternalForm()),
+                new Media(getClass().getResource("/audio/boss-fight2.mp3").toExternalForm())
+        };
     }
 
     public static AudioManager getInstance() {
@@ -26,6 +48,7 @@ public class AudioManager {
     }
 
     public void playHomeMusic() {
+        Collections.shuffle(homeTracks);
         currentIndex = 0;
         playTrack();
     }
@@ -43,6 +66,13 @@ public class AudioManager {
         playing = true;
     }
 
+    public void skipTrack() {
+        if (playing) {
+            currentIndex = (currentIndex + 1) % homeTracks.size();
+            playTrack();
+        }
+    }
+
     public void stop() {
         if (currentPlayer != null) {
             currentPlayer.stop();
@@ -54,5 +84,52 @@ public class AudioManager {
 
     public boolean isPlaying(){
         return playing;
+    }
+
+    private void playSfx(Media sound) {
+        MediaPlayer sfx = new MediaPlayer(sound);
+        sfx.setOnEndOfMedia(sfx::dispose);
+        sfx.play();
+    }
+
+    public void playLaser() {
+        playSfx(laserSound);
+    }
+
+    public void playEnemyDied() {
+        playSfx(enemyDiedSound);
+    }
+
+    public void playDamageTaken() {
+        playSfx(damageTakenSound);
+    }
+
+    public void playGameOver() {
+        playSfx(gameOverSound);
+    }
+
+    public void playBossBiten() {
+        playSfx(bossBitenSound);
+    }
+
+    public void playBossMusic() {
+        if (currentPlayer != null) {
+            currentPlayer.stop();
+            currentPlayer.dispose();
+        }
+        Media chosen = bossFightMusic[(int)(Math.random() * 2)];
+        currentPlayer = new MediaPlayer(chosen);
+        currentPlayer.setVolume(1.0);
+        currentPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        currentPlayer.play();
+        playing = true;
+    }
+
+    public void stopBossMusic() {
+        if (currentPlayer != null) {
+            currentPlayer.stop();
+            currentPlayer.dispose();
+            currentPlayer = null;
+        }
     }
 }

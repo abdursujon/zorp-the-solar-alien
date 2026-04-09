@@ -26,13 +26,12 @@ public class Boss extends GameObject {
     private static final String[] BOSS_SPRITES = {
             "/enemies/boss/boss1.png",
             "/enemies/boss/boss2.png",
-            "/enemies/boss/boss3.png",
             "/enemies/boss/boss4.png",
+            "/enemies/boss/boss3.png",
             "/enemies/boss/boss5.png",
             "/enemies/boss/boss6.png",
             "/enemies/boss/boss8.png",
             "/enemies/boss/boss9.png",
-            "/enemies/boss/boss10.png",
             "/enemies/boss/boss10.png"
     };
 
