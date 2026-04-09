@@ -6,11 +6,9 @@ import javafx.scene.control.ButtonType;
 import zorp_the_solar_alien.SingletonObject.AudioManager;
 import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
 import zorp_the_solar_alien.SingletonObject.ScoreManager;
-import zorp_the_solar_alien.controller.PlayController;
 import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.view.PlayView;
-import zorp_the_solar_alien.controller.HowToPlayController;
 
 public class HomeController {
 	private HomeModel model;
@@ -89,11 +87,6 @@ public class HomeController {
 
 		view.quitBtn.setOnAction(e -> handleQuit());
 	}
-	
-
-	private void handleHome() {
-		
-	}
 
 	private void startNewGame() {
 		view.stopAnimation();
@@ -122,19 +115,12 @@ public class HomeController {
 	private void syncMusicBtn() {
 		view.musicBtn.setText(AudioManager.getInstance().isPlaying() ? "🔊" : "🔇");
 	}
-	
-	
 
 	private void handleHowToPlay() {
 		view.stopAnimation();
 		playView.hide();
 		howToPlayController.show();
 		view.zorpImageView.setVisible(false);
-	}
-	
-
-	private void handlePlay() {
-
 	}
 
 	private void handleQuit() {

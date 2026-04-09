@@ -19,20 +19,21 @@ import zorp_the_solar_alien.view.PlayView;
 public class PlayController {
     private PlayModel model;
     private PlayView view;
+
     private SolarSystem solarSystem;
-    private AnimationTimer gameLoop;
     private ZorpTheSolarAlienFactory factory;
     private GameInfoBar gameInfoBar;
+    private FactPoint currentObjective = null;
+    private Boss currentBoss = null;
+
+    private AnimationTimer gameLoop;
 
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
     private List<EnemyBullet> enemyBullets = new ArrayList<>();
-    private FactPoint currentObjective = null;
-    private Boss currentBoss = null;
 
     private long lastBulletTime = 0;
     private static final long BULLET_COOLDOWN = 200_000_000L;
-
     private static final double PLAYER_SIZE = 80;
 
     private Image explosionImage;
@@ -233,6 +234,10 @@ public class PlayController {
             }
         }
 
+        resolveEnemySeparation();
+    }
+
+    private void resolveEnemySeparation() {
         for (int i = 0; i < enemies.size(); i++) {
             for (int j = i + 1; j < enemies.size(); j++) {
                 Enemy a = enemies.get(i);
@@ -317,6 +322,16 @@ public class PlayController {
         double px = player.getX();
         double py = player.getY();
 
+        checkBulletEnemyCollisions();
+        checkMeleeEnemyCollisions(player, px, py);
+        checkEnemyContactCollisions(player, px, py, now);
+        checkBulletBossCollisions();
+        checkMeleeBossCollisions(player, px, py);
+        checkEnemyBulletPlayerCollisions(px, py, now);
+        checkObjectiveCollision(px, py);
+    }
+
+    private void checkBulletEnemyCollisions() {
         Iterator<Bullet> bit = bullets.iterator();
         while (bit.hasNext()) {
             Bullet b = bit.next();
@@ -335,25 +350,28 @@ public class PlayController {
             }
         }
         bullets.removeIf(b -> !b.isActive());
+    }
 
-        if (player.isMelee()) {
-            double meleeX = px + PLAYER_SIZE;
-            double meleeY = py;
-            double meleeW = 40;
-            double meleeH = PLAYER_SIZE;
-            for (Enemy e : enemies) {
-                if (!e.isActive()) continue;
-                if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
-                        e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
-                    e.takeDamage(15);
-                    if (!e.isActive()) {
-                        model.registerKill();
-                        AudioManager.getInstance().playEnemyDied();
-                    }
+    private void checkMeleeEnemyCollisions(MainCharacterManager player, double px, double py) {
+        if (!player.isMelee()) return;
+        double meleeX = px + PLAYER_SIZE;
+        double meleeY = py;
+        double meleeW = 40;
+        double meleeH = PLAYER_SIZE;
+        for (Enemy e : enemies) {
+            if (!e.isActive()) continue;
+            if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
+                    e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
+                e.takeDamage(15);
+                if (!e.isActive()) {
+                    model.registerKill();
+                    AudioManager.getInstance().playEnemyDied();
                 }
             }
         }
+    }
 
+    private void checkEnemyContactCollisions(MainCharacterManager player, double px, double py, long now) {
         for (Enemy e : enemies) {
             if (!e.isActive()) continue;
             if (rectsOverlap(px, py, PLAYER_SIZE, PLAYER_SIZE,
@@ -380,38 +398,42 @@ public class PlayController {
                 }
             }
         }
+    }
 
-        if (currentBoss != null && currentBoss.isActive()) {
-            Iterator<Bullet> bbit = bullets.iterator();
-            while (bbit.hasNext()) {
-                Bullet b = bbit.next();
-                if (circleIntersectsRect(b.getX(), b.getY(), b.getRadius(),
-                        currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
-                    b.setActive(false);
-                    currentBoss.takeDamage(10);
-                    if (!currentBoss.isActive()) {
-                        onBossDefeated();
-                        break;
-                    }
-                }
-            }
-            bullets.removeIf(b -> !b.isActive());
-
-            if (currentBoss != null && currentBoss.isActive() && player.isMelee()) {
-                double meleeX = px + PLAYER_SIZE;
-                double meleeY = py;
-                double meleeW = 40;
-                double meleeH = PLAYER_SIZE;
-                if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
-                        currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
-                    currentBoss.takeDamage(15);
-                    if (!currentBoss.isActive()) {
-                        onBossDefeated();
-                    }
+    private void checkBulletBossCollisions() {
+        if (currentBoss == null || !currentBoss.isActive()) return;
+        Iterator<Bullet> bbit = bullets.iterator();
+        while (bbit.hasNext()) {
+            Bullet b = bbit.next();
+            if (circleIntersectsRect(b.getX(), b.getY(), b.getRadius(),
+                    currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
+                b.setActive(false);
+                currentBoss.takeDamage(10);
+                if (!currentBoss.isActive()) {
+                    onBossDefeated();
+                    break;
                 }
             }
         }
+        bullets.removeIf(b -> !b.isActive());
+    }
 
+    private void checkMeleeBossCollisions(MainCharacterManager player, double px, double py) {
+        if (currentBoss == null || !currentBoss.isActive() || !player.isMelee()) return;
+        double meleeX = px + PLAYER_SIZE;
+        double meleeY = py;
+        double meleeW = 40;
+        double meleeH = PLAYER_SIZE;
+        if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
+                currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
+            currentBoss.takeDamage(15);
+            if (!currentBoss.isActive()) {
+                onBossDefeated();
+            }
+        }
+    }
+
+    private void checkEnemyBulletPlayerCollisions(double px, double py, long now) {
         Iterator<EnemyBullet> ebit = enemyBullets.iterator();
         while (ebit.hasNext()) {
             EnemyBullet eb = ebit.next();
@@ -424,26 +446,27 @@ public class PlayController {
             }
         }
         enemyBullets.removeIf(eb -> !eb.isActive());
+    }
 
-        if (currentObjective != null && currentObjective.isActive() && !currentObjective.isLocked()) {
-            if (circleIntersectsRect(currentObjective.getX(), currentObjective.getY(), currentObjective.getRadius(),
-                    px, py, PLAYER_SIZE, PLAYER_SIZE)) {
-                currentObjective.setActive(false);
-                model.collectFact();
-                model.addScore(500);
-                model.heal(30);
-                int factNum = model.getCurrentWave() + 1;
-                String factText = currentObjective.getFactText();
-                model.completeWave();
-                ScoreManager.getInstance().saveWaveProgress(model.getCurrentWave(), model.getScore());
+    private void checkObjectiveCollision(double px, double py) {
+        if (currentObjective == null || !currentObjective.isActive() || currentObjective.isLocked()) return;
+        if (circleIntersectsRect(currentObjective.getX(), currentObjective.getY(), currentObjective.getRadius(),
+                px, py, PLAYER_SIZE, PLAYER_SIZE)) {
+            currentObjective.setActive(false);
+            model.collectFact();
+            model.addScore(500);
+            model.heal(30);
+            int factNum = model.getCurrentWave() + 1;
+            String factText = currentObjective.getFactText();
+            model.completeWave();
+            ScoreManager.getInstance().saveWaveProgress(model.getCurrentWave(), model.getScore());
 
-                if (!model.isLevelComplete()) {
-                    spawnWave();
-                }
-
-                gameLoop.stop();
-                view.showFactCard(factText, factNum);
+            if (!model.isLevelComplete()) {
+                spawnWave();
             }
+
+            gameLoop.stop();
+            view.showFactCard(factText, factNum);
         }
     }
 
