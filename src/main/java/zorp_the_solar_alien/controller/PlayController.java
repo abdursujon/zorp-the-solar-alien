@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -26,7 +28,7 @@ public class PlayController {
     private FactPoint currentObjective = null;
     private Boss currentBoss = null;
 
-    private AnimationTimer gameLoop;
+    private Timeline gameLoop;
 
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
@@ -34,6 +36,8 @@ public class PlayController {
 
     private long lastBulletTime = 0;
     private static final long BULLET_COOLDOWN = 200_000_000L;
+    private long lastMeleeTime = 0;
+    private static final long MELEE_COOLDOWN = 400_000_000L;
     private static final double PLAYER_SIZE = 80;
 
     private Image explosionImage;
@@ -90,34 +94,33 @@ public class PlayController {
 
         spawnWave();
 
-        gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                double w = view.canvas.getWidth();
-                double h = view.canvas.getHeight();
-                view.gc.clearRect(0, 0, w, h);
+        gameLoop = new Timeline(new KeyFrame(Duration.millis(16.67), e -> {
+            long now = System.nanoTime();
+            double w = view.canvas.getWidth();
+            double h = view.canvas.getHeight();
+            view.gc.clearRect(0, 0, w, h);
 
-                solarSystem.setFactsCollected(model.getFactsCollected());
-                solarSystem.update();
-                updateObjective();
-                handlePlayerShooting(now);
-                updateBullets();
-                updateEnemies(now);
-                updateBoss(now);
-                updateEnemyBullets();
-                MainCharacterManager.getInstance().update();
-                checkCollisions(now);
-                gameInfoBar.setData(
-                        model.getHp(), model.getMaxHp(), model.getScore(),
-                        model.getCurrentPlanetName(), model.getCurrentWave(),
-                        model.getTotalWaves(), model.getWaveEnemiesKilled(),
-                        model.getEnemiesPerWave()
-                );
-                gameInfoBar.update();
-                checkGameState();
-            }
-        };
-        gameLoop.start();
+            solarSystem.setFactsCollected(model.getFactsCollected());
+            solarSystem.update();
+            updateObjective();
+            handlePlayerShooting(now);
+            updateBullets();
+            updateEnemies(now);
+            updateBoss(now);
+            updateEnemyBullets();
+            MainCharacterManager.getInstance().update();
+            checkCollisions(now);
+            gameInfoBar.setData(
+                    model.getHp(), model.getMaxHp(), model.getScore(),
+                    model.getCurrentPlanetName(), model.getCurrentWave(),
+                    model.getTotalWaves(), model.getWaveEnemiesKilled(),
+                    model.getEnemiesPerWave()
+            );
+            gameInfoBar.update();
+            checkGameState();
+        }));
+        gameLoop.setCycleCount(Animation.INDEFINITE);
+        gameLoop.play();
     }
 
     private void spawnWave() {
@@ -158,7 +161,7 @@ public class PlayController {
 
     public void stopGame() {
         if (gameLoop != null) {
-            gameLoop.stop();
+            gameLoop.pause();
         }
     }
 
@@ -173,7 +176,7 @@ public class PlayController {
                 view.showLevelComplete(model.getCurrentPlanetName(), model.getScore());
             }
         } else {
-            gameLoop.start();
+            gameLoop.play();
         }
     }
 
@@ -190,8 +193,8 @@ public class PlayController {
     private void handlePlayerShooting(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
         if (player.isShooting() && now - lastBulletTime > BULLET_COOLDOWN) {
-            double cx = player.getX() + PLAYER_SIZE / 2;
-            double cy = player.getY() + PLAYER_SIZE / 2;
+            double cx = player.isFacingRight() ? player.getX() + PLAYER_SIZE - 5 : player.getX() + 5;
+            double cy = player.getY() + PLAYER_SIZE * 0.35;
             Bullet b = (Bullet) factory.createProduct("bullet", cx, cy);
 
             double dx = player.isFacingRight() ? 1 : -1;
@@ -323,10 +326,10 @@ public class PlayController {
         double py = player.getY();
 
         checkBulletEnemyCollisions();
-        checkMeleeEnemyCollisions(player, px, py);
+        checkMeleeEnemyCollisions(player, px, py, now);
         checkEnemyContactCollisions(player, px, py, now);
         checkBulletBossCollisions();
-        checkMeleeBossCollisions(player, px, py);
+        checkMeleeBossCollisions(player, px, py, now);
         checkEnemyBulletPlayerCollisions(px, py, now);
         checkObjectiveCollision(px, py);
     }
@@ -352,23 +355,26 @@ public class PlayController {
         bullets.removeIf(b -> !b.isActive());
     }
 
-    private void checkMeleeEnemyCollisions(MainCharacterManager player, double px, double py) {
-        if (!player.isMelee()) return;
+    private void checkMeleeEnemyCollisions(MainCharacterManager player, double px, double py, long now) {
+        if (!player.isMelee() || now - lastMeleeTime < MELEE_COOLDOWN) return;
         double meleeX = px + PLAYER_SIZE;
         double meleeY = py;
         double meleeW = 40;
         double meleeH = PLAYER_SIZE;
+        boolean hit = false;
         for (Enemy e : enemies) {
             if (!e.isActive()) continue;
             if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
                     e.getX(), e.getY(), e.getWidth(), e.getHeight())) {
                 e.takeDamage(15);
+                hit = true;
                 if (!e.isActive()) {
                     model.registerKill();
                     AudioManager.getInstance().playEnemyDied();
                 }
             }
         }
+        if (hit) lastMeleeTime = now;
     }
 
     private void checkEnemyContactCollisions(MainCharacterManager player, double px, double py, long now) {
@@ -418,8 +424,9 @@ public class PlayController {
         bullets.removeIf(b -> !b.isActive());
     }
 
-    private void checkMeleeBossCollisions(MainCharacterManager player, double px, double py) {
+    private void checkMeleeBossCollisions(MainCharacterManager player, double px, double py, long now) {
         if (currentBoss == null || !currentBoss.isActive() || !player.isMelee()) return;
+        if (now - lastMeleeTime < MELEE_COOLDOWN) return;
         double meleeX = px + PLAYER_SIZE;
         double meleeY = py;
         double meleeW = 40;
@@ -427,6 +434,7 @@ public class PlayController {
         if (rectsOverlap(meleeX, meleeY, meleeW, meleeH,
                 currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
             currentBoss.takeDamage(15);
+            lastMeleeTime = now;
             if (!currentBoss.isActive()) {
                 onBossDefeated();
             }
@@ -465,14 +473,14 @@ public class PlayController {
                 spawnWave();
             }
 
-            gameLoop.stop();
+            gameLoop.pause();
             view.showFactCard(factText, factNum);
         }
     }
 
     private void checkGameState() {
         if (model.isGameOver()) {
-            gameLoop.stop();
+            gameLoop.pause();
             AudioManager.getInstance().stop();
             AudioManager.getInstance().playGameOver();
             ScoreManager.getInstance().saveScore(model.getScore());
@@ -481,6 +489,7 @@ public class PlayController {
     }
 
     private void restartGame() {
+        AudioManager.getInstance().playHomeMusic();
         if (model.isLevelComplete() && model.isLastLevel()) {
             model.reset();
             solarSystem.reset();

@@ -38,7 +38,7 @@ public class MainCharacterManager extends GameObject {
         super(gc, 200, 400);
         this.root = root;
         idleImage = new Image(getClass().getResource("/zorp/shoot.png").toExternalForm());
-        shootImage = new Image(getClass().getResource("/zorp/shoot.png").toExternalForm());
+        shootImage = idleImage;
 
         meleeFrames = new Image[] {
                 new Image(getClass().getResource("/zorp/img.png").toExternalForm()),

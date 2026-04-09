@@ -36,8 +36,6 @@ public class HomeView {
     private double bgScrollX = 0;
     private double zorpFloat = 0;
     private double titleGlow = 0;
-    private static final int STAR_COUNT = 100;
-    private double[] starX, starY, starSize, starPhase, starSpeed, starBrightness;
 
     public HomeView(Pane root, HomeModel model) {
         this.root = root;
@@ -101,21 +99,6 @@ public class HomeView {
         zorpImageView.setPreserveRatio(true);
         zorpImageView.setSmooth(true);
 
-        starX = new double[STAR_COUNT];
-        starY = new double[STAR_COUNT];
-        starSize = new double[STAR_COUNT];
-        starPhase = new double[STAR_COUNT];
-        starSpeed = new double[STAR_COUNT];
-        starBrightness = new double[STAR_COUNT];
-        for (int i = 0; i < STAR_COUNT; i++) {
-            starX[i] = Math.random();
-            starY[i] = Math.random();
-            starSize[i] = 1 + Math.random() * 3;
-            starPhase[i] = Math.random() * Math.PI * 2;
-            starSpeed[i] = 0.02 + Math.random() * 0.06;
-            starBrightness[i] = 0.5 + Math.random() * 0.5;
-        }
-
         root.getChildren().addAll(canvas, zorpImageView);
 
         homeLoop = new AnimationTimer() {
@@ -142,13 +125,6 @@ public class HomeView {
         gc.setFill(Color.rgb(5, 5, 20));
         gc.fillRect(0, 0, w, h);
 
-        for (int i = 0; i < STAR_COUNT; i++) {
-            starPhase[i] += starSpeed[i];
-            double twinkle = starBrightness[i] * (0.5 + 0.5 * Math.sin(starPhase[i]));
-            gc.setFill(Color.color(1, 1, 1, twinkle));
-            gc.fillOval(starX[i] * w, starY[i] * h, starSize[i], starSize[i]);
-        }
-
         bgScrollX += 0.15;
         double imgW = backgroundView.getWidth();
         double imgH = backgroundView.getHeight();
@@ -165,7 +141,7 @@ public class HomeView {
 
         titleGlow += 0.03;
         double glow = 0.6 + 0.4 * Math.sin(titleGlow);
-        double titleY = h * 0.82;
+        double titleY = h * 0.82 - 200;
 
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 52));
         gc.setGlobalAlpha(glow * 0.4);
