@@ -1,5 +1,7 @@
 package zorp_the_solar_alien.view;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -21,10 +23,12 @@ public class PlayView {
     private VBox introCard;
     private VBox factCard;
     private Button restartBtn;
+    public Button pauseBtn;
 
     private Runnable onStartGame;
     private Runnable onDoneReading;
     private Runnable onRestart;
+    private Runnable onPause;
 
     public PlayView(Pane root) {
         this.root = root;
@@ -39,6 +43,7 @@ public class PlayView {
         buildIntroCard();
         buildFactCard();
         buildRestartBtn();
+        buildPauseBtn();
     }
 
     public void setOnStartGame(Runnable callback) {
@@ -53,12 +58,19 @@ public class PlayView {
         this.onRestart = callback;
     }
 
+    public void setOnPause(Runnable callback) {
+        this.onPause = callback;
+    }
+
     public void show() {
         canvas.setVisible(true);
+        pauseBtn.setVisible(true);
+        pauseBtn.toFront();
     }
 
     public void hide() {
         canvas.setVisible(false);
+        pauseBtn.setVisible(false);
     }
 
     private void buildIntroCard() {
@@ -155,13 +167,14 @@ public class PlayView {
 
         Button doneBtn = new Button("Done Reading");
         doneBtn.setStyle(
-                "-fx-background-color: #DC2626;" +
+                "-fx-background-color: #888888;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
                 "-fx-padding: 10 30;" +
-                "-fx-cursor: hand;" +
                 "-fx-background-radius: 8;");
+        doneBtn.setDisable(true);
+        doneBtn.setOpacity(0.3);
         doneBtn.setOnAction(e -> {
             factCard.setVisible(false);
             if (onDoneReading != null) onDoneReading.run();
@@ -178,6 +191,33 @@ public class PlayView {
         factTitle.setText("Fact " + factNumber);
         factContent.setText(factText);
 
+        Button doneBtn = (Button) factCard.getChildren().get(3);
+        doneBtn.setDisable(true);
+        doneBtn.setOpacity(1.0);
+
+        String baseStyle =
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 18px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-padding: 10 30;" +
+                "-fx-background-radius: 8;";
+        doneBtn.setStyle("-fx-background-color: #888888;" + baseStyle);
+
+        int totalFrames = 300;
+        Timeline fillTimer = new Timeline();
+        for (int i = 0; i <= totalFrames; i++) {
+            int pct = (int) ((i / (double) totalFrames) * 100);
+            KeyFrame kf = new KeyFrame(javafx.util.Duration.millis(i * (5000.0 / totalFrames)), e -> {
+                doneBtn.setStyle("-fx-background-color: linear-gradient(to right, #34A853 " + pct + "%, #888888 " + pct + "%);" + baseStyle);
+            });
+            fillTimer.getKeyFrames().add(kf);
+        }
+        fillTimer.setOnFinished(e -> {
+            doneBtn.setDisable(false);
+            doneBtn.setStyle("-fx-background-color: #34A853;" + baseStyle + "-fx-cursor: hand;");
+        });
+        fillTimer.play();
+
         factCard.setVisible(true);
         factCard.toFront();
         javafx.application.Platform.runLater(() -> {
@@ -186,6 +226,27 @@ public class PlayView {
             factCard.setLayoutX((w - factCard.getBoundsInLocal().getWidth()) / 2);
             factCard.setLayoutY((h - factCard.getBoundsInLocal().getHeight()) / 2);
         });
+    }
+
+    private void buildPauseBtn() {
+        pauseBtn = new Button("PAUSE");
+        pauseBtn.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e);" +
+                "-fx-text-fill: black;" +
+                "-fx-font-size: 30px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-padding: 10;" +
+                "-fx-cursor: hand;" +
+                "-fx-shape: 'M 10,0 L 90,5 Q 100,2 100,10 L 95,90 Q 98,100 90,100 L 8,95 Q 0,98 0,90 L 5,10 Q 2,0 10,0 Z';" +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);");
+        pauseBtn.setVisible(false);
+        pauseBtn.setOnAction(e -> {
+            if (onPause != null) onPause.run();
+        });
+    }
+
+    public void setPauseText(boolean paused) {
+        pauseBtn.setText(paused ? "UNPAUSE" : "PAUSE");
     }
 
     private void buildRestartBtn() {

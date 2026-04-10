@@ -10,6 +10,9 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import zorp_the_solar_alien.SingletonObject.AudioManager;
 import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
@@ -29,6 +32,7 @@ public class PlayController {
     private Boss currentBoss = null;
 
     private Timeline gameLoop;
+    private boolean paused = false;
 
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
@@ -53,6 +57,7 @@ public class PlayController {
         view.setOnStartGame(() -> startGame());
         view.setOnDoneReading(() -> onDoneReading());
         view.setOnRestart(() -> restartGame());
+        view.setOnPause(() -> togglePause());
 
         view.canvas.visibleProperty().addListener((obs, wasVisible, isVisible) -> {
             if (!isVisible) {
@@ -163,6 +168,25 @@ public class PlayController {
         if (gameLoop != null) {
             gameLoop.pause();
         }
+        paused = false;
+    }
+
+    public void togglePause() {
+        if (paused) {
+            gameLoop.play();
+            paused = false;
+        } else {
+            gameLoop.pause();
+            double w = view.canvas.getWidth();
+            double h = view.canvas.getHeight();
+            view.gc.setFill(Color.rgb(0, 0, 0, 0.5));
+            view.gc.fillRect(0, 0, w, h);
+            view.gc.setFont(Font.font("Arial", FontWeight.BOLD, 56));
+            view.gc.setFill(Color.WHITE);
+            view.gc.fillText("PAUSED", w / 2 - 130, h / 2);
+            paused = true;
+        }
+        view.setPauseText(paused);
     }
 
     private void onDoneReading() {

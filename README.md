@@ -42,6 +42,31 @@ mvn clean javafx:run
 To do
 1. Finish each level facts x
 2. Final review of each line of code twice and comment all method 
+File to comment: 
+1. ZorpTheSolarAlienApp - Main x
+2. GameObject - Abstract x
+3. HomeModel - MVC (Model) 
+4. PlayModel - MVC (Model)
+5. HowToPlayModel - MVC (Model)
+6. HomeView - MVC (View)
+7. PlayView - MVC (View)
+8. HowToPlayView - MVC (View)
+9. HomeController - MVC (Controller)
+10. PlayController - MVC (Controller)
+11. HowToPlayController - MVC (Controller)
+12. MainCharacterManager - Singleton
+13. AudioManager - Singleton
+14. ScoreManager - Singleton
+15. SolarSystem - Singleton
+16. Enemy - Factory Product
+17. Boss - Factory Product
+18. Bullet - Factory Product
+19. EnemyBullet - Factory Product
+20. FactPoint - Factory Product
+21. GameInfoBar - Factory Product
+22. ZorpTheSolarAlienFactory - Factory
+23. ZorpTheSolarAlienInterface - Factory Interface
+
 3. Create UML and write report 
 4. Final review of everything in the project and delete all extra file 
 5. Build Jar 

@@ -13,6 +13,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.model.HomeModel;
 
+/**
+ * This view class is designed to support the MVC pattern.
+ * The task of this class is to create different UI component of the home screen,
+ * which then can be used by homeController to create the home screen of the game.
+ */
 public class HomeView {
     Pane root;
     HomeModel model;
@@ -92,7 +97,7 @@ public class HomeView {
         quitBtn.layoutXProperty().bind(root.widthProperty().subtract(quitBtn.widthProperty()).subtract(10));
         quitBtn.setLayoutY(10);
 
-        backgroundView = new Image(getClass().getResource("/home/home.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
 
         zorpAnimation = new Image(getClass().getResource("/home/zorp-sequence.gif").toExternalForm());
         zorpImageView = new ImageView(zorpAnimation);
@@ -148,16 +153,16 @@ public class HomeView {
         gc.setFill(Color.web("#FF6B00"));
         for (int i = -3; i <= 3; i++) {
             for (int j = -3; j <= 3; j++) {
-                gc.fillText("ZORP THE SOLAR ALIEN", w / 2 - 310 + i, titleY + j);
+                gc.fillText(model.getGameTitle(), w / 2 - 310 + i, titleY + j);
             }
         }
         gc.setGlobalAlpha(1.0);
         gc.setFill(Color.WHITE);
-        gc.fillText("ZORP THE SOLAR ALIEN", w / 2 - 310, titleY);
+        gc.fillText(model.getGameTitle(), w / 2 - 310, titleY);
 
         gc.setFont(Font.font("Arial", FontWeight.NORMAL, 18));
         gc.setFill(Color.color(1, 1, 1, 0.5 + 0.3 * Math.sin(titleGlow * 2)));
-        gc.fillText("Explore the Solar System!", w / 2 - 100, titleY + 35);
+        gc.fillText(model.getGameSubtitle(), w / 2 - 100, titleY + 35);
 
         zorpFloat += 0.04;
         double floatOffset = Math.sin(zorpFloat) * 10;
