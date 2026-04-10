@@ -22,6 +22,20 @@ public class Boss extends GameObject {
 
     private double targetX, targetY;
 
+    private String bossName;
+
+    private static final String[] BOSS_NAMES = {
+            "Solaris the Scorcher",
+            "Mercurio the Swift",
+            "Venoma the Toxic",
+            "Captain Carrot",
+            "Rusty the Red",
+            "Big Jupe",
+            "Ringo the Ringed",
+            "Frostbite",
+            "Stormy the Wind King"
+    };
+
     private static final String[] BOSS_SPRITES = {
             "/enemies/boss/boss1.png",
             "/enemies/boss/boss2.png",
@@ -40,6 +54,7 @@ public class Boss extends GameObject {
     public Boss(GraphicsContext gc, double x, double y, int planetIndex) {
         super(gc, x, y);
         planetIndex = Math.min(planetIndex, BOSS_SPRITES.length - 1);
+        bossName = BOSS_NAMES[planetIndex];
         sprite = new Image(getClass().getResource(BOSS_SPRITES[planetIndex]).toExternalForm());
         if (ammoImages == null) {
             ammoImages = new Image[TOTAL_AMMO];
@@ -89,7 +104,8 @@ public class Boss extends GameObject {
 
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         gc.setFill(Color.RED);
-        gc.fillText("BOSS", x + DRAW_SIZE / 2.0 - 20, barY - 4);
+        double textWidth = bossName.length() * 7.5;
+        gc.fillText(bossName, x + DRAW_SIZE / 2.0 - textWidth / 2, barY - 4);
     }
 
     public boolean canShoot(long now) {

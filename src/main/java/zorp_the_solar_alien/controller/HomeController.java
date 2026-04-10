@@ -10,6 +10,13 @@ import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.view.PlayView;
 
+/**
+ * This controller class is designed to support MVC pattern.
+ * This is a controller for the home scree, it handles navigation between different
+ * screen such as how to play, play and home.
+ * It also manages some actions such as starting the game, starting a new game, continue from saved game
+ * and quiting the game by clicking on the quit button.
+ */
 public class HomeController {
 	private HomeModel model;
 	private HomeView view;
@@ -17,6 +24,12 @@ public class HomeController {
 	private PlayController playController;
 	private HowToPlayController howToPlayController;
 
+	/**
+	 * Through using different classes from the project, this constructor handle button set up.
+	 * It also initialises the home screen with text animation and music.
+	 * When player already in a play through but wants to start a fresh game, this controller creates an alert to ask for
+	 * if user is sure about their decision.
+	 */
 	public HomeController(HomeModel model, HomeView view, PlayView playView, PlayController playController, HowToPlayController howToPlayController) {
 		this.model = model;
 		this.view = view;
@@ -90,6 +103,9 @@ public class HomeController {
 		view.quitBtn.setOnAction(e -> handleQuit());
 	}
 
+	/**
+	 * Reset all progress and start the game from level 1.
+	 */
 	private void startNewGame() {
 		view.stopAnimation();
 		view.canvas.setVisible(false);
@@ -103,8 +119,15 @@ public class HomeController {
 		syncMusicBtn();
 	}
 
+	/**
+	 * This method help us update play button.
+	 * If the user already started a game, we show continue button
+	 * which user can click to continue where they left of.
+	 */
 	private void updatePlayButtonText() {
-		boolean hasSave = ScoreManager.getInstance().getHighestLevelUnlocked() > 0;
+		boolean hasSave = ScoreManager.getInstance().getHighestLevelUnlocked() > 0
+				|| ScoreManager.getInstance().getSavedWave() > 0
+				|| ScoreManager.getInstance().getSavedScore() > 0;
 		if (hasSave) {
 			view.playBtn.setText("CONTINUE");
 			view.playBtn.setVisible(true);
@@ -115,10 +138,17 @@ public class HomeController {
 		}
 	}
 
+	/**
+	 * This helps us to change icon for the music on and off button.
+	 */
 	private void syncMusicBtn() {
 		view.musicBtn.setText(AudioManager.getInstance().isPlaying() ? "🔊" : "🔇");
 	}
 
+	/**
+	 * When user is on home, or play screen, if they click on how to play button, this method
+	 * switches to how to play view by calling how to play controller and hide other screens.
+	 */
 	private void handleHowToPlay() {
 		view.stopAnimation();
 		playView.hide();
@@ -126,6 +156,9 @@ public class HomeController {
 		view.zorpImageView.setVisible(false);
 	}
 
+	/**
+	 * This method help us exit the application.
+	 */
 	private void handleQuit() {
 		System.exit(0);
 	}

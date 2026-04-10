@@ -21,6 +21,12 @@ import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 import zorp_the_solar_alien.view.PlayView;
 
+/**
+ * This controller handles gameplay, manages the game loop, enemy spawn, collision detection,
+ * and all interaction between players. It also handles enemy, boss, bullets and different objects by creating
+ * instance of different  classes. It connects playModel and playView to interact with each other
+ * creating a model view controller pattern successfully.
+ */
 public class PlayController {
     private PlayModel model;
     private PlayView view;
@@ -46,6 +52,13 @@ public class PlayController {
 
     private Image explosionImage;
 
+    /**
+     * This constructor set up the solar system game play.
+     * By using classes from factory pattern such as SolarSystem, Factory, and GameInfoBar
+     * it renders different objects on the play screen.
+     * It also uses PlayView to create logic what happens when start a game, on restart and pause and
+     * done reading screen card.
+     */
     public PlayController(PlayModel model, PlayView view) {
         this.model = model;
         this.view = view;
@@ -66,6 +79,10 @@ public class PlayController {
         });
     }
 
+    /**
+     * This method helps us load a saved game by reading data through ScoreManager class.
+     * If no game is saved, and it's a new game play, it starts a fresh game play.
+     */
     public void loadSavedGame(boolean isNewGame) {
         stopGame();
         ScoreManager sm = ScoreManager.getInstance();
@@ -89,6 +106,12 @@ public class PlayController {
         );
     }
 
+    /**
+     * This method starts a game by first clearing all object from the scene.
+     * Then through using ScoreManager it tracks if there is any saved data, if yes, use the saved data
+     * to decide which level and facts to start from.
+     * It handles game loop through calling required methods from different classes and starts the game.
+     */
     public void startGame() {
         bullets.clear();
         enemies.clear();
@@ -102,15 +125,15 @@ public class PlayController {
 
         gameLoop = new Timeline(new KeyFrame(Duration.millis(16.67), e -> {
             long now = System.nanoTime();
-            double w = view.canvas.getWidth();
-            double h = view.canvas.getHeight();
-            view.gc.clearRect(0, 0, w, h);
+            double width = view.canvas.getWidth();
+            double height = view.canvas.getHeight();
+            view.gc.clearRect(0, 0, width, height);
 
             solarSystem.setFactsCollected(model.getFactsCollected());
             solarSystem.update();
             updateObjective();
             handlePlayerShooting(now);
-            updateBullets();
+            updateZorpBullets();
             updateEnemies(now);
             updateBoss(now);
             updateEnemyBullets();
@@ -130,9 +153,16 @@ public class PlayController {
         gameLoop.play();
     }
 
+    /**
+     * On each fact collected, this method helps us spawn new wave on the screen.
+     * It uses MainCharacter class to create and reset main player as well as enemies.
+     * When main character clear all enemy, this method also enable collecting the fact to
+     * progress to next fact.
+     * It also checks if the enemy is a boss to play boss music or normal enemy, and does action accordingly.
+     */
     private void spawnWave() {
-        double w = view.canvas.getWidth();
-        double h = view.canvas.getHeight();
+        double width = view.canvas.getWidth();
+        double height = view.canvas.getHeight();
 
         model.startWave();
         currentBoss = null;
@@ -142,30 +172,33 @@ public class PlayController {
 
         MainCharacterManager player = MainCharacterManager.getInstance();
         player.setX(50);
-        player.setY(h / 2 - PLAYER_SIZE / 2);
+        player.setY(height / 2 - PLAYER_SIZE / 2);
 
         String fact = model.getWaveFact();
-        double objX = w * 0.9;
-        double objY = h * 0.5;
+        double objX =  width * 0.9;
+        double objY = height * 0.5;
         currentObjective = (FactPoint) factory.createProduct("factPoint", objX, objY);
         currentObjective.setFactText(fact);
         currentObjective.setFactNumber(model.getCurrentWave() + 1);
 
         if (model.isBossWave()) {
-            double bossX = w * 0.65;
-            double bossY = h * 0.35;
+            double bossX =  width * 0.65;
+            double bossY = height * 0.35;
             currentBoss = new Boss(view.gc, bossX, bossY, model.getCurrentPlanet());
             AudioManager.getInstance().playBossMusic();
         } else {
             for (int i = 0; i < model.getEnemiesPerWave(); i++) {
-                double spawnX = w * 0.3 + Math.random() * (w * 0.5);
-                double spawnY = 80 + Math.random() * (h - 200);
-                Enemy e = (Enemy) factory.createProduct("enemy", spawnX, spawnY);
-                enemies.add(e);
+                double spawnX =  width * 0.3 + Math.random() * ( width * 0.5);
+                double spawnY = 80 + Math.random() * (height - 200);
+                Enemy enemy = (Enemy) factory.createProduct("enemy", spawnX, spawnY);
+                enemies.add(enemy);
             }
         }
     }
 
+    /**
+     * Pauses the game loop when user click on escape or pause button, and check for the state of the pause.
+     */
     public void stopGame() {
         if (gameLoop != null) {
             gameLoop.pause();
@@ -173,6 +206,9 @@ public class PlayController {
         paused = false;
     }
 
+    /**
+     * Changes between pause and play state, if paused, it draws pause overlay on top of the play screen.
+     */
     public void togglePause() {
         if (paused) {
             gameLoop.play();
@@ -192,6 +228,11 @@ public class PlayController {
         view.setPauseText(paused);
     }
 
+    /**
+     * When user collects a fact and done reading the fact, this method handle logic when player click on done reading button.
+     * If the level is complete and there is no more fact to collect, show the level complete card. If entire game play is complete,
+     * show gameplay screen. Otherwise, it resumes gameplay for next fact.
+     */
     private void onDoneReading() {
         if (model.isLevelComplete()) {
             ScoreManager.getInstance().saveScore(model.getScore());
@@ -207,6 +248,9 @@ public class PlayController {
         }
     }
 
+    /**
+     * Check if the wave of enemy is cleared by main character, if yes, unlocked the fact objectives.
+     */
     private void updateObjective() {
         if (currentObjective != null && currentObjective.isActive()) {
             model.checkWaveCleared();
@@ -217,78 +261,128 @@ public class PlayController {
         }
     }
 
+    /**
+     * When user left click mouse, and shooting cooldown has passed,
+     * it first calculated where should be the position of bullet spawn.
+     * It also checks if main character is facing left or right.
+     * It creates a bullet using factory pattern, and sets the direction of the
+     * bullet depending on if the main character facing left or right.
+     * It also handles the shooting audio through calling singleton object AudioManager when main character shoot.
+     */
     private void handlePlayerShooting(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
+
         if (player.isShooting() && now - lastBulletTime > BULLET_COOLDOWN) {
-            double cx = player.isFacingRight() ? player.getX() + PLAYER_SIZE - 5 : player.getX() + 5;
-            double cy = player.getY() + PLAYER_SIZE * 0.35;
-            Bullet b = (Bullet) factory.createProduct("bullet", cx, cy);
+            double bulletStartX = player.isFacingRight() ? player.getX() + PLAYER_SIZE - 5 : player.getX() + 5;
+            double bulletStartY = player.getY() + PLAYER_SIZE * 0.35;
+            Bullet bullet = (Bullet) factory.createProduct("bullet", bulletStartX,  bulletStartY);
 
-            double dx = player.isFacingRight() ? 1 : -1;
-            b.setTarget(cx + dx * 500, cy);
+            double bulletDirection = player.isFacingRight() ? 1 : -1;
+            bullet.setTarget(bulletStartX + bulletDirection * 500,  bulletStartY);
 
-            bullets.add(b);
+            bullets.add(bullet);
             lastBulletTime = now;
             AudioManager.getInstance().playLaser();
         }
     }
 
-    private void updateBullets() {
-        Iterator<Bullet> it = bullets.iterator();
-        while (it.hasNext()) {
-            Bullet b = it.next();
+    /**
+     * This method loops through the bullet list to update state of bullets for the main character.
+     * If a bullet is off-screen, it removes that object.
+     */
+    private void updateZorpBullets() {
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+        while (bulletIterator.hasNext()) {
+            Bullet b = bulletIterator.next();
             b.update();
-            if (!b.isActive()) it.remove();
+            if (!b.isActive()) bulletIterator.remove();
         }
     }
 
+    /**
+     * The method loop through all enemy bullets, and update their positon on the screen, and draws them.
+     * If any bullet is off screen, it removes the bullet from the list.
+     * Java built in class Iterator helps us to iterate over objects of enemybullets which helps us delete object during mid loop.
+     */
+    private void updateEnemyBullets() {
+        Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+        while (enemyBulletIterator.hasNext()) {
+            EnemyBullet eb = enemyBulletIterator.next();
+            eb.update();
+            if (!eb.isActive()) enemyBulletIterator.remove();
+        }
+    }
+
+    /**
+     * Get the players positions, and loop through all enemy.
+     * Handle logic so enemy chase the main character.
+     * Update enemey position on the screen and draw them, and if
+     * any enemy is dead remove them from screen. If shooting cooldown has passed for enemy,
+     * the enemy automatically shoot bullets aiming on main character.
+     */
     private void updateEnemies(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
         double playerCX = player.getX() + PLAYER_SIZE / 2;
         double playerCY = player.getY() + PLAYER_SIZE / 2;
 
-        Iterator<Enemy> it = enemies.iterator();
-        while (it.hasNext()) {
-            Enemy e = it.next();
-            e.setChaseTarget(playerCX, playerCY);
-            e.update();
-            if (!e.isActive()) {
-                it.remove();
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            enemy.setChaseTarget(playerCX, playerCY);
+            enemy.update();
+            if (!enemy.isActive()) {
+                enemyIterator.remove();
                 continue;
             }
-            if (e.canShoot(now)) {
-                EnemyBullet eb = (EnemyBullet) factory.createProduct("enemyBullet", e.getCenterX(), e.getCenterY());
-                eb.setTarget(playerCX, playerCY);
-                enemyBullets.add(eb);
-                e.markShot(now);
+            if (enemy.canShoot(now)) {
+                EnemyBullet enemyBullet = (EnemyBullet) factory.createProduct("enemyBullet", enemy.getCenterX(), enemy.getCenterY());
+                enemyBullet.setTarget(playerCX, playerCY);
+                enemyBullets.add(enemyBullet);
+                enemy.markShot(now);
             }
         }
 
         resolveEnemySeparation();
     }
 
+    /**
+     * This method helps us creat logic so that enemy does not overlap each other.
+     * It create true object collsion and keeps the enemy seperated from each other.
+     * Without this method, all enemy could potentially go on top of each other
+     * making the game look has no physics elements.
+     * It calculate the mergin of overlap by comparing enemy in pair, then pushed enemy equally in opposite direction.
+     */
     private void resolveEnemySeparation() {
         for (int i = 0; i < enemies.size(); i++) {
             for (int j = i + 1; j < enemies.size(); j++) {
                 Enemy a = enemies.get(i);
                 Enemy b = enemies.get(j);
-                double dx = a.getCenterX() - b.getCenterX();
-                double dy = a.getCenterY() - b.getCenterY();
-                double dist = Math.sqrt(dx * dx + dy * dy);
+
+                double distanceX = a.getCenterX() - b.getCenterX();
+                double distanceY = a.getCenterY() - b.getCenterY();
+                double dist = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
                 double minDist = (a.getWidth() + b.getWidth()) / 2.0;
+
                 if (dist < minDist && dist > 0) {
                     double overlap = (minDist - dist) / 2.0;
-                    double nx = dx / dist;
-                    double ny = dy / dist;
-                    a.setX(a.getX() + nx * overlap);
-                    a.setY(a.getY() + ny * overlap);
-                    b.setX(b.getX() - nx * overlap);
-                    b.setY(b.getY() - ny * overlap);
+                    double normalisedX = distanceX/ dist;
+                    double normalisedY = distanceY / dist;
+
+                    a.setX(a.getX() + normalisedX * overlap);
+                    a.setY(a.getY() + normalisedY * overlap);
+                    b.setX(b.getX() - normalisedX * overlap);
+                    b.setY(b.getY() - normalisedY * overlap);
                 }
             }
         }
     }
 
+    /**
+     * This method helps us determind if a boss it active, if not active or dead this method is skipped.
+     * Otherwise, if boss is active and alive, boss chase the player. When shooting cooldown is done,
+     * boss fire a new bullet aiming towards the player. The boss also fire random bullets through using
+     * factory product by using createProduct method.
+     */
     private void updateBoss(long now) {
         if (currentBoss == null || !currentBoss.isActive()) return;
 
@@ -300,15 +394,22 @@ public class PlayController {
         currentBoss.update();
 
         if (currentBoss.canShoot(now)) {
-            EnemyBullet eb = (EnemyBullet) factory.createProduct("enemyBullet",
+            EnemyBullet enemeyBossBullet = (EnemyBullet) factory.createProduct("enemyBullet",
                     currentBoss.getCenterX(), currentBoss.getCenterY());
-            eb.setTarget(playerCX, playerCY);
-            eb.setAmmoImage(currentBoss.getAmmoImage());
-            enemyBullets.add(eb);
+            enemeyBossBullet.setTarget(playerCX, playerCY);
+            enemeyBossBullet.setAmmoImage(currentBoss.getAmmoImage());
+            enemyBullets.add(enemeyBossBullet);
             currentBoss.markShot(now);
         }
     }
 
+    /**
+     * When player defeat the boss, stop the boss music by calling singleton AudioManager method,
+     * then play defeated music, and after that start playing normal music.
+     * When boss defeated, on the position of the boss, this method help us create the explosion effect.
+     * It update the score of the player and add 1000 points, and full heal the player and register the boss killed.
+     * After all anmiation done, it removed all relevant objects from the screen, and unlock the final facts.
+     */
     private void onBossDefeated() {
         AudioManager.getInstance().stopBossMusic();
         AudioManager.getInstance().playBossBiten();
@@ -338,27 +439,23 @@ public class PlayController {
         }
     }
 
-    private void updateEnemyBullets() {
-        Iterator<EnemyBullet> it = enemyBullets.iterator();
-        while (it.hasNext()) {
-            EnemyBullet eb = it.next();
-            eb.update();
-            if (!eb.isActive()) it.remove();
-        }
-    }
-
+    /**
+     * First we get the player position then we run all collion check method to handle game logic
+     * such as what happends when bullet hits enemy, or if enemy bullet hits the main player etc.
+     * It also handle runt he logic when player touch the objective after clearing enemy wave.
+     */
     private void checkCollisions(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
-        double px = player.getX();
-        double py = player.getY();
+        double playerXPosition = player.getX();
+        double playerYPosition = player.getY();
 
         checkBulletEnemyCollisions();
-        checkMeleeEnemyCollisions(player, px, py, now);
-        checkEnemyContactCollisions(player, px, py, now);
+        checkMeleeEnemyCollisions(player, playerXPosition,playerYPosition, now);
+        checkEnemyContactCollisions(player, playerXPosition, playerYPosition, now);
         checkBulletBossCollisions();
-        checkMeleeBossCollisions(player, px, py, now);
-        checkEnemyBulletPlayerCollisions(px, py, now);
-        checkObjectiveCollision(px, py);
+        checkMeleeBossCollisions(player, playerXPosition, playerYPosition, now);
+        checkEnemyBulletPlayerCollisions(playerXPosition, playerYPosition, now);
+        checkObjectiveCollision(playerXPosition, playerYPosition);
     }
 
     private void checkBulletEnemyCollisions() {
