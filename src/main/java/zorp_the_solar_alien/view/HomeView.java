@@ -21,7 +21,7 @@ import zorp_the_solar_alien.model.HomeModel;
 public class HomeView {
     Pane root;
     HomeModel model;
-    Canvas canvas;
+    public Canvas canvas;
     GraphicsContext gc;
     Image backgroundView;
 

@@ -33,6 +33,7 @@ public class HomeController {
 			playView.hide();
 			howToPlayController.hide();
 			MainCharacterManager.getInstance().setVisible(false);
+			view.canvas.setVisible(true);
 			view.zorpImageView.setVisible(true);
 			view.startAnimation();
 			updatePlayButtonText();
@@ -57,9 +58,10 @@ public class HomeController {
 
 		view.playBtn.setOnAction(e -> {
 			view.stopAnimation();
+			view.canvas.setVisible(false);
 			playController.stopGame();
-			playController.loadSavedGame(false);
 			playView.show();
+			playController.loadSavedGame(false);
 			howToPlayController.hide();
 			view.zorpImageView.setVisible(false);
 			MainCharacterManager.getInstance().setVisible(true);
@@ -90,10 +92,11 @@ public class HomeController {
 
 	private void startNewGame() {
 		view.stopAnimation();
+		view.canvas.setVisible(false);
 		ScoreManager.getInstance().resetProgress();
 		playController.stopGame();
-		playController.loadSavedGame(true);
 		playView.show();
+		playController.loadSavedGame(true);
 		howToPlayController.hide();
 		view.zorpImageView.setVisible(false);
 		MainCharacterManager.getInstance().setVisible(true);

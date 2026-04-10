@@ -79,6 +79,7 @@ public class PlayController {
             model.setFactsCollected(sm.getSavedWave());
             model.setScore(sm.getSavedScore());
         }
+
         model.setCurrentPlanet(savedLevel);
         solarSystem.setCurrentPlanet(savedLevel);
         MainCharacterManager.getInstance().reset();
@@ -124,6 +125,7 @@ public class PlayController {
             gameInfoBar.update();
             checkGameState();
         }));
+
         gameLoop.setCycleCount(Animation.INDEFINITE);
         gameLoop.play();
     }
@@ -186,6 +188,7 @@ public class PlayController {
             view.gc.fillText("PAUSED", w / 2 - 130, h / 2);
             paused = true;
         }
+
         view.setPauseText(paused);
     }
 
@@ -515,6 +518,7 @@ public class PlayController {
     private void restartGame() {
         AudioManager.getInstance().playHomeMusic();
         if (model.isLevelComplete() && model.isLastLevel()) {
+            ScoreManager.getInstance().resetProgress();
             model.reset();
             solarSystem.reset();
             MainCharacterManager.getInstance().reset();

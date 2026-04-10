@@ -17,7 +17,7 @@ public class Bullet extends GameObject {
         vx = speed;
         vy = 0;
         if (bulletImage == null) {
-            bulletImage = new Image(getClass().getResource("/enemies/zorp-bullet.png").toExternalForm());
+            bulletImage = new Image(getClass().getResource("/zorp/zorp-bullet.png").toExternalForm());
         }
     }
 

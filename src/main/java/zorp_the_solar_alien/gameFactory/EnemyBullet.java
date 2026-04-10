@@ -11,17 +11,18 @@ public class EnemyBullet extends GameObject {
     private boolean active = true;
     private static final double RADIUS = 5;
     private Image ammoImage = null;
+    private static final int TOTAL_BULLETS = 15;
     private static Image[] enemyBulletImages = null;
 
     public EnemyBullet(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
         if (enemyBulletImages == null) {
-            enemyBulletImages = new Image[] {
-                new Image(getClass().getResource("/enemies/bullet1.png").toExternalForm()),
-                new Image(getClass().getResource("/enemies/bullet2.png").toExternalForm())
-            };
+            enemyBulletImages = new Image[TOTAL_BULLETS];
+            for (int i = 0; i < TOTAL_BULLETS; i++) {
+                enemyBulletImages[i] = new Image(getClass().getResource("/enemies/normal-enemy/normal-enemy-bullets/bullet" + (i + 1) + ".png").toExternalForm());
+            }
         }
-        ammoImage = enemyBulletImages[(int)(Math.random() * 2)];
+        ammoImage = enemyBulletImages[(int)(Math.random() * TOTAL_BULLETS)];
     }
 
     public void setAmmoImage(Image image) {
@@ -48,7 +49,7 @@ public class EnemyBullet extends GameObject {
             active = false;
         }
         if (ammoImage != null) {
-            double size = RADIUS * 4;
+            double size = RADIUS * 8;
             gc.drawImage(ammoImage, x - size / 2, y - size / 2, size, size);
         } else {
             gc.setFill(Color.RED);

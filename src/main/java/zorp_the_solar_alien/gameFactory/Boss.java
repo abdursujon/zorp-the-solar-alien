@@ -15,7 +15,6 @@ public class Boss extends GameObject {
     private static final int DRAW_SIZE = 120;
 
     private Image sprite;
-    private Image ammoImage;
     private double sinePhase;
 
     private long lastShotTime = 0;
@@ -35,23 +34,19 @@ public class Boss extends GameObject {
             "/enemies/boss/boss10.png"
     };
 
-    private static final String[] BOSS_AMMO = {
-            "/enemies/boss/ammo1.png",
-            "/enemies/boss/ammo1.png",
-            "/enemies/boss/ammo2.png",
-            "/enemies/boss/ammo3.png",
-            "/enemies/boss/ammo1.png",
-            "/enemies/boss/ammo2.png",
-            "/enemies/boss/ammo2.png",
-            "/enemies/boss/ammo1.png",
-            "/enemies/boss/ammo2.png"
-    };
+    private static final int TOTAL_AMMO = 50;
+    private static Image[] ammoImages = null;
 
     public Boss(GraphicsContext gc, double x, double y, int planetIndex) {
         super(gc, x, y);
         planetIndex = Math.min(planetIndex, BOSS_SPRITES.length - 1);
         sprite = new Image(getClass().getResource(BOSS_SPRITES[planetIndex]).toExternalForm());
-        ammoImage = new Image(getClass().getResource(BOSS_AMMO[planetIndex]).toExternalForm());
+        if (ammoImages == null) {
+            ammoImages = new Image[TOTAL_AMMO];
+            for (int i = 0; i < TOTAL_AMMO; i++) {
+                ammoImages[i] = new Image(getClass().getResource("/enemies/boss/boss-bullets/ammo" + (i + 1) + ".png").toExternalForm());
+            }
+        }
         sinePhase = Math.random() * Math.PI * 2;
         targetX = x;
         targetY = y;
@@ -111,7 +106,7 @@ public class Boss extends GameObject {
     }
 
     public Image getAmmoImage() {
-        return ammoImage;
+        return ammoImages[(int) (Math.random() * TOTAL_AMMO)];
     }
 
     public boolean isActive() { return active; }

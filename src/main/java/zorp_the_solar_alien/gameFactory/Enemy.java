@@ -12,7 +12,7 @@ public class Enemy extends GameObject {
 
     private static Image[] sharedSprites = null;
     private static Image swordImage = null;
-    private static final int TOTAL_TYPES = 11;
+    private static final int TOTAL_TYPES = 10;
     private Image sprite;
     private boolean hasSword = false;
 
@@ -31,13 +31,10 @@ public class Enemy extends GameObject {
         super(gc, x, y);
         if (sharedSprites == null) {
             sharedSprites = new Image[TOTAL_TYPES];
-            for (int i = 0; i < 5; i++) {
-                sharedSprites[i] = new Image(getClass().getResource("/enemies/enemy_" + i + ".png").toExternalForm());
+            for (int i = 0; i < TOTAL_TYPES; i++) {
+                sharedSprites[i] = new Image(getClass().getResource("/enemies/normal-enemy/enemy" + (i + 1) + ".png").toExternalForm());
             }
-            for (int i = 5; i < TOTAL_TYPES; i++) {
-                sharedSprites[i] = new Image(getClass().getResource("/enemies/enemy" + i + ".png").toExternalForm());
-            }
-            swordImage = new Image(getClass().getResource("/enemies/enemysord.png").toExternalForm());
+            swordImage = new Image(getClass().getResource("/enemies/normal-enemy/enemysord.png").toExternalForm());
         }
         speed = 1.5 + Math.random() * 1.5;
         sinePhase = Math.random() * Math.PI * 2;

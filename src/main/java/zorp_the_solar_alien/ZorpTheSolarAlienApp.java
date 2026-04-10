@@ -33,6 +33,7 @@ public class ZorpTheSolarAlienApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		Pane root = new Pane();
+		root.setStyle("-fx-background-color: black;");
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.setMaximized(true);
