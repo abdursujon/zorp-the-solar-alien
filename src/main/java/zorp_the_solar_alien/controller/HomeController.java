@@ -3,12 +3,13 @@ package zorp_the_solar_alien.controller;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import zorp_the_solar_alien.SingletonObject.AudioManager;
-import zorp_the_solar_alien.SingletonObject.MainCharacterManager;
-import zorp_the_solar_alien.SingletonObject.ScoreManager;
+import zorp_the_solar_alien.SingletonObjects.AudioManager;
+import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
+import zorp_the_solar_alien.SingletonObjects.ScoreManager;
 import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.view.HomeView;
 import zorp_the_solar_alien.view.PlayView;
+
 
 /**
  * This controller class is designed to support MVC pattern.
@@ -23,6 +24,7 @@ public class HomeController {
 	private PlayView playView;
 	private PlayController playController;
 	private HowToPlayController howToPlayController;
+
 
 	/**
 	 * Through using different classes from the project, this constructor handle button set up.
@@ -103,6 +105,7 @@ public class HomeController {
 		view.quitBtn.setOnAction(e -> handleQuit());
 	}
 
+
 	/**
 	 * Reset all progress and start the game from level 1.
 	 */
@@ -118,6 +121,7 @@ public class HomeController {
 		MainCharacterManager.getInstance().setVisible(true);
 		syncMusicBtn();
 	}
+
 
 	/**
 	 * This method help us update play button.
@@ -138,12 +142,14 @@ public class HomeController {
 		}
 	}
 
+
 	/**
 	 * This helps us to change icon for the music on and off button.
 	 */
 	private void syncMusicBtn() {
 		view.musicBtn.setText(AudioManager.getInstance().isPlaying() ? "🔊" : "🔇");
 	}
+
 
 	/**
 	 * When user is on home, or play screen, if they click on how to play button, this method
@@ -155,6 +161,7 @@ public class HomeController {
 		howToPlayController.show();
 		view.zorpImageView.setVisible(false);
 	}
+
 
 	/**
 	 * This method help us exit the application.

@@ -1,4 +1,4 @@
-package zorp_the_solar_alien.SingletonObject;
+package zorp_the_solar_alien.SingletonObjects;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
