@@ -1,6 +1,10 @@
 package zorp_the_solar_alien.model;
 
+/**
+ * This HomeModel class provide required data for HomeView to establish MVC pattern.
+ */
 public class HomeModel {
+
     public String getGameTitle() {
         return "ZORP THE SOLAR ALIEN";
     }
@@ -8,4 +12,5 @@ public class HomeModel {
     public String getGameSubtitle() {
         return "Explore the Solar System!";
     }
+
 }

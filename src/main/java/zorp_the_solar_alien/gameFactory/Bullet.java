@@ -41,6 +41,7 @@ public class Bullet extends GameObject {
             case "zorp":
                 speed = 8;
                 drawSize = 20;
+
                 if (zorpBulletImage == null) {
                     zorpBulletImage = new Image(getClass().getResource("/zorp/zorp-bullet.png").toExternalForm());
                 }
@@ -50,6 +51,7 @@ public class Bullet extends GameObject {
             case "enemy":
                 speed = 4;
                 drawSize = 40;
+
                 if (enemyBulletImages == null) {
                     enemyBulletImages = new Image[TOTAL_ENEMY_BULLETS];
                     for (int i = 0; i < TOTAL_ENEMY_BULLETS; i++) {
@@ -62,6 +64,7 @@ public class Bullet extends GameObject {
             case "boss":
                 speed = 4;
                 drawSize = 40;
+
                 if (bossBulletImages == null) {
                     bossBulletImages = new Image[TOTAL_BOSS_BULLETS];
                     for (int i = 0; i < TOTAL_BOSS_BULLETS; i++) {
@@ -76,6 +79,7 @@ public class Bullet extends GameObject {
         vy = 0;
     }
 
+
     /**
      * This method override the method provided by GameObject class.
      * It moves the bullet by its velocity, when off-screen it deactivates the bullet.
@@ -87,9 +91,11 @@ public class Bullet extends GameObject {
         y += vy;
         double w = gc.getCanvas().getWidth();
         double h = gc.getCanvas().getHeight();
+
         if (x < -20 || x > w + 20 || y < -20 || y > h + 20) {
             active = false;
         }
+
         if (ammoImage != null) {
             gc.drawImage(ammoImage, x - drawSize / 2, y - drawSize / 2, drawSize, drawSize);
         } else {
@@ -98,6 +104,7 @@ public class Bullet extends GameObject {
         }
     }
 
+
     /**
      * Based on the target position, this method calculate bullet's velocity direction.
      */
@@ -105,6 +112,7 @@ public class Bullet extends GameObject {
         double distanceX = targetX - x;
         double distanceY = targetY - y;
         double dist = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
         if (dist > 0) {
             vx = (distanceX / dist) * speed;
             vy = (distanceY / dist) * speed;

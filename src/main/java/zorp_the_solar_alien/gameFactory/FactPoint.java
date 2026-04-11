@@ -19,6 +19,7 @@ public class FactPoint extends GameObject {
     private double bobPhase = 0;
     private double baseY;
 
+
     /**
      * This constructor creates a fact point at the given position with a locked icon by default.
      */
@@ -26,6 +27,7 @@ public class FactPoint extends GameObject {
         super(gc, x, y);
         baseY = y;
     }
+
 
     /**
      * We override the provided update method from GameObject as required according to brief.
@@ -59,6 +61,7 @@ public class FactPoint extends GameObject {
         }
     }
 
+
     /**
      * This method sets the educational fact text on the screen when the player collects this fact point.
      */
@@ -66,17 +69,21 @@ public class FactPoint extends GameObject {
         this.factText = fact;
     }
 
+
     public void setFactNumber(int number) {
         this.factNumber = number;
     }
+
 
     public String getFactText() {
         return factText;
     }
 
+
     public boolean isLocked() {
         return locked;
     }
+
 
     /**
      * Unlock fact objective to enable player to collect the objective.
@@ -85,21 +92,26 @@ public class FactPoint extends GameObject {
         this.locked = false;
     }
 
+
     public boolean isActive() {
         return active;
     }
+
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
+
     public double getX() {
         return x;
     }
 
+
     public double getY() {
         return y;
     }
+
 
     public double getRadius() {
         return RADIUS;

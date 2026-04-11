@@ -14,10 +14,11 @@ import javafx.util.Duration;
 import zorp_the_solar_alien.SingletonObjects.AudioManager;
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.SingletonObjects.ScoreManager;
+import zorp_the_solar_alien.SingletonObjects.SolarSystem;
 import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.gameLogic.BossHandler;
 import zorp_the_solar_alien.gameLogic.CollisionHandler;
-import zorp_the_solar_alien.gameLogic.PlayerHandler;
+import zorp_the_solar_alien.gameLogic.MainCharacterHandler;
 import zorp_the_solar_alien.gameLogic.WaveSpawner;
 import zorp_the_solar_alien.model.PlayModel;
 import zorp_the_solar_alien.view.PlayView;
@@ -32,22 +33,18 @@ import zorp_the_solar_alien.view.PlayView;
 public class PlayController {
     private PlayModel model;
     private PlayView view;
-
     private SolarSystem solarSystem;
     private ZorpTheSolarAlienFactory factory;
     private GameInfoBar gameInfoBar;
-
     private Timeline gameLoop;
     private boolean paused = false;
-
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
     private List<Bullet> enemyBullets = new ArrayList<>();
-
     private CollisionHandler collisionHandler;
     private WaveSpawner waveSpawner;
     private BossHandler bossHandler;
-    private PlayerHandler playerHandler;
+    private MainCharacterHandler mainCharacterHandler;
 
 
     /**
@@ -68,7 +65,7 @@ public class PlayController {
         this.collisionHandler = new CollisionHandler(model, bullets, enemies, enemyBullets);
         this.waveSpawner = new WaveSpawner(model, view.gc, factory, bullets, enemies, enemyBullets);
         this.bossHandler = new BossHandler(model, view.root, factory, enemyBullets);
-        this.playerHandler = new PlayerHandler(factory, bullets);
+        this.mainCharacterHandler = new MainCharacterHandler(factory, bullets);
 
         collisionHandler.setOnBossDefeated(() ->
                 bossHandler.onBossDefeated(waveSpawner.getCurrentBoss(), waveSpawner.getCurrentObjective())
@@ -144,11 +141,11 @@ public class PlayController {
             solarSystem.setFactsCollected(model.getFactsCollected());
             solarSystem.update();
             updateObjective();
-            playerHandler.handlePlayerShooting(now);
-            playerHandler.updateZorpBullets();
+            mainCharacterHandler.handlePlayerShooting(now);
+            mainCharacterHandler.updateZorpBullets();
             updateEnemies(now);
             bossHandler.updateBoss(waveSpawner.getCurrentBoss(), now);
-            playerHandler.updateBullets(enemyBullets);
+            mainCharacterHandler.updateBullets(enemyBullets);
             MainCharacterManager.getInstance().update();
 
             collisionHandler.setCurrentBoss(waveSpawner.getCurrentBoss());
@@ -204,6 +201,7 @@ public class PlayController {
      * This method declares what happens when game is on pause. If pause, it draws pause overlay text on top of play screen.
      */
     public void togglePause() {
+        if (gameLoop == null) return;
         if (paused) {
             gameLoop.play();
             paused = false;
@@ -324,19 +322,13 @@ public class PlayController {
             model.reset();
             solarSystem.reset();
             MainCharacterManager.getInstance().reset();
-            view.showIntroCard(
-                    "Level 1: " + model.getCurrentPlanetName(),
-                    model.getCurrentPlanetDescription()
-            );
+            view.showIntroCard("Level 1: " + model.getCurrentPlanetName(), model.getCurrentPlanetDescription());
         } else if (model.isLevelComplete()) {
             solarSystem.nextPlanet();
             model.nextPlanet();
             model.resetForNextLevel();
             MainCharacterManager.getInstance().reset();
-            view.showIntroCard(
-                    "Level " + (model.getCurrentPlanet() + 1) + ": " + model.getCurrentPlanetName(),
-                    model.getCurrentPlanetDescription()
-            );
+            view.showIntroCard("Level " + (model.getCurrentPlanet() + 1) + ": " + model.getCurrentPlanetName(), model.getCurrentPlanetDescription());
         } else {
             model.resetForRetry();
             MainCharacterManager.getInstance().reset();

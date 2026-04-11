@@ -4,6 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/**
+ * ScoreManager uses singleton pattern because the entire gameplay needs only one instance of score management system.
+ * It tracks level progress, and wave progress.
+ * When player scored and complete any facts or levels it stores the score to local text file so user can start
+ * from where they left off.
+ */
 public class ScoreManager {
     private static ScoreManager instance = null;
     private int currentScore = 0;
@@ -13,10 +19,20 @@ public class ScoreManager {
     private int savedWave = 0;
     private int savedScore = 0;
 
+
+    /**
+     * Private constructor enforcing singleton pattern.
+     * It loads any previous saved data from the cache directory text file (save-game.txt).
+     */
     private ScoreManager() {
         loadFromFile();
     }
 
+
+    /**
+     * Return the singleton instance of ScoreManager for the controller to used.
+     * If no score manager exist yet, it creates one.
+     */
     public static ScoreManager getInstance() {
         if (instance == null) {
             instance = new ScoreManager();
@@ -24,19 +40,6 @@ public class ScoreManager {
         return instance;
     }
 
-    public void addScore(int points) { currentScore += points; }
-    public int getCurrentScore() { return currentScore; }
-    public void resetCurrentScore() { currentScore = 0; }
-
-    public void saveLevelScore(int levelIndex) {
-        if (currentScore > levelHighScores[levelIndex]) {
-            levelHighScores[levelIndex] = currentScore;
-        }
-    }
-
-    public int getLevelHighScore(int levelIndex) {
-        return levelHighScores[levelIndex];
-    }
 
     public void saveScore(int score) {
         if (score > highScore) {
@@ -45,7 +48,11 @@ public class ScoreManager {
         saveToFile();
     }
 
-    public int getHighScore() { return highScore; }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
 
     public void unlockLevel(int levelIndex) {
         if (levelIndex > highestLevelUnlocked) {
@@ -54,9 +61,11 @@ public class ScoreManager {
         }
     }
 
+
     public int getHighestLevelUnlocked() {
         return highestLevelUnlocked;
     }
+
 
     public void saveWaveProgress(int wave, int score) {
         this.savedWave = wave;
@@ -64,8 +73,15 @@ public class ScoreManager {
         saveToFile();
     }
 
-    public int getSavedWave() { return savedWave; }
-    public int getSavedScore() { return savedScore; }
+
+    public int getSavedWave() {
+        return savedWave;
+    }
+
+
+    public int getSavedScore() {
+        return savedScore;
+    }
 
     public void resetProgress() {
         highScore = 0;
@@ -78,6 +94,11 @@ public class ScoreManager {
         saveToFile();
     }
 
+
+    /**
+     * This method handles writing game state data to save-game.txt so player can continue playing
+     * where they left previously instead of having to redo all the progress again.
+     */
     public void saveToFile() {
         new File("cache").mkdirs();
         try (PrintWriter writer = new PrintWriter("cache/save-game.txt")) {
@@ -91,6 +112,11 @@ public class ScoreManager {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+
+    /**
+     * This method reads the saved data in a sequence of how they were written.
+     * It is used by constructor to determine if any there any saved data exist.
+     */
     public void loadFromFile() {
         try (Scanner scanner = new Scanner(new File("cache/save-game.txt"))) {
             if (scanner.hasNextInt()) highScore = scanner.nextInt();

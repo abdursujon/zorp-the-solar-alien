@@ -42,7 +42,8 @@ mvn clean javafx:run
 To do
 1. Finish each level facts x
 2. Final review of each line of code twice and comment all method
-   controller
+  
+controller
 1. HomeController x
 2. HowToPlayController x
 3. PlayController x
@@ -52,35 +53,33 @@ gameFactory
 5. Bullet x
 6. Enemy x
 7. FactPoint x
-8. GameInfoBar x
-9. SolarSystem 
-10. ZorpTheSolarAlienFactory
-11. ZorpTheSolarAlienInterface x
+8. GameInfoBar x 
+9. ZorpTheSolarAlienFactory x
+10. ZorpTheSolarAlienInterface x
 
 gameLogic
-12. BossHandler
-13. CollisionHandler
-14. PlayerHandler
-15. WaveSpawner
+11. BossHandler x
+12. CollisionHandler x
+13. MainCharacterHandler x
+14. WaveSpawner x
 
 model
-16. HomeModel
-17. HowToPlayModel
-18. PlayModel
+15. HomeModel x
+16. HowToPlayModel x
+17. PlayModel x
 
 SingletonObjects
-19. AudioManager
-20. MainCharacterManager
-21. ScoreManager
-
+18. AudioManager x 
+19. MainCharacterManager x
+20. ScoreManager x
+21. Solar System x
 view
-22. HomeView
+22. HomeView x
 23. HowToPlayView
 24. PlayView
 
 Root package
-25. GameObject
-26. ZorpTheSolarAlienApp
+25.  ZorpTheSolarAlienApp
 
 3. Create UML and write report 
 ---                                                                                                                                                                                                                               

@@ -55,6 +55,7 @@ public class Enemy extends GameObject {
         targetY = y;
     }
 
+
     /**
      * We override the provided update method from GameObject to update logic form enemy.
      * Handle updating and moves the enemy toward the player, applies sine wave
@@ -106,6 +107,7 @@ public class Enemy extends GameObject {
         }
     }
 
+
     /**
      * This method set the chase target position, which is main character center.
      */
@@ -124,12 +126,14 @@ public class Enemy extends GameObject {
         return now - lastShotTime > SHOOT_COOLDOWN_NS;
     }
 
+
     /**
      * It records the time of the last shot by enemy so we can track the shot cooldown.
      */
     public void markShot(long now) {
         lastShotTime = now;
     }
+
 
     /**
      * For damage taken, it reduces enemy hp, and if the hp reaches zero, enemy gets deactivated.
@@ -139,49 +143,61 @@ public class Enemy extends GameObject {
         if (hp <= 0) active = false;
     }
 
+
     public boolean isActive() {
         return active;
     }
+
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
+
     public double getX() {
         return x;
     }
+
 
     public double getY() {
         return y;
     }
 
+
     public void setX(double x) {
         this.x = x;
     }
+
 
     public void setY(double y) {
         this.y = y;
     }
 
+
     public double getWidth() {
         return DRAW_SIZE;
     }
+
 
     public double getHeight() {
         return DRAW_SIZE;
     }
 
+
     public double getCenterX() {
         return x + DRAW_SIZE / 2.0;
     }
+
 
     public double getCenterY() {
         return y + DRAW_SIZE / 2.0;
     }
 
+
     public boolean hasSword() {
         return hasSword;
     }
+
 
     /**
      * After enough time passed, it returns true when enemy can deal contact damage to the player.
@@ -190,12 +206,14 @@ public class Enemy extends GameObject {
         return now - lastContactDamageTime > CONTACT_DAMAGE_COOLDOWN_NS;
     }
 
+
     /**
      * It records the time of the last contact damage so we can track the contact damage cooldown.
      */
     public void markContactDamage(long now) {
         lastContactDamageTime = now;
     }
+
 
     /**
      * Returns the contact damage amount. Sword enemies deal 15 damage, ranged enemies deal 5.

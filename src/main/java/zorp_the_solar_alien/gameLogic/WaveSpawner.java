@@ -1,7 +1,6 @@
 package zorp_the_solar_alien.gameLogic;
 
 import java.util.List;
-
 import zorp_the_solar_alien.SingletonObjects.AudioManager;
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
@@ -9,9 +8,8 @@ import zorp_the_solar_alien.model.PlayModel;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * This class is delegated by PlayController to handle spawning waves of enemies and bosses.
- * It resets player position, creates the fact objective, and spawns either normal enemies
- * or a boss depending on the current wave.
+ * This class handles logic to spawn enemy wave after each fact collected.
+ * It used by playController to spawn random number of enemies.
  */
 public class WaveSpawner {
     private PlayModel model;
@@ -21,10 +19,12 @@ public class WaveSpawner {
     private List<Bullet> enemyBullets;
     private List<Bullet> bullets;
     private static final double PLAYER_SIZE = 80;
-
     private Boss currentBoss;
     private FactPoint currentObjective;
 
+    /**
+     * The constructor create wave spawner with reference to required classes to handle enemy wave.
+     */
     public WaveSpawner(PlayModel model, GraphicsContext gc, ZorpTheSolarAlienFactory factory,
                        List<Bullet> bullets, List<Enemy> enemies, List<Bullet> enemyBullets) {
         this.model = model;
@@ -35,15 +35,23 @@ public class WaveSpawner {
         this.enemyBullets = enemyBullets;
     }
 
-    public Boss getCurrentBoss() { return currentBoss; }
-    public FactPoint getCurrentObjective() { return currentObjective; }
+
+    public Boss getCurrentBoss() {
+        return currentBoss;
+    }
+
+
+    public FactPoint getCurrentObjective() {
+        return currentObjective;
+    }
+
 
     /**
-     * On each fact collected, this method helps us spawn new wave on the screen.
-     * It uses MainCharacter class to create and reset main player as well as enemies.
-     * When main character clear all enemy, this method also enable collecting the fact to
-     * progress to next fact.
-     * It also checks if the enemy is a boss to play boss music or normal enemy, and does action accordingly.
+     * This method handles enemy spawn logic.
+     * It clears all existing objects from the screen when all enemy dies.
+     * It also resets the player and enemy position using the factory pattern. Also creates the fact objects
+     * and if boss level required it spawn boss instead of normal enemy. Also handle
+     * music depending on enemy type.
      */
     public void spawnWave(double canvasWidth, double canvasHeight) {
         model.startWave();
@@ -59,6 +67,7 @@ public class WaveSpawner {
         String fact = model.getWaveFact();
         double objX = canvasWidth * 0.9;
         double objY = canvasHeight * 0.5;
+
         currentObjective = (FactPoint) factory.createProduct("factPoint", objX, objY);
         currentObjective.setFactText(fact);
         currentObjective.setFactNumber(model.getCurrentWave() + 1);

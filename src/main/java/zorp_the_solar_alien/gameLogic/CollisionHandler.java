@@ -2,32 +2,34 @@ package zorp_the_solar_alien.gameLogic;
 
 import java.util.Iterator;
 import java.util.List;
-
 import zorp_the_solar_alien.SingletonObjects.AudioManager;
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 
+
 /**
- * This class is delegated by PlayController to handle all collision detection logic in the game.
- * It checks collisions between Zorp's bullets and enemies, melee attacks, enemy contact damage,
- * boss collisions, enemy bullets hitting the player, and objective collection.
+ * This game logic class is built to support collision detection logic in gameplay.
+ * Some of the collision detection it is responsible for are check if bullet hit enemy or main character,
+ * if the player and enemy is in melee range, wether enemy touching the player.
+ * It also prevents enemy going on top each other mainting a sense of physics.
  */
 public class CollisionHandler {
     private PlayModel model;
     private List<Bullet> bullets;
     private List<Enemy> enemies;
     private List<Bullet> enemyBullets;
-
     private long lastMeleeTime = 0;
     private static final long MELEE_COOLDOWN = 400_000_000L;
     private static final double PLAYER_SIZE = 80;
-
     private Boss currentBoss;
     private FactPoint currentObjective;
     private Runnable onBossDefeated;
     private Runnable onSpawnWave;
 
+    /**
+     * The constructor creates collision handler with reference to required class that needs be used to handle collision logic.
+     */
     public CollisionHandler(PlayModel model, List<Bullet> bullets, List<Enemy> enemies, List<Bullet> enemyBullets) {
         this.model = model;
         this.bullets = bullets;
@@ -35,37 +37,15 @@ public class CollisionHandler {
         this.enemyBullets = enemyBullets;
     }
 
-    public void setCurrentBoss(Boss boss) { this.currentBoss = boss; }
-    public void setCurrentObjective(FactPoint objective) { this.currentObjective = objective; }
-    public void setOnBossDefeated(Runnable callback) { this.onBossDefeated = callback; }
-    public void setOnSpawnWave(Runnable callback) { this.onSpawnWave = callback; }
 
     /**
-     * First we get the player position then we run all collision check method to handle game collision logic
-     * such as what happens when bullet hits enemy, or if enemy bullet hits the main player etc.
-     * It also handle logic what happens when player touch the objective after clearing enemy wave.
-     */
-    public void checkCollisions(long now) {
-        MainCharacterManager player = MainCharacterManager.getInstance();
-        double playerXPosition = player.getX();
-        double playerYPosition = player.getY();
-
-        checkZorpBulletEnemyCollisions();
-        checkZorpMeleeAttackAndEnemyCollisions(player, playerXPosition, playerYPosition, now);
-        checkEnemyContactCollisions(player, playerXPosition, playerYPosition, now);
-        checkBulletBossCollisions();
-        checkMeleeBossCollisions(player, playerXPosition, playerYPosition, now);
-        checkEnemyBulletPlayerCollisions(playerXPosition, playerYPosition, now);
-    }
-
-    /**
-     * Checks if player has touched the unlocked fact objective.
-     * If yes, collects the fact, awards score, heals, saves progress,
-     * spawns next wave if level not complete, and returns fact data for display.
-     * @return String array with [factText, factNum] if collected, null otherwise
+     * Check if the player has touched the unlocked fact after beating the boss.
+     * If the fact is collected, it awards enemy scores, heals, and return what facts to display on the screen.
+     * If level is not on last fact, it re-swan enemy wave.
      */
     public String[] checkObjectiveCollision(double px, double py) {
         if (currentObjective == null || !currentObjective.isActive() || currentObjective.isLocked()) return null;
+
         if (checkIfBulletOverlapsAnyCharacter(currentObjective.getX(), currentObjective.getY(), currentObjective.getRadius(),
                 px, py, PLAYER_SIZE, PLAYER_SIZE)) {
             currentObjective.setActive(false);
@@ -85,12 +65,11 @@ public class CollisionHandler {
         return null;
     }
 
+
     /**
-     * This method helps us create logic so that enemy does not overlap each other.
-     * It create true object collision and keeps the enemy separated from each other.
-     * Without this method, all enemy could potentially go on top of each other
-     * making the game look has no physics elements.
-     * It calculate the margin of overlap by comparing enemy in pair, then pushed enemy equally in opposite direction.
+     * This method prevents enemy from overlapping each other by comparing them in pairs.
+     * When two enemy are too close to each other, it calculates the overlap and pushes the
+     * enemy from each other in opposite direction.
      */
     public void resolveEnemySeparation() {
         for (int i = 0; i < enemies.size(); i++) {
@@ -117,11 +96,11 @@ public class CollisionHandler {
         }
     }
 
+
     /**
-     * Loop through shot bullets from the main character.
-     * If a bullet hits an enemy, deactivate the bullet from the screen.
-     * When bullet is hit on an enemy, they take 10 damage.
-     * If enemy dies, we register the kill and play relevant sound through AudioManager.
+     * This method loops through main character bullets to check if any bullets hit an enemy.
+     * If bullet hits enemy, it registers 10 damage, and deactivate the bullet.
+     * If enemy dies, the method save the kill count and play death sound.
      */
     private void checkZorpBulletEnemyCollisions() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
@@ -147,12 +126,24 @@ public class CollisionHandler {
     }
 
     /**
-     * When player use melee attack, and cooldown for melee attack has passed,
-     * this method creates invisible melee range box 40px by 80px.
-     * Then it checks if any living enemy overlap with the melee range.
-     * If they are in the melee range, it does 15 damage for each hit.
-     * If any enemy dies, it registers the kill and plays the death sound.
-     * Cooldown resets when enemy is hit.
+     * This method is designed to check melee attact range.
+     * It checks if two rectenagles overlap each other by comparing their edges from each other.
+     */
+    private boolean rectangleOverlapToCheckMeleeDamageAndEnemyContactDamage(double attackerX, double attackerY,
+                                                                            double attackerWidth, double attackerHeight,
+                                                                            double targetX, double targetY,
+                                                                            double targetWidth, double targetHeight) {
+        return attackerX < targetX + targetWidth && attackerX + attackerWidth > targetX && attackerY < targetY +
+                targetHeight && attackerY + attackerHeight > targetY;
+    }
+
+
+    /**
+     * This method handle logic for main character melee attact.
+     * When player uses melee attact after cooldown has passed, it creates invisible
+     * melee range box in front of the player. If any enemy is in the range of player melee attact
+     * and player is using melee key, it does 15 damage to the enemy. When any enemy dies,
+     * the method registers the kill and plays the death sound.
      */
     private void checkZorpMeleeAttackAndEnemyCollisions(MainCharacterManager player, double px, double py, long now) {
         if (!player.isMelee() || now - lastMeleeTime < MELEE_COOLDOWN) {
@@ -170,7 +161,7 @@ public class CollisionHandler {
                 continue;
             }
 
-            if (rectangleOverlapToCheckMeleDamageAndEnemyContactDamage(meleeX, meleeY, meleeW, meleeH,
+            if (rectangleOverlapToCheckMeleeDamageAndEnemyContactDamage(meleeX, meleeY, meleeW, meleeH,
                     enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight())) {
                 enemy.takeDamage(15);
                 hit = true;
@@ -186,17 +177,26 @@ public class CollisionHandler {
         }
     }
 
+
+    /**
+     * This method check if any enemy touching the main character. If enemy makes any contact with
+     * the player, it registers some damage and play the damage sound.
+     * It also pushes the player away from the enemy to prevent all enemy going on top of main character.
+     */
     private void checkEnemyContactCollisions(MainCharacterManager player, double px, double py, long now) {
         for (Enemy enemy : enemies) {
             if (!enemy.isActive()) continue;
-            if (rectangleOverlapToCheckMeleDamageAndEnemyContactDamage(px, py, PLAYER_SIZE, PLAYER_SIZE,
+
+            if (rectangleOverlapToCheckMeleeDamageAndEnemyContactDamage(px, py, PLAYER_SIZE, PLAYER_SIZE,
                     enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight())) {
+
                 if (enemy.canContactDamage(now)) {
                     if (model.takeDamage(enemy.getContactDamage(), now)) {
                         AudioManager.getInstance().playDamageTaken();
                     }
                     enemy.markContactDamage(now);
                 }
+
                 double pcx = px + PLAYER_SIZE / 2;
                 double pcy = py + PLAYER_SIZE / 2;
                 double ecx = enemy.getCenterX();
@@ -204,6 +204,7 @@ public class CollisionHandler {
                 double pushDx = pcx - ecx;
                 double pushDy = pcy - ecy;
                 double pushDist = Math.sqrt(pushDx * pushDx + pushDy * pushDy);
+
                 if (pushDist > 0) {
                     double pushStrength = 6;
                     player.setX(px + (pushDx / pushDist) * pushStrength);
@@ -211,13 +212,21 @@ public class CollisionHandler {
                     px = player.getX();
                     py = player.getY();
                 }
+
             }
         }
     }
 
+
+    /**
+     * Checks if bullets fired by zorp hit the boss. Each hit does 10 damage to the boss.
+     * When boss dies, it triggers the boss defeated sequence such as fact unlocked, show fact card etc.
+     */
     private void checkBulletBossCollisions() {
         if (currentBoss == null || !currentBoss.isActive()) return;
+
         Iterator<Bullet> bulletIterator = bullets.iterator();
+
         while (bulletIterator.hasNext()) {
             Bullet b = bulletIterator.next();
             if (checkIfBulletOverlapsAnyCharacter(b.getX(), b.getY(), b.getRadius(),
@@ -233,14 +242,22 @@ public class CollisionHandler {
         bullets.removeIf(b -> !b.isActive());
     }
 
+
+    /**
+     * Checks if the main character melee attack hits the boss. If yes, it does some damage.
+     * When boss dies, it triggers th boss defeated sequence.
+     */
     private void checkMeleeBossCollisions(MainCharacterManager player, double px, double py, long now) {
         if (currentBoss == null || !currentBoss.isActive() || !player.isMelee()) return;
+
         if (now - lastMeleeTime < MELEE_COOLDOWN) return;
+
         double meleeX = px + PLAYER_SIZE;
         double meleeY = py;
         double meleeW = 40;
         double meleeH = PLAYER_SIZE;
-        if (rectangleOverlapToCheckMeleDamageAndEnemyContactDamage(meleeX, meleeY, meleeW, meleeH,
+
+        if (rectangleOverlapToCheckMeleeDamageAndEnemyContactDamage(meleeX, meleeY, meleeW, meleeH,
                 currentBoss.getX(), currentBoss.getY(), currentBoss.getWidth(), currentBoss.getHeight())) {
             currentBoss.takeDamage(15);
             lastMeleeTime = now;
@@ -250,8 +267,14 @@ public class CollisionHandler {
         }
     }
 
+
+    /**
+     * This method checks if an enemy or boss bullets hits the player. For each hit, the
+     * player takes 10 damage, and plays the damage sound. It also removed the hit bullets from the screen.
+     */
     private void checkEnemyBulletPlayerCollisions(double px, double py, long now) {
         Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
+
         while (enemyBulletIterator.hasNext()) {
             Bullet eb = enemyBulletIterator.next();
             if (checkIfBulletOverlapsAnyCharacter(eb.getX(), eb.getY(), eb.getRadius(),
@@ -266,30 +289,54 @@ public class CollisionHandler {
     }
 
     /**
-     * Bullet are measured in a circular way, check if any bullet circle overlaps any rectangle object (target)
-     * by finding closest edge point on the target. Then compare the distance against the bullet radius.
-     * @return true if any bullets overlap any target
+     * This checks if the bullet overlaps any rectangular target by finding the closest point on the target.
      */
     private boolean checkIfBulletOverlapsAnyCharacter(double bulletX, double bulletY, double bulletRadius,
                                                       double targetX, double targetY, double targetWidth, double targetHeight) {
+
         double closestX = Math.max(targetX, Math.min(bulletX, targetX + targetWidth));
         double closestY = Math.max(targetY, Math.min(bulletY, targetY + targetHeight));
         double distanceX = bulletX - closestX;
         double distanceY = bulletY - closestY;
+
         return (distanceX * distanceX + distanceY * distanceY) <= (bulletRadius * bulletRadius);
     }
 
+
+
     /**
-     * Check if two object in play hit boxes are overlapping through comparing where their edges are.
-     * Attacker is the main character and target is the enemy.
-     * The method also check if zorp is contacting any enemy which does additional damage through other methods.
-     * @return true if two object boxes overlap each other.
+     * First this method gets the player position then runs all the collision check through using different collision methods.
      */
-    private boolean rectangleOverlapToCheckMeleDamageAndEnemyContactDamage(double attackerX, double attackerY,
-                                                                           double attackerWidth, double attackerHeight,
-                                                                           double targetX, double targetY,
-                                                                           double targetWidth, double targetHeight) {
-        return attackerX < targetX + targetWidth && attackerX + attackerWidth > targetX
-                && attackerY < targetY + targetHeight && attackerY + attackerHeight > targetY;
+    public void checkCollisions(long now) {
+        MainCharacterManager player = MainCharacterManager.getInstance();
+        double playerXPosition = player.getX();
+        double playerYPosition = player.getY();
+
+        checkZorpBulletEnemyCollisions();
+        checkZorpMeleeAttackAndEnemyCollisions(player, playerXPosition, playerYPosition, now);
+        checkEnemyContactCollisions(player, playerXPosition, playerYPosition, now);
+        checkBulletBossCollisions();
+        checkMeleeBossCollisions(player, playerXPosition, playerYPosition, now);
+        checkEnemyBulletPlayerCollisions(playerXPosition, playerYPosition, now);
+    }
+
+
+    public void setCurrentBoss(Boss boss) {
+        this.currentBoss = boss;
+    }
+
+
+    public void setCurrentObjective(FactPoint objective) {
+        this.currentObjective = objective;
+    }
+
+
+    public void setOnBossDefeated(Runnable callback) {
+        this.onBossDefeated = callback;
+    }
+
+
+    public void setOnSpawnWave(Runnable callback) {
+        this.onSpawnWave = callback;
     }
 }

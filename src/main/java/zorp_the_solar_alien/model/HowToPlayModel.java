@@ -1,10 +1,16 @@
 package zorp_the_solar_alien.model;
 
+/**
+ * HowToPlayModel class handles data needed by HowToPlayController to create MVC pattern.
+ * The class provides different method which can be used to retrieve data by controller
+ * so it can use them to show information on view.
+ */
 public class HowToPlayModel {
 
     public String getTitle() {
         return "Zorp The Solar Alien";
     }
+
 
     public String getStory() {
         return "Hello there, Zorp. You are indeed a brave alien from \"Petunsky\" " +
@@ -19,19 +25,23 @@ public class HowToPlayModel {
                 "you must fight to survive.";
     }
 
+
     public String getObjectivesTitle() {
         return "Objectives";
     }
 
+
     public String getObjectives() {
         return "Your mission is to explore all the planets in the solar system." +
-                " Gather knowledge about them, and learn how to process materials to build and launch your own rocket to " +
-                "reach your home!";
+                " Gather knowledge about them, and so you are aware of their atmosphere before you can gather materials to build and launch your own rocket! " +
+                "Hope you reach your home! Have fun exploring :) ";
     }
+
 
     public String getControlsTitle() {
         return "Controls";
     }
+
 
     public String[][] getControls() {
         return new String[][] {
@@ -41,7 +51,8 @@ public class HowToPlayModel {
                 {"D", "Move Right"},
                 {"Left Click", "Shoot"},
                 {"Right Click", "Melee"},
-                {"Space", "Jump"}
+                {"Space", "Jump"},
+                {"Escape", "Pause"}
         };
     }
 }

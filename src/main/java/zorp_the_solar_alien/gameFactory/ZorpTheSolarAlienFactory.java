@@ -2,6 +2,8 @@ package zorp_the_solar_alien.gameFactory;
 
 import javafx.scene.canvas.GraphicsContext;
 import zorp_the_solar_alien.GameObject;
+import zorp_the_solar_alien.SingletonObjects.SolarSystem;
+
 
 /**
  * This class implements the ZorpTheSolarAlienInterface to support the factory design pattern.
@@ -12,6 +14,7 @@ import zorp_the_solar_alien.GameObject;
 public class ZorpTheSolarAlienFactory implements ZorpTheSolarAlienInterface {
     private GraphicsContext gc;
 
+
     /**
      * Creates the factory with a reference to the graphics context used for rendering all game objects.
      */
@@ -19,9 +22,11 @@ public class ZorpTheSolarAlienFactory implements ZorpTheSolarAlienInterface {
         this.gc = gc;
     }
 
+
     /**
-     * Creates and returns a game object based on the given type string.
-     * Supported types: sun, bullet, enemyBullet, bossBullet, enemy, factPoint, gameInfoBar.
+     * Creates and returns a game object based on the given type string by createProduct from the main interface.
+     * It supports type of objects which are sun, bullet, enemyBullet, bossBullet, enemy, factPoint, gameInfoBar.
+     * Depending on what is called on game play, this method helps us switch between objects.
      */
     @Override
     public GameObject createProduct(String type, double x, double y) {

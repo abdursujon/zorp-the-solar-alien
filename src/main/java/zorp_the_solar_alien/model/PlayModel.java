@@ -1,12 +1,13 @@
 package zorp_the_solar_alien.model;
 
+/**
+ * This is the model class for playController to create MVC pattern.
+ * It stores all game state for the controller and provides education facts.
+ */
 public class PlayModel {
-    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
-            "Jupiter", "Saturn", "Uranus", "Neptune"};
-
+    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
     private int currentPlanet = 0;
     private int factsCollected = 0;
-
     private int hp = 100;
     private int maxHp = 100;
     private int score = 0;
@@ -14,8 +15,7 @@ public class PlayModel {
     private boolean levelComplete = false;
     private boolean gameOver = false;
     private long lastDamageTime = 0;
-    private static final long INVINCIBILITY_NS = 1_000_000_000L;
-
+    private static final long INVINCIBILITY_COOLDOWN = 1_000_000_000L;
     private int currentWave = 0;
     private int waveEnemiesKilled = 0;
     private int currentWaveEnemyCount = 5;
@@ -40,9 +40,9 @@ public class PlayModel {
 
             {
                     "Mercury is the smallest planet in the Solar System.",
-                    "It is the closest planet to the Sun yet not the hottest planet! The hottest planet is Venus not Mercury, mysterious I know right?",
-                    "It has no atmosphere like Earth! Therefore it has no weather, no seasons, no wind, no rain, nothing! " +
-                    "It would be boring to live on Mercury don't you think?",
+                    "Mercury is the closest planet to the Sun yet not the hottest planet! The hottest planet is Venus not Mercury, mysterious I know right?",
+                    "Mercury has no atmosphere like Earth! Therefore it has no weather, no seasons, no wind, no rain, nothing! " +
+                            "It would be boring to live on Mercury don't you think?",
                     "A year on Mercury is only 88 Earth days! As you guessed correctly, because it's the smallest it orbits the fastest.",
                     "Do you like the Moon on Earth? Sadly there is no moon for Mercury :(",
                     "Mercury's surface is covered with craters (giant holes) just like the Moon!",
@@ -50,13 +50,13 @@ public class PlayModel {
                     "Mercury can get as hot as 430 degrees Celsius during the day, and -180 Celsius at night!",
                     "Mercury is a tiny planet, it's only slightly bigger than Earth's Moon.",
                     "Mercury has hidden frozen craters, even though it's closest to the Sun! Do you know why? " +
-                    "Because you could be closest but if the sunlight does not reach " +
-                    "a certain area it will always be frozen even if you are that close!",
+                            "Because you could be closest to the Sun but if the sunlight does not reach " +
+                            "a certain area it will always be frozen even if you are that close!",
             },
 
             {
-                    "Venus is the hottest planet in the Solar System, even hotter than Mercury, even though it's the second planet by distance from the Sun.",
-                    "Venus has a twin called Earth, well scientists like to call them that because they are almost the same size!",
+                    "Did you know Venus is the hottest planet in the Solar System, even hotter than Mercury, even though it's the second planet by distance from the Sun.",
+                    "Venus has a twin called Earth, well scientists like to call that because they are almost the same size!",
                     "Did you know the Sun rises in the west on Venus! Sunset is in the east! " +
                             "Really odd isn't it? It's because Venus spins backwards, the opposite direction of how Earth orbits!",
                     "Now this will blow your mind, a day on Venus is longer than a year! Yeah you heard it right. " +
@@ -66,7 +66,7 @@ public class PlayModel {
                     "The surface of this planet is so hot (465 degrees Celsius) that it is enough to melt any metal on Earth.",
                     "This planet has the most volcanoes on its surface than any other planet in the Solar System.",
                     "Sadly Venus has no moon or rings just like Mercury.",
-                    "The air pressure on the surface of this planet is so strong that it would crush any biological being into pieces."
+                    "The air pressure on the surface of this planet is so strong that it would crush any biological being into pieces. Are you a biological being Zorp?"
             },
 
             {
@@ -79,7 +79,8 @@ public class PlayModel {
                     "The highest peak on Earth is called Mount Everest but the funny thing is that the deepest point in the ocean called the Mariana Trench is deeper than Mount Everest is tall!",
                     "Earth is not a proper circle shape, it is slightly squished at the top and bottom.",
                     "Earth's core is as hot as the surface of the Sun, which is about 5,500 degrees Celsius!",
-                    "A year on Earth is 365 and a quarter days, that's why it has a leap year every 4 years to make up for it."
+                    "A year on Earth is 365 and a quarter days, that's why it has a leap year every 4 years to make up for it. " +
+                            "Are you convinced that you want to visit earth Zorp?"
             },
 
             {
@@ -87,7 +88,7 @@ public class PlayModel {
                     "Can you imagine a volcano that is nearly three times taller than Mount Everest? " +
                             "Mars has a volcano called Olympus Mons which is almost three times taller than Mount Everest!",
                     "Mars has two dwarf moons called Phobos and Deimos, which mean fear and panic in Greek!",
-                    "A day on Mars is almost the same as Earth — only 37 minutes longer. Maybe that's why humans from Earth are so interested in this planet?",
+                    "A day on Mars is almost the same as Earth - only 37 minutes longer. Maybe that's why humans from Earth are so interested in this planet?",
                     "It's known that scientists from Earth found frozen water ice at the poles of Mars under the surface.",
                     "Mars has the biggest canyon called Valles Marineris in the entire Solar System.",
                     "Gravity on Mars is only about 38% of Earth's, if someone could jump 1 metre on Earth, they could jump 3 metres on Mars! Imagine running!",
@@ -96,7 +97,7 @@ public class PlayModel {
             },
 
             {
-                    "Jupiter is the biggest planet in the entire Solar System, about 1,300 Earths can fit inside it.",
+                    "Jupiter is the biggest planet in the entire Solar System, about 1,300 Earths can fit inside it!",
                     "Jupiter has at least 95 moons! The three biggest ones are called Io, Europa, and Ganymede.",
                     "Jupiter spins faster than all other planets in the Solar System, one day is only about 10 hours!",
                     "It has no solid ground to stand on because it's like a giant gas ball.",
@@ -119,14 +120,15 @@ public class PlayModel {
                     "The rings you see behind you stretch out for hundreds of thousands of kilometres but are only about 10 metres thick!",
                     "It is the second biggest planet in the Solar System after Jupiter and about 95 times heavier than Earth.",
                     "It spins so fast that a day is only about 10 and a half hours long!",
-                    "It is also a gas giant like Jupiter, so there is no solid ground to stand on sadly, meaning we won't be able to land on its surface to explore!",
-                    "Winds blowing on its surface can sometimes be about 1,800 kilometres per hour, much faster than any hurricane on Earth!",
+                    "It is also a gas giant like Jupiter, so there is no solid ground to stand on sadly, meaning we won't be able to land on its surface to explore! " +
+                            "May be you can try to build that impossible technology which will allow us?",
+                    "Winds blowing on Saturn surface can sometimes be about 1,800 kilometres per hour, much faster than any hurricane on Earth!",
                     "Saturn's moon called Enceladus shoots giant fountains of water ice into space from cracks in its surface, looks like fountains of Earth but only from beneath!"
             },
 
             {
                     "Uranus is the only planet in the entire Solar System that spins on its side, like a rolling football!",
-                    "It is mostly made of water, methane, and ammonia ice.",
+                    "It is mostly made of methane, ammonia and frozen ice water deep inside the planet.",
                     "Scientists from Earth think it has 27 moons, humans named them after characters from Shakespeare and Alexander Pope!",
                     "A year on Uranus is 84 Earth years long, imagine not having the chance to celebrate your first birthday :(",
                     "Uranus has rings too, 13 of them! But they are faint and very hard to see.",
@@ -141,9 +143,9 @@ public class PlayModel {
                     "Neptune is the farthest planet from the Sun in the Solar System. As you can imagine it is really really cold.",
                     "The winds on Neptune are wild, it has the strongest winds out of all the planets, blowing at over 2,000 kilometres per hour!",
                     "Have you heard of the name Triton? It is the biggest moon of Neptune out of the 16 moons it has.",
-                    "Don't think about how long a year is, because it is 165 Earth years long! No biological being on Earth will ever have a birthday!",
+                    "Don't think about how long a year is, because it is 165 Earth years long! No biological being on Earth will ever have a birthday! May be you will?",
                     "It has lots of methane on its surface, making it a beautiful deep blue colour.",
-                    "As you guessed it is also an ice giant just like Uranus, made mostly of water, methane, and ammonia.",
+                    "As you guessed it is also an ice giant just like Uranus, made mostly ice water deep inside the planet, methane, and ammonia.",
                     "One day on Neptune is only about 16 hours long.",
                     "Huh, rings again, yeah Neptune has rings too, but you won't see them, they are way too thin.",
                     "Hope you like maths? Neptune was the first planet found using maths! Scientists from Earth predicted where it would be before anyone saw it through a telescope!",
@@ -164,41 +166,51 @@ public class PlayModel {
             "Neptune is the windiest planet ever! The winds blow so fast they could whoosh you away like a leaf in a tornado, if you don't know what tornado feels like, give earth a visit!"
     };
 
+
     public String getCurrentPlanetDescription() {
         return planetDescriptions[currentPlanet];
     }
+
 
     public String[] getPlanetNames() {
         return planetNames;
     }
 
+
     public String getCurrentPlanetName() {
         return planetNames[currentPlanet];
     }
+
 
     public int getCurrentPlanet() {
         return currentPlanet;
     }
 
+
     public void setCurrentPlanet(int planet) {
         this.currentPlanet = Math.min(planet, planetNames.length - 1);
     }
+
 
     public void setCurrentWave(int wave) {
         this.currentWave = wave;
     }
 
+
     public void setFactsCollected(int facts) {
         this.factsCollected = facts;
     }
+
 
     public void setScore(int score) {
         this.score = score;
     }
 
+
     public boolean isLastLevel() {
         return currentPlanet >= planetNames.length - 1;
     }
+
 
     public void nextPlanet() {
         if (currentPlanet < planetNames.length - 1) {
@@ -207,45 +219,56 @@ public class PlayModel {
         }
     }
 
+
     public void collectFact() {
         factsCollected++;
     }
+
 
     public int getFactsCollected() {
         return factsCollected;
     }
 
+
     public int getHp() {
         return hp;
     }
+
 
     public int getMaxHp() {
         return maxHp;
     }
 
+
+    /**
+     * This method reduces player hp by a given amount.
+     * If the player was hit less than a second ago damage is ignored.
+     * Through INVINCIBILITY_COOLDOWN we ignore all hit in less than a second
+     * so the player does not die immediately.
+     */
     public boolean takeDamage(int amount, long now) {
-        if (now - lastDamageTime < INVINCIBILITY_NS) return false;
+        if (now - lastDamageTime < INVINCIBILITY_COOLDOWN) return false;
         hp = Math.max(0, hp - amount);
         lastDamageTime = now;
         if (hp <= 0) gameOver = true;
         return true;
     }
 
+
     public int getScore() {
         return score;
     }
+
 
     public void addScore(int points) {
         score += points;
     }
 
+
     public void heal(int amount) {
         hp = Math.min(maxHp, hp + amount);
     }
 
-    public int getKillCount() {
-        return killCount;
-    }
 
     public void registerKill() {
         killCount++;
@@ -253,9 +276,11 @@ public class PlayModel {
         addScore(100);
     }
 
+
     public boolean isObjectiveUnlocked() {
         return objectiveUnlocked;
     }
+
 
     public void checkWaveCleared() {
         if (waveEnemiesKilled >= currentWaveEnemyCount) {
@@ -263,10 +288,12 @@ public class PlayModel {
         }
     }
 
-    public boolean isWaveActive() {
-        return waveActive;
-    }
 
+    /**
+     * Start a new wave by resetting the kill count and locking the fact.
+     * If the enemy wave is normal enemy, the count gets randomise between 5 and 8.
+     * But if the wave is a boss fight, only one boss is rendered.
+     */
     public void startWave() {
         waveActive = true;
         waveEnemiesKilled = 0;
@@ -278,30 +305,37 @@ public class PlayModel {
         }
     }
 
+
     public void completeWave() {
         waveActive = false;
         currentWave++;
     }
 
+
     public int getCurrentWave() {
         return currentWave;
     }
+
 
     public int getTotalWaves() {
         return TOTAL_WAVES;
     }
 
+
     public boolean isBossWave() {
         return currentWave == TOTAL_WAVES - 1;
     }
+
 
     public int getEnemiesPerWave() {
         return currentWaveEnemyCount;
     }
 
+
     public int getWaveEnemiesKilled() {
         return waveEnemiesKilled;
     }
+
 
     public String getWaveFact() {
         int planetIdx = Math.min(currentPlanet, planetFacts.length - 1);
@@ -309,13 +343,16 @@ public class PlayModel {
         return planetFacts[planetIdx][factIdx];
     }
 
+
     public boolean isLevelComplete() {
         return factsCollected >= TOTAL_WAVES;
     }
 
+
     public boolean isGameOver() {
         return gameOver;
     }
+
 
     public void reset() {
         currentPlanet = 0;
@@ -333,6 +370,7 @@ public class PlayModel {
         lastDamageTime = 0;
     }
 
+
     public void resetForNextLevel() {
         factsCollected = 0;
         hp = maxHp;
@@ -346,6 +384,7 @@ public class PlayModel {
         gameOver = false;
         lastDamageTime = 0;
     }
+
 
     public void resetForRetry() {
         hp = maxHp;

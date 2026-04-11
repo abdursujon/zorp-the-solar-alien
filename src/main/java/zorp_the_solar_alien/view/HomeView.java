@@ -13,18 +13,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.model.HomeModel;
 
+
 /**
- * This view class is designed to support the MVC pattern.
- * The task of this class is to create different UI component of the home screen,
- * which then can be used by homeController to create the home screen of the game.
+ * Handles the view of the home screen of the game. This view class helps us establish the MVC pattern which is used by HomeController.
  */
 public class HomeView {
     Pane root;
     HomeModel model;
-    public Canvas canvas;
     GraphicsContext gc;
     Image backgroundView;
-
+    Image zorpAnimation;
+    public Canvas canvas;
     public ImageView zorpImageView;
     public Button homeBtn;
     public Button settingsBtn;
@@ -35,13 +34,17 @@ public class HomeView {
     public Button newGameBtn;
     public Button quitBtn;
     public HBox menuBar;
-    Image zorpAnimation;
-
     private AnimationTimer homeLoop;
     private double bgScrollX = 0;
     private double zorpFloat = 0;
     private double titleGlow = 0;
 
+
+    /**
+     * Creates the home screen of the game with all buttons, canvas, and relevant assets.
+     * It renders zorp character animation in the center.
+     * Button are styled and positon like a website header and can be used to navigate to different screen.
+     */
     public HomeView(Pane root, HomeModel model) {
         this.root = root;
         this.model = model;
@@ -114,14 +117,22 @@ public class HomeView {
         };
     }
 
+
     public void startAnimation() {
         homeLoop.start();
     }
+
 
     public void stopAnimation() {
         homeLoop.stop();
     }
 
+
+    /**
+     * Renders home screen frames and draws the background.
+     * It also renders the game title with glowing effect,
+     * displays the subtitle with animation effect.
+     */
     private void renderHome() {
         double w = canvas.getWidth();
         double h = canvas.getHeight();
@@ -130,7 +141,6 @@ public class HomeView {
         gc.setFill(Color.rgb(5, 5, 20));
         gc.fillRect(0, 0, w, h);
 
-        bgScrollX += 0.15;
         double imgW = backgroundView.getWidth();
         double imgH = backgroundView.getHeight();
         double scaleX = w / imgW;
@@ -140,6 +150,7 @@ public class HomeView {
         double bgH = imgH * scale;
         double offsetX = (w - bgW) / 2;
         double offsetY = (h - bgH) / 2;
+
         gc.setGlobalAlpha(0.85);
         gc.drawImage(backgroundView, offsetX, offsetY, bgW, bgH);
         gc.setGlobalAlpha(1.0);
@@ -151,11 +162,13 @@ public class HomeView {
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 52));
         gc.setGlobalAlpha(glow * 0.4);
         gc.setFill(Color.web("#FF6B00"));
+
         for (int i = -3; i <= 3; i++) {
             for (int j = -3; j <= 3; j++) {
                 gc.fillText(model.getGameTitle(), w / 2 - 310 + i, titleY + j);
             }
         }
+
         gc.setGlobalAlpha(1.0);
         gc.setFill(Color.WHITE);
         gc.fillText(model.getGameTitle(), w / 2 - 310, titleY);
@@ -165,12 +178,14 @@ public class HomeView {
         gc.fillText(model.getGameSubtitle(), w / 2 - 100, titleY + 35);
 
         zorpFloat += 0.04;
-        double floatOffset = Math.sin(zorpFloat) * 10;
+        double floatOffset = Math.sin(zorpFloat) * 50;
+
         if (zorpImageView != null) {
             zorpImageView.setLayoutX((w - zorpImageView.getBoundsInLocal().getWidth()) / 2);
             zorpImageView.setLayoutY(h * 0.4 + floatOffset);
         }
     }
+
 
     public void updateHomeView() {
         renderHome();

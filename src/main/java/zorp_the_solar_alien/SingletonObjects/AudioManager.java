@@ -6,19 +6,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class implements singleton pattern which is used in playController
+ * and game logic classes to play audio based on relevance.
+ */
 public class AudioManager {
     private static AudioManager instance;
     private List<Media> homeTracks;
     private MediaPlayer currentPlayer;
     private int currentIndex = 0;
-
     private Media laserSound;
     private Media enemyDiedSound;
     private Media damageTakenSound;
     private Media gameOverSound;
     private Media bossBitenSound;
     private Media[] bossFightMusic;
+    private boolean playing = false;
 
+
+    /**
+     * This constructor set to private to enforce Singleton pattern.
+     * It loads all audio files from resources.
+     */
     private AudioManager(){
         homeTracks = new ArrayList<>(List.of(
                 new Media(getClass().getResource("/audio/song1.mp3").toExternalForm()),
@@ -40,6 +49,11 @@ public class AudioManager {
         };
     }
 
+
+    /**
+     * Returns the single instance of AudioManager.
+     * If the instance does not exist yet, it creates one.
+     */
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
@@ -47,12 +61,17 @@ public class AudioManager {
         return instance;
     }
 
+
     public void playHomeMusic() {
         Collections.shuffle(homeTracks);
         currentIndex = 0;
         playTrack();
     }
 
+
+    /**
+     * This method loops through all audio track for home and normal gameplay.
+     */
     private void playTrack() {
         if (currentPlayer != null) {
             currentPlayer.stop();
@@ -66,6 +85,10 @@ public class AudioManager {
         playing = true;
     }
 
+
+    /**
+     * This method is used by homeController to check if user click on skip button to skip a song.
+     */
     public void skipTrack() {
         if (playing) {
             currentIndex = (currentIndex + 1) % homeTracks.size();
@@ -73,6 +96,10 @@ public class AudioManager {
         }
     }
 
+
+    /**
+     * Stops the audio track.
+     */
     public void stop() {
         if (currentPlayer != null) {
             currentPlayer.stop();
@@ -80,43 +107,54 @@ public class AudioManager {
         playing = false;
     }
 
-    private boolean playing = false;
 
     public boolean isPlaying(){
         return playing;
     }
 
-    private void playSfx(Media sound) {
+
+    /**
+     * For short sound effect this method is used by other methods to handle what sound they need.
+     * The method uses MediaPlayer dispose free the memory when a specific sound not needed anymore.
+     */
+    private void playSoundEffect(Media sound) {
         MediaPlayer sfx = new MediaPlayer(sound);
         sfx.setOnEndOfMedia(sfx::dispose);
         sfx.play();
     }
 
+
     public void playLaser() {
-        playSfx(laserSound);
+        playSoundEffect(laserSound);
     }
+
 
     public void playEnemyDied() {
-        playSfx(enemyDiedSound);
+        playSoundEffect(enemyDiedSound);
     }
+
 
     public void playDamageTaken() {
-        playSfx(damageTakenSound);
+        playSoundEffect(damageTakenSound);
     }
+
 
     public void playGameOver() {
-        playSfx(gameOverSound);
+        playSoundEffect(gameOverSound);
     }
 
+
     public void playBossBiten() {
-        playSfx(bossBitenSound);
+        playSoundEffect(bossBitenSound);
     }
+
 
     public void playBossMusic() {
         if (currentPlayer != null) {
             currentPlayer.stop();
             currentPlayer.dispose();
         }
+
         Media chosen = bossFightMusic[(int)(Math.random() * 2)];
         currentPlayer = new MediaPlayer(chosen);
         currentPlayer.setVolume(1.0);
@@ -124,6 +162,7 @@ public class AudioManager {
         currentPlayer.play();
         playing = true;
     }
+
 
     public void stopBossMusic() {
         if (currentPlayer != null) {

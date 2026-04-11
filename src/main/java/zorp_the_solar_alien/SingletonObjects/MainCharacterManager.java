@@ -6,9 +6,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import zorp_the_solar_alien.GameObject;
 
+
+/**
+ * This class implements singleton design pattern as we have only one main character.
+ * It handles main character movement, shooting, melee attacks and sprite animation.
+ * The class also handles keyboard and mouse input to control the character on play screen.
+ */
 public class MainCharacterManager extends GameObject {
     private static MainCharacterManager instance;
-
     private Image idleImage;
     private Image shootImage;
     private ImageView imageView;
@@ -31,6 +36,12 @@ public class MainCharacterManager extends GameObject {
     private int meleeCounter = 0;
     private boolean meleePlaying = false;
 
+
+    /**
+     * Private constructor which is used to enforce singleton design pattern.
+     * Loads main character idle and sprite images from resource directory.
+     * It also sets the starting position of the character, and add it to the screen.
+     */
     private MainCharacterManager(GraphicsContext gc, Pane root) {
         super(gc, 200, 400);
         this.root = root;
@@ -56,6 +67,10 @@ public class MainCharacterManager extends GameObject {
         root.getChildren().add(imageView);
     }
 
+    /**
+     * This method returns the single instance of main character which can be used by other class to
+     * use main character. If the character does not exist on the screen, it creates one.
+     */
     public static MainCharacterManager getInstance(GraphicsContext gc, Pane root) {
         if (instance == null) {
             instance = new MainCharacterManager(gc, root);
@@ -63,10 +78,19 @@ public class MainCharacterManager extends GameObject {
         return instance;
     }
 
+
     public static MainCharacterManager getInstance() {
         return instance;
     }
 
+    /**
+     * Here we override the provided method from GameObject base class.
+     * In this class it moves the player based on key actions. It handles
+     * jump physics with gravity effect to make the jump look natural.
+     * It also makes sure the player stays on screen.
+     * It also handles mele animation frames, switching the image based on
+     * current key action and if facing left it flips the image.
+     */
     @Override
     public void update() {
         double w = gc.getCanvas().getWidth();
@@ -135,6 +159,10 @@ public class MainCharacterManager extends GameObject {
         imageView.setLayoutY(y);
     }
 
+
+    /**
+     * This method sets the movement state depending on which key is pressed by user or released.
+     */
     public void setInput(String key, boolean state) {
         switch (key) {
             case "W": movingUp = state; break;
@@ -145,6 +173,11 @@ public class MainCharacterManager extends GameObject {
         }
     }
 
+
+    /**
+     * Sets the attack option based on which mouse button clicked.
+     * If left click, activates shooting and if right click activates melee.
+     */
     public void setMouseInput(String button, boolean state) {
         switch (button) {
             case "PRIMARY": shooting = state; break;
@@ -152,21 +185,26 @@ public class MainCharacterManager extends GameObject {
         }
     }
 
+
     public boolean isShooting() {
         return shooting;
     }
+
 
     public boolean isMelee() {
         return melee;
     }
 
+
     public boolean isJumping() {
         return jumping;
     }
 
+
     public boolean isFacingRight() {
         return facingRight;
     }
+
 
     public void reset() {
         x = 200;
@@ -189,21 +227,26 @@ public class MainCharacterManager extends GameObject {
         imageView.setLayoutY(y);
     }
 
+
     public double getX() {
         return x;
     }
+
 
     public double getY() {
         return y;
     }
 
+
     public void setX(double x) {
         this.x = x;
     }
 
+
     public void setY(double y) {
         this.y = y;
     }
+
 
     public void setVisible(boolean visible) {
         imageView.setVisible(visible);

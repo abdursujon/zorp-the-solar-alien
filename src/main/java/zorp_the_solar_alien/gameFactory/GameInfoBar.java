@@ -19,12 +19,14 @@ public class GameInfoBar extends GameObject {
     private int popupTimer = 0;
     private static final int POPUP_DURATION = 180;
 
+
     /**
      * Creates the game info bar.
      */
     public GameInfoBar(GraphicsContext gc, double x, double y) {
         super(gc, 0, 0);
     }
+
 
     /**
      * This method override the provided update method from GameObject.
@@ -78,6 +80,7 @@ public class GameInfoBar extends GameObject {
             }
         }
     }
+
 
     /**
      * Updates the game info bar data with the latest game state from the playModel.

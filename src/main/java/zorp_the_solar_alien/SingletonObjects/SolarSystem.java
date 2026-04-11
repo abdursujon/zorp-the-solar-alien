@@ -1,4 +1,4 @@
-package zorp_the_solar_alien.gameFactory;
+package zorp_the_solar_alien.SingletonObjects;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -6,13 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import zorp_the_solar_alien.GameObject;
 
-/**
- * This class extends GameObject base class and uses the singleton design pattern
- * so only one instance of the solar system exists throughout the game.
- * It renders the background of the play screen including twinkling stars and the current planet.
- * As the player collects more facts, the planet grows larger and more visible on screen.
- * The planet also rotates slowly to create a visual effect.
- */
+
 public class SolarSystem extends GameObject {
     private static SolarSystem instance = null;
     private Image[] planetImages;
@@ -33,9 +27,10 @@ public class SolarSystem extends GameObject {
 
 
     /**
-     * Private constructor to enforce singleton pattern.
-     * Loads all 9 planet images from resources and initialises 150 stars
-     * with random positions, sizes, phases and brightness for the twinkling effect.
+     * Here we implement singleton pattern by making the solar system pattern private.
+     * It loads all planet images from resource directory and creates 150 starts on the play background
+     * to make it look solar system with stars twinkling. The twinkling effect of star gets random positons,
+     * size and brightness for to make it look realistic.
      */
     private SolarSystem(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
@@ -71,8 +66,9 @@ public class SolarSystem extends GameObject {
         }
     }
 
+
     /**
-     * Returns the single instance of SolarSystem. Creates it if it does not exist yet.
+     * Returns the singleton instance of SolarSystem which is by playController to draw the background.
      */
     public static SolarSystem getInstance(GraphicsContext gc, double x, double y) {
         if (instance == null) {
@@ -81,52 +77,13 @@ public class SolarSystem extends GameObject {
         return instance;
     }
 
-    /**
-     * Updates the number of facts collected and calculates the target scale for the planet.
-     * The more facts collected, the larger the planet appears on screen.
-     */
-    public void setFactsCollected(int facts) {
-        this.factsCollected = facts;
-        double progress = Math.min(1.0, (double) factsCollected / maxFacts);
-        targetScale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * progress;
-    }
 
     /**
-     * Moves to the next planet in the solar system and resets the scale back to minimum.
-     */
-    public void nextPlanet() {
-        if (currentPlanet < planetNames.length - 1) {
-            currentPlanet++;
-            factsCollected = 0;
-            currentScale = MIN_SCALE;
-            targetScale = MIN_SCALE;
-        }
-    }
-
-    /**
-     * Sets the current planet to a specific index for loading a saved game.
-     */
-    public void setCurrentPlanet(int planet) {
-        this.currentPlanet = Math.min(planet, planetNames.length - 1);
-        factsCollected = 0;
-        currentScale = MIN_SCALE;
-        targetScale = MIN_SCALE;
-    }
-
-    /**
-     * Resets the solar system back to the first planet with minimum scale for a new game.
-     */
-    public void reset() {
-        currentPlanet = 0;
-        factsCollected = 0;
-        currentScale = MIN_SCALE;
-        targetScale = MIN_SCALE;
-    }
-
-    /**
-     * This method override the provided update method from GameObject.
-     * It draws the black background, renders twinkling stars, smoothly scales the planet
-     * toward the target size, and draws the rotating planet image in the centre of the screen.
+     * This method overrides the base class GameObject method.
+     * In this class it draws a background with twinkling star or the gameplay to
+     * make the game play more color full and fun.
+     * It also handles animation to the current level background image and place it to the center of the screen.
+     * After each fact collected by player, the planet image gets larger in size.
      */
     @Override
     public void update() {
@@ -173,5 +130,38 @@ public class SolarSystem extends GameObject {
         gc.restore();
 
         gc.setGlobalAlpha(1.0);
+    }
+
+
+    public void setFactsCollected(int facts) {
+        this.factsCollected = facts;
+        double progress = Math.min(1.0, (double) factsCollected / maxFacts);
+        targetScale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * progress;
+    }
+
+
+    public void nextPlanet() {
+        if (currentPlanet < planetNames.length - 1) {
+            currentPlanet++;
+            factsCollected = 0;
+            currentScale = MIN_SCALE;
+            targetScale = MIN_SCALE;
+        }
+    }
+
+
+    public void setCurrentPlanet(int planet) {
+        this.currentPlanet = Math.min(planet, planetNames.length - 1);
+        factsCollected = 0;
+        currentScale = MIN_SCALE;
+        targetScale = MIN_SCALE;
+    }
+
+
+    public void reset() {
+        currentPlanet = 0;
+        factsCollected = 0;
+        currentScale = MIN_SCALE;
+        targetScale = MIN_SCALE;
     }
 }

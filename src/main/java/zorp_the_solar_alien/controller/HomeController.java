@@ -1,6 +1,5 @@
 package zorp_the_solar_alien.controller;
 
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import zorp_the_solar_alien.SingletonObjects.AudioManager;

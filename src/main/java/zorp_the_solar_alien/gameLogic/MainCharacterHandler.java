@@ -2,36 +2,33 @@ package zorp_the_solar_alien.gameLogic;
 
 import java.util.Iterator;
 import java.util.List;
-
 import zorp_the_solar_alien.SingletonObjects.AudioManager;
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
 
 /**
- * This class is delegated by PlayController to handle the main character's shooting logic
- * and bullet updates. It creates bullets using the factory pattern when the player shoots,
- * and removes bullets that go off screen.
+ * This class handles game logic for the main character shooting and bullet updates.
+ * It uses the factory pattern to create bullets, manages the shooting cooldown, and update
+ * bullets status depending on if the bullet is on or off-screen.
  */
-public class PlayerHandler {
+public class MainCharacterHandler {
     private ZorpTheSolarAlienFactory factory;
     private List<Bullet> bullets;
     private static final double PLAYER_SIZE = 80;
-
     private long lastBulletTime = 0;
     private static final long BULLET_COOLDOWN = 200_000_000L;
 
-    public PlayerHandler(ZorpTheSolarAlienFactory factory, List<Bullet> bullets) {
+
+    public MainCharacterHandler(ZorpTheSolarAlienFactory factory, List<Bullet> bullets) {
         this.factory = factory;
         this.bullets = bullets;
     }
 
+
     /**
-     * When user left click mouse, and shooting cooldown has passed,
-     * it first calculated where should be the position of bullet spawn.
-     * It also checks if main character is facing left or right.
-     * It creates a bullet using factory pattern, and sets the direction of the
-     * bullet depending on if the main character facing left or right.
-     * It also handles the shooting audio through calling singleton object AudioManager when main character shoot.
+     * When the player left click to shoot after cooldown, it creates a bullet at the player position using the factory objects.
+     * Depending on player position, bullet is shot either left or right.
+     * When player shoots, it also handles the shooting laser sound.
      */
     public void handlePlayerShooting(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
@@ -50,9 +47,9 @@ public class PlayerHandler {
         }
     }
 
+
     /**
-     * This method loops through the bullet list to update state of bullets for the main character.
-     * If a bullet is off-screen, it removes that object.
+     * Updates the position of each of the player bullets and remove bullets that are off screen.
      */
     public void updateZorpBullets() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
@@ -64,10 +61,9 @@ public class PlayerHandler {
         }
     }
 
+
     /**
-     * The method loop through all enemy bullets, and update their position on the screen, and draws them.
-     * If any bullet is off screen, it removes the bullet from the list.
-     * Java built in class Iterator helps us to iterate over objects of enemybullets which helps us delete object during mid loop.
+     * First it updates the position of the enemy and boss bullet. Then removes bullet that are not on screen.
      */
     public void updateBullets(List<Bullet> enemyBullets) {
         Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();

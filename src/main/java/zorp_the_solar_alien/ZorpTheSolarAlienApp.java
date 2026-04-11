@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import zorp_the_solar_alien.controller.PlayController;
-
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.model.HomeModel;
 import zorp_the_solar_alien.model.PlayModel;

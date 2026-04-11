@@ -13,6 +13,7 @@ public class HowToPlayView {
     Image backgroundView;
     HowToPlayModel model;
 
+
     public HowToPlayView(Pane root, HowToPlayModel model) {
         this.root = root;
         this.model = model;
@@ -29,11 +30,13 @@ public class HowToPlayView {
         root.getChildren().add(canvas);
     }
 
+
     private double drawWrappedText(GraphicsContext gc, String text, double x, double y, double maxWidth, double lineHeight) {
         String[] words = text.split(" ");
         StringBuilder line = new StringBuilder();
         javafx.scene.text.Text helper = new javafx.scene.text.Text();
         helper.setFont(gc.getFont());
+
         for (String word : words) {
             String testLine = line + word + " ";
             helper.setText(testLine);
@@ -45,9 +48,11 @@ public class HowToPlayView {
                 line.append(word).append(" ");
             }
         }
+
         gc.fillText(line.toString(), x, y);
         return y + lineHeight;
     }
+
 
     public void updateView() {
         double width = canvas.getWidth();
@@ -83,9 +88,11 @@ public class HowToPlayView {
         }
     }
 
+
     public void showHowToPlayView() {
         canvas.setVisible(true);
     }
+
 
     public void hideHowToPlayView() {
         canvas.setVisible(false);

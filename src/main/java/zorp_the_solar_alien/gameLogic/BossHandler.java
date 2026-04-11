@@ -1,7 +1,6 @@
 package zorp_the_solar_alien.gameLogic;
 
 import java.util.List;
-
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,9 +12,9 @@ import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 
 /**
- * This class is delegated by PlayController to handle all boss related game logic.
- * It updates the boss movement and shooting, and handles the boss defeated sequence
- * including explosion animation, score reward, and unlocking the final fact objective.
+ * This class is designed to handle all boss related game logic for playController.
+ * It updates boss movement and shooting. Also handles the sequence what happens when boss
+ * is defeated.
  */
 public class BossHandler {
     private PlayModel model;
@@ -24,6 +23,11 @@ public class BossHandler {
     private List<Bullet> enemyBullets;
     private static final double PLAYER_SIZE = 80;
 
+
+    /**
+     * The constructor creates boss handler with reference to the play model, and root pane for explosion animation.
+     * It uses factory pattern to create boss bullets on the play screen.
+     */
     public BossHandler(PlayModel model, Pane root, ZorpTheSolarAlienFactory factory, List<Bullet> enemyBullets) {
         this.model = model;
         this.root = root;
@@ -31,11 +35,12 @@ public class BossHandler {
         this.enemyBullets = enemyBullets;
     }
 
+
     /**
-     * This method helps us determine if a boss is active, if not active or dead this method is skipped.
-     * Otherwise, if boss is active and alive, boss chase the player. When shooting cooldown is done,
-     * boss fire a new bullet aiming towards the player. The boss also fire random bullets through using
-     * factory product by using createProduct method.
+     * This method check if boss is alive, if yes, this method handle logic so the boss
+     * chase the player and draws the boss on the screen. It also checks if boss shooting
+     * cooldown is finished, if yes it creates boss bullet using factory pattern aiming at the player
+     * central.
      */
     public void updateBoss(Boss currentBoss, long now) {
         if (currentBoss == null || !currentBoss.isActive()) {
@@ -58,12 +63,12 @@ public class BossHandler {
         }
     }
 
+
     /**
-     * When player defeat the boss, stop the boss music by calling singleton AudioManager method,
-     * then play defeated music, and after that start playing normal music.
-     * When boss defeated, on the position of the boss, this method help us create the explosion effect.
-     * It update the score of the player and add 1000 points, and full heal the player and register the boss killed.
-     * After all animation done, it removed all relevant objects from the screen, and unlock the final facts.
+     * When player defeat the boss, this method help us stoping the boss music audio, and plays defeated sound instead.
+     * Also in the place of where boss was defeated, it creates explosion effect. Then it awards the player 1000 points,
+     * regenerate full hp and register the kills. Then it clears all enemy bullets and boss objects from the screen.
+     * Finally, it unlocks the final facts and make it ready to collect by player.
      */
     public void onBossDefeated(Boss currentBoss, FactPoint currentObjective) {
         AudioManager.getInstance().stopBossMusic();

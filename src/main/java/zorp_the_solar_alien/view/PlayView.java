@@ -19,12 +19,10 @@ public class PlayView {
     public Pane root;
     public Canvas canvas;
     public GraphicsContext gc;
-
     private VBox introCard;
     private VBox factCard;
     private Button restartBtn;
     public Button pauseBtn;
-
     private Runnable onStartGame;
     private Runnable onDoneReading;
     private Runnable onRestart;
@@ -46,21 +44,26 @@ public class PlayView {
         buildPauseBtn();
     }
 
+
     public void setOnStartGame(Runnable callback) {
         this.onStartGame = callback;
     }
+
 
     public void setOnDoneReading(Runnable callback) {
         this.onDoneReading = callback;
     }
 
+
     public void setOnRestart(Runnable callback) {
         this.onRestart = callback;
     }
 
+
     public void setOnPause(Runnable callback) {
         this.onPause = callback;
     }
+
 
     public void show() {
         canvas.setVisible(true);
@@ -68,10 +71,12 @@ public class PlayView {
         pauseBtn.toFront();
     }
 
+
     public void hide() {
         canvas.setVisible(false);
         pauseBtn.setVisible(false);
     }
+
 
     private void buildIntroCard() {
         introCard = new VBox(20);
@@ -115,6 +120,7 @@ public class PlayView {
         root.getChildren().add(introCard);
     }
 
+
     public void showIntroCard(String title, String description) {
         Label titleLabel = (Label) introCard.getChildren().get(0);
         Label descLabel = (Label) introCard.getChildren().get(1);
@@ -136,6 +142,7 @@ public class PlayView {
             introCard.setLayoutY((h - introCard.getBoundsInLocal().getHeight()) / 2);
         });
     }
+
 
     private void buildFactCard() {
         factCard = new VBox(15);
@@ -185,6 +192,7 @@ public class PlayView {
         root.getChildren().add(factCard);
     }
 
+
     public void showFactCard(String factText, int factNumber) {
         Label factTitle = (Label) factCard.getChildren().get(0);
         Label factContent = (Label) factCard.getChildren().get(1);
@@ -205,13 +213,15 @@ public class PlayView {
 
         int totalFrames = 300;
         Timeline fillTimer = new Timeline();
+
         for (int i = 0; i <= totalFrames; i++) {
             int pct = (int) ((i / (double) totalFrames) * 100);
-            KeyFrame kf = new KeyFrame(javafx.util.Duration.millis(i * (5000.0 / totalFrames)), e -> {
+            KeyFrame kf = new KeyFrame(javafx.util.Duration.millis(i * (10000.0 / totalFrames)), e -> {
                 doneBtn.setStyle("-fx-background-color: linear-gradient(to right, #34A853 " + pct + "%, #888888 " + pct + "%);" + baseStyle);
             });
             fillTimer.getKeyFrames().add(kf);
         }
+
         fillTimer.setOnFinished(e -> {
             doneBtn.setDisable(false);
             doneBtn.setStyle("-fx-background-color: #34A853;" + baseStyle + "-fx-cursor: hand;");
@@ -227,6 +237,7 @@ public class PlayView {
             factCard.setLayoutY((h - factCard.getBoundsInLocal().getHeight()) / 2);
         });
     }
+
 
     private void buildPauseBtn() {
         pauseBtn = new Button("PAUSE");
@@ -245,9 +256,11 @@ public class PlayView {
         });
     }
 
+
     public void setPauseText(boolean paused) {
         pauseBtn.setText(paused ? "UNPAUSE" : "PAUSE");
     }
+
 
     private void buildRestartBtn() {
         restartBtn = new Button("RESTART");
@@ -266,6 +279,7 @@ public class PlayView {
             if (onRestart != null) onRestart.run();
         });
     }
+
 
     public void showGameOver(int score, int highScore) {
         double w = canvas.getWidth();
@@ -288,6 +302,7 @@ public class PlayView {
         restartBtn.toFront();
     }
 
+
     public void showLevelComplete(String planetName, int score) {
         double w = canvas.getWidth();
         double h = canvas.getHeight();
@@ -309,6 +324,7 @@ public class PlayView {
         restartBtn.setVisible(true);
         restartBtn.toFront();
     }
+
 
     public void showGameComplete(int score) {
         double w = canvas.getWidth();
