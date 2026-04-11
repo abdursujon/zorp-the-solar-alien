@@ -69,11 +69,11 @@ public class PlayerHandler {
      * If any bullet is off screen, it removes the bullet from the list.
      * Java built in class Iterator helps us to iterate over objects of enemybullets which helps us delete object during mid loop.
      */
-    public void updateEnemyBullets(List<EnemyBullet> enemyBullets) {
-        Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+    public void updateBullets(List<Bullet> enemyBullets) {
+        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
 
         while (enemyBulletIterator.hasNext()) {
-            EnemyBullet eb = enemyBulletIterator.next();
+            Bullet eb = enemyBulletIterator.next();
             eb.update();
             if (!eb.isActive()) enemyBulletIterator.remove();
         }

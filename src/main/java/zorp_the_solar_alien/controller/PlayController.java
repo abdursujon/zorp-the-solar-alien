@@ -42,7 +42,7 @@ public class PlayController {
 
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
-    private List<EnemyBullet> enemyBullets = new ArrayList<>();
+    private List<Bullet> enemyBullets = new ArrayList<>();
 
     private CollisionHandler collisionHandler;
     private WaveSpawner waveSpawner;
@@ -148,7 +148,7 @@ public class PlayController {
             playerHandler.updateZorpBullets();
             updateEnemies(now);
             bossHandler.updateBoss(waveSpawner.getCurrentBoss(), now);
-            playerHandler.updateEnemyBullets(enemyBullets);
+            playerHandler.updateBullets(enemyBullets);
             MainCharacterManager.getInstance().update();
 
             collisionHandler.setCurrentBoss(waveSpawner.getCurrentBoss());
@@ -285,7 +285,7 @@ public class PlayController {
                 continue;
             }
             if (enemy.canShoot(now)) {
-                EnemyBullet enemyBullet = (EnemyBullet) factory.createProduct("enemyBullet", enemy.getCenterX(), enemy.getCenterY());
+                Bullet enemyBullet = (Bullet) factory.createProduct("enemyBullet", enemy.getCenterX(), enemy.getCenterY());
                 enemyBullet.setTarget(playerCX, playerCY);
                 enemyBullets.add(enemyBullet);
                 enemy.markShot(now);

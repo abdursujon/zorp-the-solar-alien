@@ -18,7 +18,7 @@ public class WaveSpawner {
     private GraphicsContext gc;
     private ZorpTheSolarAlienFactory factory;
     private List<Enemy> enemies;
-    private List<EnemyBullet> enemyBullets;
+    private List<Bullet> enemyBullets;
     private List<Bullet> bullets;
     private static final double PLAYER_SIZE = 80;
 
@@ -26,7 +26,7 @@ public class WaveSpawner {
     private FactPoint currentObjective;
 
     public WaveSpawner(PlayModel model, GraphicsContext gc, ZorpTheSolarAlienFactory factory,
-                       List<Bullet> bullets, List<Enemy> enemies, List<EnemyBullet> enemyBullets) {
+                       List<Bullet> bullets, List<Enemy> enemies, List<Bullet> enemyBullets) {
         this.model = model;
         this.gc = gc;
         this.factory = factory;

@@ -13,21 +13,18 @@ public class MainCharacterManager extends GameObject {
     private Image shootImage;
     private ImageView imageView;
     private Pane root;
-
     private double speed = 5;
     private boolean movingLeft, movingRight, movingUp, movingDown;
     private boolean shooting;
     private boolean melee;
     private boolean jumping;
     private boolean facingRight = true;
-
     private boolean jumpPlaying = false;
     private double jumpVelocity = 0;
     private double groundY;
     private static final double GRAVITY = 0.5;
     private static final double JUMP_FORCE = -12;
     private static final int DRAW_SIZE = 80;
-
     private static final int MELEE_FRAMES = 3;
     private Image[] meleeFrames;
     private int meleeFrame = 0;
@@ -155,10 +152,21 @@ public class MainCharacterManager extends GameObject {
         }
     }
 
-    public boolean isShooting() { return shooting; }
-    public boolean isMelee() { return melee; }
-    public boolean isJumping() { return jumping; }
-    public boolean isFacingRight() { return facingRight; }
+    public boolean isShooting() {
+        return shooting;
+    }
+
+    public boolean isMelee() {
+        return melee;
+    }
+
+    public boolean isJumping() {
+        return jumping;
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
 
     public void reset() {
         x = 200;
@@ -181,9 +189,23 @@ public class MainCharacterManager extends GameObject {
         imageView.setLayoutY(y);
     }
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public void setX(double x) { this.x = x; }
-    public void setY(double y) { this.y = y; }
-    public void setVisible(boolean visible) { imageView.setVisible(visible); }
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setVisible(boolean visible) {
+        imageView.setVisible(visible);
+    }
 }

@@ -41,31 +41,46 @@ mvn clean javafx:run
 
 To do
 1. Finish each level facts x
-2. Final review of each line of code twice and comment all method 
-File to comment: 
-1. ZorpTheSolarAlienApp - Main x
-2. GameObject - Abstract x
-3. HomeModel - MVC (Model) 
-4. PlayModel - MVC (Model)
-5. HowToPlayModel - MVC (Model)
-6. HomeView - MVC (View)
-7. PlayView - MVC (View)
-8. HowToPlayView - MVC (View)
-9. HomeController - MVC (Controller)
-10. PlayController - MVC (Controller)
-11. HowToPlayController - MVC (Controller)
-12. MainCharacterManager - Singleton
-13. AudioManager - Singleton
-14. ScoreManager - Singleton
-15. SolarSystem - Singleton
-16. Enemy - Factory Product
-17. Boss - Factory Product
-18. Bullet - Factory Product
-19. EnemyBullet - Factory Product
-20. FactPoint - Factory Product
-21. GameInfoBar - Factory Product
-22. ZorpTheSolarAlienFactory - Factory
-23. ZorpTheSolarAlienInterface - Factory Interface
+2. Final review of each line of code twice and comment all method
+   controller
+1. HomeController x
+2. HowToPlayController x
+3. PlayController x
+
+gameFactory
+4. Boss x
+5. Bullet x
+6. Enemy x
+7. FactPoint x
+8. GameInfoBar x
+9. SolarSystem 
+10. ZorpTheSolarAlienFactory
+11. ZorpTheSolarAlienInterface x
+
+gameLogic
+12. BossHandler
+13. CollisionHandler
+14. PlayerHandler
+15. WaveSpawner
+
+model
+16. HomeModel
+17. HowToPlayModel
+18. PlayModel
+
+SingletonObjects
+19. AudioManager
+20. MainCharacterManager
+21. ScoreManager
+
+view
+22. HomeView
+23. HowToPlayView
+24. PlayView
+
+Root package
+25. GameObject
+26. ZorpTheSolarAlienApp
 
 3. Create UML and write report 
 ---                                                                                                                                                                                                                               

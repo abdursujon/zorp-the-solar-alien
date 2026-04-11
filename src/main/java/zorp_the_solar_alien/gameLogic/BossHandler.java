@@ -21,10 +21,10 @@ public class BossHandler {
     private PlayModel model;
     private Pane root;
     private ZorpTheSolarAlienFactory factory;
-    private List<EnemyBullet> enemyBullets;
+    private List<Bullet> enemyBullets;
     private static final double PLAYER_SIZE = 80;
 
-    public BossHandler(PlayModel model, Pane root, ZorpTheSolarAlienFactory factory, List<EnemyBullet> enemyBullets) {
+    public BossHandler(PlayModel model, Pane root, ZorpTheSolarAlienFactory factory, List<Bullet> enemyBullets) {
         this.model = model;
         this.root = root;
         this.factory = factory;
@@ -50,11 +50,10 @@ public class BossHandler {
         currentBoss.update();
 
         if (currentBoss.canShoot(now)) {
-            EnemyBullet enemyBossBullet = (EnemyBullet) factory.createProduct("enemyBullet",
+            Bullet bossBullet = (Bullet) factory.createProduct("bossBullet",
                     currentBoss.getCenterX(), currentBoss.getCenterY());
-            enemyBossBullet.setTarget(playerCX, playerCY);
-            enemyBossBullet.setAmmoImage(currentBoss.getAmmoImage());
-            enemyBullets.add(enemyBossBullet);
+            bossBullet.setTarget(playerCX, playerCY);
+            enemyBullets.add(bossBullet);
             currentBoss.markShot(now);
         }
     }

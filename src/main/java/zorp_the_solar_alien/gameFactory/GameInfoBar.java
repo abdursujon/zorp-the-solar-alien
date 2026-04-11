@@ -6,40 +6,34 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
 
+/**
+ * This class extends GameObject base class and is designed to support the factory pattern.
+ * It renders the game info bar at the top of the play screen showing the player's HP bar,
+ * current score, planet name, wave progress, and enemies killed count.
+ */
 public class GameInfoBar extends GameObject {
     private int hp, maxHp, score;
     private String planetName;
     private int currentWave, totalWaves, waveEnemiesKilled, enemiesPerWave;
-
     private String currentFactPopup = null;
     private int popupTimer = 0;
     private static final int POPUP_DURATION = 180;
 
+    /**
+     * Creates the game info bar.
+     */
     public GameInfoBar(GraphicsContext gc, double x, double y) {
         super(gc, 0, 0);
     }
 
-    public void setData(int hp, int maxHp, int score, String planetName,
-                        int currentWave, int totalWaves, int waveEnemiesKilled, int enemiesPerWave) {
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.score = score;
-        this.planetName = planetName;
-        this.currentWave = currentWave;
-        this.totalWaves = totalWaves;
-        this.waveEnemiesKilled = waveEnemiesKilled;
-        this.enemiesPerWave = enemiesPerWave;
-    }
-
-    public void showFactPopup(String factText) {
-        currentFactPopup = factText;
-        popupTimer = POPUP_DURATION;
-    }
-
+    /**
+     * This method override the provided update method from GameObject.
+     * It draws the main character health bar, total score, wave and enemies count.
+     */
     @Override
     public void update() {
         double w = gc.getCanvas().getWidth();
-        double topY = 70;
+        double topY = 80;
 
         gc.setFill(Color.rgb(0, 0, 0, 0.5));
         gc.fillRect(0, topY, w, 55);
@@ -84,4 +78,20 @@ public class GameInfoBar extends GameObject {
             }
         }
     }
+
+    /**
+     * Updates the game info bar data with the latest game state from the playModel.
+     */
+    public void setData(int hp, int maxHp, int score, String planetName,
+                        int currentWave, int totalWaves, int waveEnemiesKilled, int enemiesPerWave) {
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.score = score;
+        this.planetName = planetName;
+        this.currentWave = currentWave;
+        this.totalWaves = totalWaves;
+        this.waveEnemiesKilled = waveEnemiesKilled;
+        this.enemiesPerWave = enemiesPerWave;
+    }
+
 }

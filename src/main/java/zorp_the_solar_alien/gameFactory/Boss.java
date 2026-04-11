@@ -7,33 +7,35 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
 
+/**
+ * This class extends GameObject base class and implements logic to handle how boss behave in the game play.
+ * Designed to support the factory pattern.
+ * This class provides unique boss with their name and health bar for each level.
+ */
 public class Boss extends GameObject {
+
     private boolean active = true;
     private int hp;
     private int maxHp;
     private double speed = 1.2;
     private static final int DRAW_SIZE = 120;
-
     private Image sprite;
     private double sinePhase;
-
     private long lastShotTime = 0;
-    private static final long SHOOT_COOLDOWN_NS = 1_200_000_000L;
-
+    private static final long SHOOT_COOLDOWN_NS = 500_000_000L;
     private double targetX, targetY;
-
     private String bossName;
 
     private static final String[] BOSS_NAMES = {
-            "Solaris the Scorcher",
-            "Mercurio the Swift",
-            "Venoma the Toxic",
+            "Solaris The Scorcher",
+            "Mercurio The Swift",
+            "Venoma The Toxic",
             "Captain Carrot",
-            "Rusty the Red",
-            "Big Jupe",
-            "Ringo the Ringed",
-            "Frostbite",
-            "Stormy the Wind King"
+            "Rusty Mask",
+            "Demon The Jupe",
+            "Ringo",
+            "Frostbiter",
+            "Stormy King"
     };
 
     private static final String[] BOSS_SPRITES = {
@@ -48,20 +50,19 @@ public class Boss extends GameObject {
             "/enemies/boss/boss10.png"
     };
 
-    private static final int TOTAL_AMMO = 50;
-    private static Image[] ammoImages = null;
 
+    /**
+     * The constructor creates a boss for the given planet index.
+     * It loads unique sprite for the boss, name.
+     * Each boss spawn in a random position on the screen.
+     * The constructor initialise first boss with 200 hp then increase each boss health by 100hp for each level.
+     */
     public Boss(GraphicsContext gc, double x, double y, int planetIndex) {
         super(gc, x, y);
         planetIndex = Math.min(planetIndex, BOSS_SPRITES.length - 1);
         bossName = BOSS_NAMES[planetIndex];
         sprite = new Image(getClass().getResource(BOSS_SPRITES[planetIndex]).toExternalForm());
-        if (ammoImages == null) {
-            ammoImages = new Image[TOTAL_AMMO];
-            for (int i = 0; i < TOTAL_AMMO; i++) {
-                ammoImages[i] = new Image(getClass().getResource("/enemies/boss/boss-bullets/ammo" + (i + 1) + ".png").toExternalForm());
-            }
-        }
+
         sinePhase = Math.random() * Math.PI * 2;
         targetX = x;
         targetY = y;
@@ -69,11 +70,13 @@ public class Boss extends GameObject {
         hp = maxHp;
     }
 
-    public void setChaseTarget(double tx, double ty) {
-        this.targetX = tx;
-        this.targetY = ty;
-    }
 
+    /**
+     * This method override the provided update method from GameObject.
+     * In this instance, it helps us move the boss toward the main character.
+     * It also applies sine wave for floating movement of the boss, draws the sprite on canvas,
+     * and renders the health bar on top of the boss with each boss name through using defined array BOSS_NAMES .
+     */
     @Override
     public void update() {
 
@@ -108,28 +111,71 @@ public class Boss extends GameObject {
         gc.fillText(bossName, x + DRAW_SIZE / 2.0 - textWidth / 2, barY - 4);
     }
 
+
+    /**
+     * This method set the chase target position, which is main character center.
+     */
+    public void setChaseTarget(double tx, double ty) {
+        this.targetX = tx;
+        this.targetY = ty;
+    }
+
+
+    /**
+     * After enough time passed, it returns true when boss can shoot.
+     */
     public boolean canShoot(long now) {
         return now - lastShotTime > SHOOT_COOLDOWN_NS;
     }
 
+
+    /**
+     * It records the time of the last shot by boss so we can track the shot cooldown.
+     */
     public void markShot(long now) {
         lastShotTime = now;
     }
 
+
+    /**
+     * For each damage taken, this method reduces boss hp. If boss hp reach zero, boss gets deactivated.
+     */
     public void takeDamage(int damage) {
         hp -= damage;
         if (hp <= 0) active = false;
     }
 
-    public Image getAmmoImage() {
-        return ammoImages[(int) (Math.random() * TOTAL_AMMO)];
+    public boolean isActive() {
+        return active;
     }
 
-    public boolean isActive() { return active; }
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getWidth() { return DRAW_SIZE; }
-    public double getHeight() { return DRAW_SIZE; }
-    public double getCenterX() { return x + DRAW_SIZE / 2.0; }
-    public double getCenterY() { return y + DRAW_SIZE / 2.0; }
+
+    public double getX() {
+        return x;
+    }
+
+
+    public double getY() {
+        return y;
+    }
+
+
+    public double getWidth() {
+        return DRAW_SIZE;
+    }
+
+
+    public double getHeight() {
+        return DRAW_SIZE;
+    }
+
+
+    public double getCenterX() {
+        return x + DRAW_SIZE / 2.0;
+    }
+
+
+    public double getCenterY() {
+        return y + DRAW_SIZE / 2.0;
+    }
 }

@@ -17,7 +17,7 @@ public class CollisionHandler {
     private PlayModel model;
     private List<Bullet> bullets;
     private List<Enemy> enemies;
-    private List<EnemyBullet> enemyBullets;
+    private List<Bullet> enemyBullets;
 
     private long lastMeleeTime = 0;
     private static final long MELEE_COOLDOWN = 400_000_000L;
@@ -28,7 +28,7 @@ public class CollisionHandler {
     private Runnable onBossDefeated;
     private Runnable onSpawnWave;
 
-    public CollisionHandler(PlayModel model, List<Bullet> bullets, List<Enemy> enemies, List<EnemyBullet> enemyBullets) {
+    public CollisionHandler(PlayModel model, List<Bullet> bullets, List<Enemy> enemies, List<Bullet> enemyBullets) {
         this.model = model;
         this.bullets = bullets;
         this.enemies = enemies;
@@ -251,9 +251,9 @@ public class CollisionHandler {
     }
 
     private void checkEnemyBulletPlayerCollisions(double px, double py, long now) {
-        Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
         while (enemyBulletIterator.hasNext()) {
-            EnemyBullet eb = enemyBulletIterator.next();
+            Bullet eb = enemyBulletIterator.next();
             if (checkIfBulletOverlapsAnyCharacter(eb.getX(), eb.getY(), eb.getRadius(),
                     px, py, PLAYER_SIZE, PLAYER_SIZE)) {
                 eb.setActive(false);

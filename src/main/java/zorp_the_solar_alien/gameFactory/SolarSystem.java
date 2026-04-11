@@ -6,30 +6,37 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import zorp_the_solar_alien.GameObject;
 
+/**
+ * This class extends GameObject base class and uses the singleton design pattern
+ * so only one instance of the solar system exists throughout the game.
+ * It renders the background of the play screen including twinkling stars and the current planet.
+ * As the player collects more facts, the planet grows larger and more visible on screen.
+ * The planet also rotates slowly to create a visual effect.
+ */
 public class SolarSystem extends GameObject {
     private static SolarSystem instance = null;
-
     private Image[] planetImages;
     private int currentPlanet = 0;
     private int factsCollected = 0;
     private int maxFacts = 10;
-
     private static final int STAR_COUNT = 150;
     private double[] starX, starY, starSize, starPhase, starSpeed;
     private double[] starBrightness;
-
     private double currentScale = 0.0;
     private double targetScale = 0.0;
     private static final double MIN_SCALE = 0.08;
     private static final double MAX_SCALE = 0.6;
     private static final double SCALE_LERP_SPEED = 0.02;
-
     private double rotationAngle = 0.0;
     private static final double ROTATION_SPEED = 0.15;
+    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars","Jupiter", "Saturn", "Uranus", "Neptune"};
 
-    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars",
-            "Jupiter", "Saturn", "Uranus", "Neptune"};
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     * Loads all 9 planet images from resources and initialises 150 stars
+     * with random positions, sizes, phases and brightness for the twinkling effect.
+     */
     private SolarSystem(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
 
@@ -53,6 +60,7 @@ public class SolarSystem extends GameObject {
         starPhase = new double[STAR_COUNT];
         starSpeed = new double[STAR_COUNT];
         starBrightness = new double[STAR_COUNT];
+
         for (int i = 0; i < STAR_COUNT; i++) {
             starX[i] = Math.random();
             starY[i] = Math.random();
@@ -63,6 +71,9 @@ public class SolarSystem extends GameObject {
         }
     }
 
+    /**
+     * Returns the single instance of SolarSystem. Creates it if it does not exist yet.
+     */
     public static SolarSystem getInstance(GraphicsContext gc, double x, double y) {
         if (instance == null) {
             instance = new SolarSystem(gc, x, y);
@@ -70,12 +81,19 @@ public class SolarSystem extends GameObject {
         return instance;
     }
 
+    /**
+     * Updates the number of facts collected and calculates the target scale for the planet.
+     * The more facts collected, the larger the planet appears on screen.
+     */
     public void setFactsCollected(int facts) {
         this.factsCollected = facts;
         double progress = Math.min(1.0, (double) factsCollected / maxFacts);
         targetScale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * progress;
     }
 
+    /**
+     * Moves to the next planet in the solar system and resets the scale back to minimum.
+     */
     public void nextPlanet() {
         if (currentPlanet < planetNames.length - 1) {
             currentPlanet++;
@@ -85,6 +103,9 @@ public class SolarSystem extends GameObject {
         }
     }
 
+    /**
+     * Sets the current planet to a specific index for loading a saved game.
+     */
     public void setCurrentPlanet(int planet) {
         this.currentPlanet = Math.min(planet, planetNames.length - 1);
         factsCollected = 0;
@@ -92,14 +113,9 @@ public class SolarSystem extends GameObject {
         targetScale = MIN_SCALE;
     }
 
-    public int getCurrentPlanet() {
-        return currentPlanet;
-    }
-
-    public String getCurrentPlanetName() {
-        return planetNames[currentPlanet];
-    }
-
+    /**
+     * Resets the solar system back to the first planet with minimum scale for a new game.
+     */
     public void reset() {
         currentPlanet = 0;
         factsCollected = 0;
@@ -107,6 +123,11 @@ public class SolarSystem extends GameObject {
         targetScale = MIN_SCALE;
     }
 
+    /**
+     * This method override the provided update method from GameObject.
+     * It draws the black background, renders twinkling stars, smoothly scales the planet
+     * toward the target size, and draws the rotating planet image in the centre of the screen.
+     */
     @Override
     public void update() {
         double w = gc.getCanvas().getWidth();
