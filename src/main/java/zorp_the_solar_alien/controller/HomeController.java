@@ -38,6 +38,7 @@ public class HomeController {
 		this.playController = playController;
 		this.howToPlayController = howToPlayController;
 
+		view.setData(model.getGameTitle(), model.getGameSubtitle());
 		view.updateHomeView();
 		view.startAnimation();
 		updatePlayButtonText();

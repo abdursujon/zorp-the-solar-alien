@@ -11,8 +11,6 @@ public class PlayModel {
     private int hp = 100;
     private int maxHp = 100;
     private int score = 0;
-    private int killCount = 0;
-    private boolean levelComplete = false;
     private boolean gameOver = false;
     private long lastDamageTime = 0;
     private static final long INVINCIBILITY_COOLDOWN = 1_000_000_000L;
@@ -20,7 +18,6 @@ public class PlayModel {
     private int waveEnemiesKilled = 0;
     private int currentWaveEnemyCount = 5;
     private static final int TOTAL_WAVES = 10;
-    private boolean waveActive = false;
     private boolean objectiveUnlocked = false;
 
     private String[][] planetFacts = {
@@ -172,11 +169,6 @@ public class PlayModel {
     }
 
 
-    public String[] getPlanetNames() {
-        return planetNames;
-    }
-
-
     public String getCurrentPlanetName() {
         return planetNames[currentPlanet];
     }
@@ -271,7 +263,6 @@ public class PlayModel {
 
 
     public void registerKill() {
-        killCount++;
         waveEnemiesKilled++;
         addScore(100);
     }
@@ -295,7 +286,6 @@ public class PlayModel {
      * But if the wave is a boss fight, only one boss is rendered.
      */
     public void startWave() {
-        waveActive = true;
         waveEnemiesKilled = 0;
         objectiveUnlocked = false;
         if (!isBossWave()) {
@@ -307,7 +297,6 @@ public class PlayModel {
 
 
     public void completeWave() {
-        waveActive = false;
         currentWave++;
     }
 
@@ -359,13 +348,10 @@ public class PlayModel {
         factsCollected = 0;
         hp = maxHp;
         score = 0;
-        killCount = 0;
         currentWave = 0;
         waveEnemiesKilled = 0;
         currentWaveEnemyCount = 5;
-        waveActive = false;
         objectiveUnlocked = false;
-        levelComplete = false;
         gameOver = false;
         lastDamageTime = 0;
     }
@@ -374,13 +360,10 @@ public class PlayModel {
     public void resetForNextLevel() {
         factsCollected = 0;
         hp = maxHp;
-        killCount = 0;
         currentWave = 0;
         waveEnemiesKilled = 0;
         currentWaveEnemyCount = 5;
-        waveActive = false;
         objectiveUnlocked = false;
-        levelComplete = false;
         gameOver = false;
         lastDamageTime = 0;
     }
@@ -388,12 +371,9 @@ public class PlayModel {
 
     public void resetForRetry() {
         hp = maxHp;
-        killCount = 0;
         waveEnemiesKilled = 0;
         currentWaveEnemyCount = 5;
-        waveActive = false;
         objectiveUnlocked = false;
-        levelComplete = false;
         gameOver = false;
         lastDamageTime = 0;
     }

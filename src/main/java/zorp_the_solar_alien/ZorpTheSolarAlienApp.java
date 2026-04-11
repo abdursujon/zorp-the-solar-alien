@@ -19,10 +19,6 @@ import zorp_the_solar_alien.controller.HowToPlayController;
  * The main application class which launches zorp the solar alien game.
  */
 public class ZorpTheSolarAlienApp extends Application {
-	HomeModel homeModel;
-	HomeView playView;
-	HomeController homeController;
-
 	/**
 	 * This method enable us to set up the stage, through creating different components of different class from MVC pattern.
 	 * In the beginning of the application, home screen is set to show, and rest of the view is set to hide.
@@ -42,12 +38,12 @@ public class ZorpTheSolarAlienApp extends Application {
 		HomeModel homeModel = new HomeModel();
 		PlayModel playModel = new PlayModel();
 
-		HomeView homeView = new HomeView(root, homeModel);
+		HomeView homeView = new HomeView(root);
 		PlayView playView = new PlayView(root);
 		playView.hide();
 		HowToPlayModel howToPlayModel = new HowToPlayModel();
-		HowToPlayView howToPlayView = new HowToPlayView(root, howToPlayModel);
-		HowToPlayController howToPlayController = new HowToPlayController(howToPlayView);
+		HowToPlayView howToPlayView = new HowToPlayView(root);
+		HowToPlayController howToPlayController = new HowToPlayController(howToPlayModel, howToPlayView);
 		howToPlayController.hide();
 
 		PlayController playController = new PlayController(playModel, playView);

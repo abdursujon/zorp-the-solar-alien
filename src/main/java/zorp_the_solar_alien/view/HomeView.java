@@ -11,22 +11,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import zorp_the_solar_alien.model.HomeModel;
-
-
 /**
  * Handles the view of the home screen of the game. This view class helps us establish the MVC pattern which is used by HomeController.
  */
 public class HomeView {
     Pane root;
-    HomeModel model;
+    private String gameTitle;
+    private String gameSubtitle;
     GraphicsContext gc;
     Image backgroundView;
     Image zorpAnimation;
     public Canvas canvas;
     public ImageView zorpImageView;
     public Button homeBtn;
-    public Button settingsBtn;
     public Button howToPlayBtn;
     public Button musicBtn;
     public Button skipBtn;
@@ -35,7 +32,6 @@ public class HomeView {
     public Button quitBtn;
     public HBox menuBar;
     private AnimationTimer homeLoop;
-    private double bgScrollX = 0;
     private double zorpFloat = 0;
     private double titleGlow = 0;
 
@@ -45,9 +41,8 @@ public class HomeView {
      * It renders zorp character animation in the center.
      * Button are styled and positon like a website header and can be used to navigate to different screen.
      */
-    public HomeView(Pane root, HomeModel model) {
+    public HomeView(Pane root) {
         this.root = root;
-        this.model = model;
 
         canvas = new Canvas();
         gc = canvas.getGraphicsContext2D();
@@ -118,6 +113,12 @@ public class HomeView {
     }
 
 
+    public void setData(String gameTitle, String gameSubtitle) {
+        this.gameTitle = gameTitle;
+        this.gameSubtitle = gameSubtitle;
+    }
+
+
     public void startAnimation() {
         homeLoop.start();
     }
@@ -165,17 +166,17 @@ public class HomeView {
 
         for (int i = -3; i <= 3; i++) {
             for (int j = -3; j <= 3; j++) {
-                gc.fillText(model.getGameTitle(), w / 2 - 310 + i, titleY + j);
+                gc.fillText(gameTitle, w / 2 - 310 + i, titleY + j);
             }
         }
 
         gc.setGlobalAlpha(1.0);
         gc.setFill(Color.WHITE);
-        gc.fillText(model.getGameTitle(), w / 2 - 310, titleY);
+        gc.fillText(gameTitle, w / 2 - 310, titleY);
 
         gc.setFont(Font.font("Arial", FontWeight.NORMAL, 18));
         gc.setFill(Color.color(1, 1, 1, 0.5 + 0.3 * Math.sin(titleGlow * 2)));
-        gc.fillText(model.getGameSubtitle(), w / 2 - 100, titleY + 35);
+        gc.fillText(gameSubtitle, w / 2 - 100, titleY + 35);
 
         zorpFloat += 0.04;
         double floatOffset = Math.sin(zorpFloat) * 50;

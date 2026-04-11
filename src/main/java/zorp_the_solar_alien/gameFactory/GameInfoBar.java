@@ -15,10 +15,6 @@ public class GameInfoBar extends GameObject {
     private int hp, maxHp, score;
     private String planetName;
     private int currentWave, totalWaves, waveEnemiesKilled, enemiesPerWave;
-    private String currentFactPopup = null;
-    private int popupTimer = 0;
-    private static final int POPUP_DURATION = 180;
-
 
     /**
      * Creates the game info bar.
@@ -59,31 +55,11 @@ public class GameInfoBar extends GameObject {
 
         gc.fillText("Enemies: " + waveEnemiesKilled + "/" + enemiesPerWave, w - 200, topY + 45);
 
-        if (popupTimer > 0 && currentFactPopup != null) {
-            double boxW = 500;
-            double boxH = 60;
-            double boxX = (w - boxW) / 2;
-            double boxY = topY + 65;
-
-            gc.setFill(Color.rgb(0, 0, 0, 0.8));
-            gc.fillRect(boxX, boxY, boxW, boxH);
-            gc.setStroke(Color.GOLD);
-            gc.strokeRect(boxX, boxY, boxW, boxH);
-
-            gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-            gc.setFill(Color.GOLD);
-            gc.fillText(currentFactPopup, boxX + 15, boxY + 35);
-
-            popupTimer--;
-            if (popupTimer == 0) {
-                currentFactPopup = null;
-            }
-        }
     }
 
 
     /**
-     * Updates the game info bar data with the latest game state from the playModel.
+     * Updates the game info bar data with the latest game state from the play model.
      */
     public void setData(int hp, int maxHp, int score, String planetName,
                         int currentWave, int totalWaves, int waveEnemiesKilled, int enemiesPerWave) {

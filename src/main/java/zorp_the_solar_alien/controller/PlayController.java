@@ -25,9 +25,8 @@ import zorp_the_solar_alien.view.PlayView;
 
 
 /**
- * This controller class handles gameplay, manages game logic by using classes from gameLogic package.
- * Instead of handling collision, wave spawing, boss logic on it's own, it delegates
- * responsiblity to game logic class and use them to handle game play.
+ * This controller class let us handles gameplay, manages game logic by using classes from gameLogic package.
+ * Instead of handling collision, wave spawing, boss logic on it's own, it uses game logic classes and use them to handle game play.
  * The class also designed to support the MVC pattern and it uses playView and playModel to create connection between them.
  */
 public class PlayController {
@@ -48,7 +47,7 @@ public class PlayController {
 
 
     /**
-     * This constructor helps to set up the zorp the solar alien game play.
+     * This constructor handles zorp the solar alien game play.
      * It uses classes from factory pattern to render different objects on
      * the screen such as enemey, boss, main character, score manager etc.
      * It also use gameLogic classes to handle collision, enemey spawn, boss and player logic.

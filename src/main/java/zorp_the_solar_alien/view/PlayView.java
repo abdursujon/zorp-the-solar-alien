@@ -15,6 +15,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
+
+/**
+ * PlayView class support the MVC pattern of the project.
+ * This class is used by playController. It renders the intro cards of the game play, fact card with reading timer.
+ * Fact are set to 10 second wait so children can't just skip through learning materials ensuring teaching purpose
+ * of the project. It also shows pause button on the screen when user pause the game.
+ * When game over it shows relevant UI. Also handle level complete UI, and game complete screens.
+ */
 public class PlayView {
     public Pane root;
     public Canvas canvas;
@@ -28,6 +36,11 @@ public class PlayView {
     private Runnable onRestart;
     private Runnable onPause;
 
+
+    /**
+     * The constructor creates the play view with a canvas bound to the window size of the screen.
+     * It also builds all UI component for the game play such as intro card and fact card.
+     */
     public PlayView(Pane root) {
         this.root = root;
 
@@ -78,6 +91,10 @@ public class PlayView {
     }
 
 
+    /**
+     * This method builds the intro card with level name, description with a start button.
+     * It is hidden by default until controller calls this method.
+     */
     private void buildIntroCard() {
         introCard = new VBox(20);
         introCard.setAlignment(Pos.CENTER);
@@ -121,6 +138,12 @@ public class PlayView {
     }
 
 
+    /**
+     * This method update the intro card with each level title and text content.
+     * Then it makes the card visible and center it the screen.
+     * The cards are built once by buildIntroCard but this method
+     * helps us reused that card by updating the text content on it.
+     */
     public void showIntroCard(String title, String description) {
         Label titleLabel = (Label) introCard.getChildren().get(0);
         Label descLabel = (Label) introCard.getChildren().get(1);
@@ -135,6 +158,7 @@ public class PlayView {
             introCard.setLayoutX((w - newB.getWidth()) / 2);
             introCard.setLayoutY((h - newB.getHeight()) / 2);
         });
+
         javafx.application.Platform.runLater(() -> {
             double w = root.getWidth();
             double h = root.getHeight();
@@ -144,6 +168,10 @@ public class PlayView {
     }
 
 
+    /**
+     * Builds the fact card that displays education content about the Solar System.
+     * It the card includes a title, fact text content, a separator, and a done reading button.
+     */
     private void buildFactCard() {
         factCard = new VBox(15);
         factCard.setAlignment(Pos.CENTER);
@@ -169,7 +197,7 @@ public class PlayView {
         factContent.setWrapText(true);
         factContent.setMaxWidth(480);
 
-        Label separator = new Label("─────────────────────────────────");
+        Label separator = new Label("****************************");
         separator.setTextFill(Color.web("#333333"));
 
         Button doneBtn = new Button("Done Reading");
@@ -193,6 +221,11 @@ public class PlayView {
     }
 
 
+    /**
+     * This method help us swap fact card content depending on which one we need to show on the screen.
+     * Instead of building 10 fact card for each fact, we build one fact card and swap the fact content
+     * through using this method.
+     */
     public void showFactCard(String factText, int factNumber) {
         Label factTitle = (Label) factCard.getChildren().get(0);
         Label factContent = (Label) factCard.getChildren().get(1);

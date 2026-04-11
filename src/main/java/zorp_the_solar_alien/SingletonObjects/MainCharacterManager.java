@@ -196,11 +196,6 @@ public class MainCharacterManager extends GameObject {
     }
 
 
-    public boolean isJumping() {
-        return jumping;
-    }
-
-
     public boolean isFacingRight() {
         return facingRight;
     }
