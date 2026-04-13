@@ -7,7 +7,7 @@ import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
 
 /**
- * This class extends GameObject base class and is designed to support the factory pattern.
+ * FactPoint extends GameObject base class and designed to support the factory pattern.
  * It is designed to handle a fact objective that spawns on the play screen after enemies are cleared.
  */
 public class FactPoint extends GameObject {
@@ -20,9 +20,6 @@ public class FactPoint extends GameObject {
     private double baseY;
 
 
-    /**
-     * This constructor creates a fact point at the given position with a locked icon by default.
-     */
     public FactPoint(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
         baseY = y;
@@ -62,9 +59,7 @@ public class FactPoint extends GameObject {
     }
 
 
-    /**
-     * This method sets the educational fact text on the screen when the player collects this fact point.
-     */
+   
     public void setFactText(String fact) {
         this.factText = fact;
     }
@@ -85,9 +80,6 @@ public class FactPoint extends GameObject {
     }
 
 
-    /**
-     * Unlock fact objective to enable player to collect the objective.
-     */
     public void unlock() {
         this.locked = false;
     }

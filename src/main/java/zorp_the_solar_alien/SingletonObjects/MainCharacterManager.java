@@ -8,8 +8,8 @@ import zorp_the_solar_alien.GameObject;
 
 
 /**
- * This class implements singleton design pattern as we have only one main character.
- * It handles main character movement, shooting, melee attacks and sprite animation.
+ * Implements singleton design pattern as we have only one main character.
+ * Manages main character movement, shooting, melee attacks and sprite animation.
  * The class also handles keyboard and mouse input to control the character on play screen.
  */
 public class MainCharacterManager extends GameObject {
@@ -38,20 +38,20 @@ public class MainCharacterManager extends GameObject {
 
 
     /**
-     * Private constructor which is used to enforce singleton design pattern.
+     * Private constructor to enforce singleton design pattern.
      * Loads main character idle and sprite images from resource directory.
      * It also sets the starting position of the character, and add it to the screen.
      */
     private MainCharacterManager(GraphicsContext gc, Pane root) {
         super(gc, 200, 400);
         this.root = root;
-        idleImage = new Image(getClass().getResource("/zorp/shoot.png").toExternalForm());
+        idleImage = new Image(getClass().getResource("/zorp_the_solar_alien/assets/zorp/shoot.png").toExternalForm());
         shootImage = idleImage;
 
         meleeFrames = new Image[] {
-                new Image(getClass().getResource("/zorp/img.png").toExternalForm()),
-                new Image(getClass().getResource("/zorp/img_1.png").toExternalForm()),
-                new Image(getClass().getResource("/zorp/img_2.png").toExternalForm()),
+                new Image(getClass().getResource("/zorp_the_solar_alien/assets/zorp/img.png").toExternalForm()),
+                new Image(getClass().getResource("/zorp_the_solar_alien/assets/zorp/img_1.png").toExternalForm()),
+                new Image(getClass().getResource("/zorp_the_solar_alien/assets/zorp/img_2.png").toExternalForm()),
         };
 
         x = 200;
@@ -68,8 +68,8 @@ public class MainCharacterManager extends GameObject {
     }
 
     /**
-     * This method returns the single instance of main character which can be used by other class to
-     * use main character. If the character does not exist on the screen, it creates one.
+     * Returns the single instance of main character which can is used by other class to
+     * use create instance of main player. If the character does not exist on the screen, it creates one.
      */
     public static MainCharacterManager getInstance(GraphicsContext gc, Pane root) {
         if (instance == null) {
@@ -87,8 +87,7 @@ public class MainCharacterManager extends GameObject {
      * Here we override the provided method from GameObject base class.
      * In this class it moves the player based on key actions. It handles
      * jump physics with gravity effect to make the jump look natural.
-     * It also makes sure the player stays on screen.
-     * It also handles mele animation frames, switching the image based on
+     * It also makes sure the player stays on screen and handles mele animation frames, switching the image based on
      * current key action and if facing left it flips the image.
      */
     @Override
@@ -161,7 +160,7 @@ public class MainCharacterManager extends GameObject {
 
 
     /**
-     * This method sets the movement state depending on which key is pressed by user or released.
+     * Sets the movement state depending on which key is pressed by user or released.
      */
     public void setInput(String key, boolean state) {
         switch (key) {

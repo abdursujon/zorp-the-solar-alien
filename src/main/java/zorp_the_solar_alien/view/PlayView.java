@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 /**
  * PlayView class support the MVC pattern of the project.
  * This class is used by playController. It renders the intro cards of the game play, fact card with reading timer.
- * Fact are set to 10 second wait so children can't just skip through learning materials ensuring teaching purpose
+ * Fact are set to 10 second wait so children can't skip through learning materials ensuring teaching purpose
  * of the project. It also shows pause button on the screen when user pause the game.
  * When game over it shows relevant UI. Also handle level complete UI, and game complete screens.
  */
@@ -92,7 +92,7 @@ public class PlayView {
 
 
     /**
-     * This method builds the intro card with level name, description with a start button.
+     * Builds the intro card with level name, description with a start button.
      * It is hidden by default until controller calls this method.
      */
     private void buildIntroCard() {
@@ -139,8 +139,8 @@ public class PlayView {
 
 
     /**
-     * This method update the intro card with each level title and text content.
-     * Then it makes the card visible and center it the screen.
+     * Updates the intro card with each level title and text content.
+     * Then it makes the card visible and center it to the screen.
      * The cards are built once by buildIntroCard but this method
      * helps us reused that card by updating the text content on it.
      */
@@ -170,7 +170,7 @@ public class PlayView {
 
     /**
      * Builds the fact card that displays education content about the Solar System.
-     * It the card includes a title, fact text content, a separator, and a done reading button.
+     * The card includes a title, fact text content, a separator, and done reading button.
      */
     private void buildFactCard() {
         factCard = new VBox(15);
@@ -222,7 +222,7 @@ public class PlayView {
 
 
     /**
-     * This method help us swap fact card content depending on which one we need to show on the screen.
+     * Swaps fact card content depending on which one we need to show on the screen.
      * Instead of building 10 fact card for each fact, we build one fact card and swap the fact content
      * through using this method.
      */
@@ -277,9 +277,9 @@ public class PlayView {
         pauseBtn.setStyle(
                 "-fx-background-color: linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e);" +
                 "-fx-text-fill: black;" +
-                "-fx-font-size: 30px;" +
+                "-fx-font-size: 24px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-padding: 10;" +
+                "-fx-padding: 5 7;" +
                 "-fx-cursor: hand;" +
                 "-fx-shape: 'M 10,0 L 90,5 Q 100,2 100,10 L 95,90 Q 98,100 90,100 L 8,95 Q 0,98 0,90 L 5,10 Q 2,0 10,0 Z';" +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);");

@@ -7,7 +7,7 @@ import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
 
 /**
- * This class handles game logic for the main character shooting and bullet updates.
+ * Handles game logic for the main character shooting and bullet updates.
  * It uses the factory pattern to create bullets, manages the shooting cooldown, and update
  * bullets status depending on if the bullet is on or off-screen.
  */
@@ -49,7 +49,7 @@ public class MainCharacterHandler {
 
 
     /**
-     * Updates the position of each of the player bullets and remove bullets that are off screen.
+     * Updates the position of each of the player bullets and remove bullets that are off-screen.
      */
     public void updateZorpBullets() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
@@ -63,7 +63,7 @@ public class MainCharacterHandler {
 
 
     /**
-     * First it updates the position of the enemy and boss bullet. Then removes bullet that are not on screen.
+     * Updates the position of the enemy and boss bullet and removes bullet that are not on screen.
      */
     public void updateBullets(List<Bullet> enemyBullets) {
         Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();

@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 import zorp_the_solar_alien.GameObject;
 
 /**
- * This Bullet class is designed to support factory pattern.
- * It handles all bullet types in the game: zorp, enemy, and boss.
+ * Bullet class is designed to support factory pattern.
+ * It handles all bullet types in the game such as zorp, enemy, and boss.
  * The bullet travels in a straight line towards the target and when off-screen it gets deactivated.
  * Depending on the type, the bullet loads a different image and speed.
  */
@@ -29,9 +29,9 @@ public class Bullet extends GameObject {
     /**
      * Bullet constructor helps us create bullet at the given position with a type such as for zorp, boss or normal enemy
      * that determines it's image and speed.
-     * Main character bullet is fast and use a single image on the other hand normal enemy uses
+     * Main character bullet is fast and use a single image. On the other hand normal enemy uses
      * random bullets from normal enemy bullets directory.
-     * Boos bullets are the most random one which selects random bullets from 50 image from the boss-bullet directory..
+     * Boos bullets are the most random one which selects random bullets from 50 image from the boss-bullet directory.
      */
     public Bullet(GraphicsContext gc, double x, double y, String type) {
         super(gc, x, y);
@@ -43,7 +43,7 @@ public class Bullet extends GameObject {
                 drawSize = 20;
 
                 if (zorpBulletImage == null) {
-                    zorpBulletImage = new Image(getClass().getResource("/zorp/zorp-bullet.png").toExternalForm());
+                    zorpBulletImage = new Image(getClass().getResource("/zorp_the_solar_alien/assets/zorp/zorp-bullet.png").toExternalForm());
                 }
                 ammoImage = zorpBulletImage;
                 break;
@@ -55,7 +55,7 @@ public class Bullet extends GameObject {
                 if (enemyBulletImages == null) {
                     enemyBulletImages = new Image[TOTAL_ENEMY_BULLETS];
                     for (int i = 0; i < TOTAL_ENEMY_BULLETS; i++) {
-                        enemyBulletImages[i] = new Image(getClass().getResource("/enemies/normal-enemy/normal-enemy-bullets/bullet" + (i + 1) + ".png").toExternalForm());
+                        enemyBulletImages[i] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/enemies/normal-enemy/normal-enemy-bullets/bullet" + (i + 1) + ".png").toExternalForm());
                     }
                 }
                 ammoImage = enemyBulletImages[(int)(Math.random() * TOTAL_ENEMY_BULLETS)];
@@ -68,7 +68,7 @@ public class Bullet extends GameObject {
                 if (bossBulletImages == null) {
                     bossBulletImages = new Image[TOTAL_BOSS_BULLETS];
                     for (int i = 0; i < TOTAL_BOSS_BULLETS; i++) {
-                        bossBulletImages[i] = new Image(getClass().getResource("/enemies/boss/boss-bullets/ammo" + (i + 1) + ".png").toExternalForm());
+                        bossBulletImages[i] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/enemies/boss/boss-bullets/ammo" + (i + 1) + ".png").toExternalForm());
                     }
                 }
                 ammoImage = bossBulletImages[(int)(Math.random() * TOTAL_BOSS_BULLETS)];
@@ -81,9 +81,9 @@ public class Bullet extends GameObject {
 
 
     /**
-     * This method override the method provided by GameObject class.
+     * Override the method provided by GameObject base class.
      * It moves the bullet by its velocity, when off-screen it deactivates the bullet.
-     * It also handles drawing bullet image.
+     * Also, responsible for drawing bullet image.
      */
     @Override
     public void update() {

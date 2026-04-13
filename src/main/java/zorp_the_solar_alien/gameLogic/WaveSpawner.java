@@ -8,7 +8,7 @@ import zorp_the_solar_alien.model.PlayModel;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * This class handles logic to spawn enemy wave after each fact collected.
+ * Spawns enemy wave after each fact collected.
  * It used by playController to spawn random number of enemies.
  */
 public class WaveSpawner {
@@ -47,9 +47,8 @@ public class WaveSpawner {
 
 
     /**
-     * This method handles enemy spawn logic.
-     * It clears all existing objects from the screen when all enemy dies.
-     * It also resets the player and enemy position using the factory pattern. Also creates the fact objects
+     * Manages enemy spawn logic by clearing all existing objects from the screen when all enemy dies.
+     * It resets the player and enemy position using the factory pattern. Creates the fact objects
      * and if boss level required it spawn boss instead of normal enemy. Also handle
      * music depending on enemy type.
      */

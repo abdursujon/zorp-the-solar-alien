@@ -20,7 +20,7 @@ import zorp_the_solar_alien.controller.HowToPlayController;
  */
 public class ZorpTheSolarAlienApp extends Application {
 	/**
-	 * This method enable us to set up the stage, through creating different components of different class from MVC pattern.
+	 * It sets up the stage, through creating different components of different class from MVC pattern.
 	 * In the beginning of the application, home screen is set to show, and rest of the view is set to hide.
 	 * This method also places different nav link into the scene to enable user interaction for play, home etc.
 	 * It also creates the instance of the main character and register different mouse events from the user.
@@ -52,6 +52,7 @@ public class ZorpTheSolarAlienApp extends Application {
 		root.getChildren().addAll(homeView.menuBar, homeView.playBtn, homeView.newGameBtn, homeView.quitBtn);
 
 		MainCharacterManager.getInstance(playView.gc, root);
+		MainCharacterManager.getInstance().setVisible(false);
 		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
 			MainCharacterManager.getInstance().setInput(e.getCode().toString(), true);
 			if (e.getCode() == javafx.scene.input.KeyCode.SPACE) {

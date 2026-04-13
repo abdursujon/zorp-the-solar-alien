@@ -8,9 +8,9 @@ import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
 
 /**
- * This class extends GameObject base class and implements logic to handle how boss behave in the game play.
+ * Boss extends GameObject base class and implements logic to handle how boss behave in the game play.
  * Designed to support the factory pattern.
- * This class provides unique boss with their name and health bar for each level.
+ * It provides unique boss with their name and health bar for each level.
  */
 public class Boss extends GameObject {
 
@@ -39,15 +39,15 @@ public class Boss extends GameObject {
     };
 
     private static final String[] BOSS_SPRITES = {
-            "/enemies/boss/boss1.png",
-            "/enemies/boss/boss2.png",
-            "/enemies/boss/boss3.png",
-            "/enemies/boss/boss4.png",
-            "/enemies/boss/boss5.png",
-            "/enemies/boss/boss6.png",
-            "/enemies/boss/boss8.png",
-            "/enemies/boss/boss9.png",
-            "/enemies/boss/boss10.png"
+            "/zorp_the_solar_alien/assets/enemies/boss/boss1.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss2.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss3.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss4.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss5.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss6.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss8.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss9.png",
+            "/zorp_the_solar_alien/assets/enemies/boss/boss10.png"
     };
 
 
@@ -55,7 +55,7 @@ public class Boss extends GameObject {
      * The constructor creates a boss for the given planet index.
      * It loads unique sprite for the boss, name.
      * Each boss spawn in a random position on the screen.
-     * The constructor initialise first boss with 200 hp then increase each boss health by 100hp for each level.
+     * It initialises first boss with 200 hp then increase each boss health by 100hp for each level.
      */
     public Boss(GraphicsContext gc, double x, double y, int planetIndex) {
         super(gc, x, y);
@@ -72,7 +72,7 @@ public class Boss extends GameObject {
 
 
     /**
-     * This method override the provided update method from GameObject.
+     * Overrides the provided update method from GameObject.
      * In this instance, it helps us move the boss toward the main character.
      * It also applies sine wave for floating movement of the boss, draws the sprite on canvas,
      * and renders the health bar on top of the boss with each boss name through using defined array BOSS_NAMES .
@@ -112,38 +112,27 @@ public class Boss extends GameObject {
     }
 
 
-    /**
-     * This method set the chase target position, which is main character center.
-     */
     public void setChaseTarget(double tx, double ty) {
         this.targetX = tx;
         this.targetY = ty;
     }
 
 
-    /**
-     * After enough time passed, it returns true when boss can shoot.
-     */
     public boolean canShoot(long now) {
         return now - lastShotTime > SHOOT_COOLDOWN_NS;
     }
 
 
-    /**
-     * It records the time of the last shot by boss so we can track the shot cooldown.
-     */
     public void markShot(long now) {
         lastShotTime = now;
     }
 
 
-    /**
-     * For each damage taken, this method reduces boss hp. If boss hp reach zero, boss gets deactivated.
-     */
     public void takeDamage(int damage) {
         hp -= damage;
         if (hp <= 0) active = false;
     }
+
 
     public boolean isActive() {
         return active;

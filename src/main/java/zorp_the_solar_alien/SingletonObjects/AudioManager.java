@@ -2,13 +2,17 @@ package zorp_the_solar_alien.SingletonObjects;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * This class implements singleton pattern which is used in playController
- * and game logic classes to play audio based on relevance.
+ * Implements singleton pattern which is used in playController
+ * and game logic classes to play specific audio.
  */
 public class AudioManager {
     private static AudioManager instance;
@@ -25,28 +29,41 @@ public class AudioManager {
 
 
     /**
-     * This constructor set to private to enforce Singleton pattern.
+     * Constructor set to private to enforce Singleton pattern.
      * It loads all audio files from resources.
      */
     private AudioManager(){
         homeTracks = new ArrayList<>(List.of(
-                new Media(getClass().getResource("/audio/song1.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/song2.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/song3.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/song4.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/song5.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/song6.mp3").toExternalForm())
+                loadAudio("/zorp_the_solar_alien/assets/audio/song1.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/song2.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/song3.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/song4.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/song5.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/song6.mp3")
         ));
 
-        laserSound = new Media(getClass().getResource("/audio/cartoon-laser.mp3").toExternalForm());
-        enemyDiedSound = new Media(getClass().getResource("/audio/enemy-died.mp3").toExternalForm());
-        damageTakenSound = new Media(getClass().getResource("/audio/damage-taken.mp3").toExternalForm());
-        gameOverSound = new Media(getClass().getResource("/audio/gameover.mp3").toExternalForm());
-        bossBitenSound = new Media(getClass().getResource("/audio/boss-biten.mp3").toExternalForm());
+        laserSound = loadAudio("/zorp_the_solar_alien/assets/audio/cartoon-laser.mp3");
+        enemyDiedSound = loadAudio("/zorp_the_solar_alien/assets/audio/enemy-died.mp3");
+        damageTakenSound = loadAudio("/zorp_the_solar_alien/assets/audio/damage-taken.mp3");
+        gameOverSound = loadAudio("/zorp_the_solar_alien/assets/audio/gameover.mp3");
+        bossBitenSound = loadAudio("/zorp_the_solar_alien/assets/audio/boss-biten.mp3");
         bossFightMusic = new Media[] {
-                new Media(getClass().getResource("/audio/boss-fight1.mp3").toExternalForm()),
-                new Media(getClass().getResource("/audio/boss-fight2.mp3").toExternalForm())
+                loadAudio("/zorp_the_solar_alien/assets/audio/boss-fight1.mp3"),
+                loadAudio("/zorp_the_solar_alien/assets/audio/boss-fight2.mp3")
         };
+    }
+
+    private Media loadAudio(String resourcePath) {
+        try {
+            InputStream in = getClass().getResourceAsStream(resourcePath);
+            File tempFile = File.createTempFile("zorp_audio_", resourcePath.substring(resourcePath.lastIndexOf('.')));
+            tempFile.deleteOnExit();
+            Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            in.close();
+            return new Media(tempFile.toURI().toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -70,7 +87,7 @@ public class AudioManager {
 
 
     /**
-     * This method loops through all audio track for home and normal gameplay.
+     * Loops through all audio track for home and normal gameplay.
      */
     private void playTrack() {
         if (currentPlayer != null) {
@@ -87,7 +104,7 @@ public class AudioManager {
 
 
     /**
-     * This method is used by homeController to check if user click on skip button to skip a song.
+     * Used by homeController to check if user click on skip button to skip a song.
      */
     public void skipTrack() {
         if (playing) {
@@ -114,8 +131,8 @@ public class AudioManager {
 
 
     /**
-     * For short sound effect this method is used by other methods to handle what sound they need.
-     * The method uses MediaPlayer dispose free the memory when a specific sound not needed anymore.
+     * For short sound effect it is utilised by other methods to handle what sound they need.
+     * The method uses MediaPlayer dispose method to free the memory when a specific sound not needed anymore.
      */
     private void playSoundEffect(Media sound) {
         MediaPlayer sfx = new MediaPlayer(sound);
@@ -144,7 +161,7 @@ public class AudioManager {
     }
 
 
-    public void playBossBiten() {
+    public void playBossBitten() {
         playSoundEffect(bossBitenSound);
     }
 

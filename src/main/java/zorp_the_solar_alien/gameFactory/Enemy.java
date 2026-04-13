@@ -5,10 +5,10 @@ import javafx.scene.image.Image;
 import zorp_the_solar_alien.GameObject;
 
 /**
- * As required, this class also extends GameObject base class to support the factory design pattern in this project.
- * It handles how normal enemy actions on gameplay.
+ * As required, Enemy class also extends GameObject base class to support the factory design pattern.
+ * It handles normal enemy actions on gameplay.
  * Each enemy is spawned randomly and uses random sprite images from resource.
- * Enemy with index 5 or more has sword and rest of then enemy uses shooting mechanics.
+ * Enemy with index 5 or more has sword mechanics and rest of the enemies uses shooting mechanics.
  */
 public class Enemy extends GameObject {
 
@@ -31,7 +31,7 @@ public class Enemy extends GameObject {
     private static final long CONTACT_DAMAGE_COOLDOWN_NS = 800_000_000L;
 
     /**
-     * This constructor creates an enemy at the given position and loads shared sprite images on the screen.
+     * Creates an enemy at the given position and loads shared sprite images on the screen.
      * Each enemy gets a random sprite from 10 types, random speed between 1.5 and 3 to make the game look dynamic and fun,
      * and a random sine phase for floating movement so all enemy does not look the same.
      * Enemies with type index 5 or above are given a sword and less than index 5 enemy uses shooting mechanics.
@@ -41,9 +41,9 @@ public class Enemy extends GameObject {
         if (sharedSprites == null) {
             sharedSprites = new Image[TOTAL_TYPES];
             for (int i = 0; i < TOTAL_TYPES; i++) {
-                sharedSprites[i] = new Image(getClass().getResource("/enemies/normal-enemy/enemy" + (i + 1) + ".png").toExternalForm());
+                sharedSprites[i] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/enemies/normal-enemy/enemy" + (i + 1) + ".png").toExternalForm());
             }
-            swordImage = new Image(getClass().getResource("/enemies/normal-enemy/enemysord.png").toExternalForm());
+            swordImage = new Image(getClass().getResource("/zorp_the_solar_alien/assets/enemies/normal-enemy/enemysord.png").toExternalForm());
         }
 
         speed = 1.5 + Math.random() * 1.5;
@@ -57,12 +57,12 @@ public class Enemy extends GameObject {
 
 
     /**
-     * We override the provided update method from GameObject to update logic form enemy.
+     * Overrides the provided update method from GameObject to update logic form enemy.
      * Handle updating and moves the enemy toward the player, applies sine wave
      * for floating movement instead of static straight line movement,
      * and draws the enemy sprite on the canvas.
      * If enemy has sword, they stop closer to the player and swing their sword when in range.
-     * If enemies use shooting mechanice they stop further away to shoot from distance.
+     * Rest of the enemies uses shooting mechanics.
      */
     @Override
     public void update() {
@@ -108,36 +108,23 @@ public class Enemy extends GameObject {
     }
 
 
-    /**
-     * This method set the chase target position, which is main character center.
-     */
     public void setChaseTarget(double tx, double ty) {
         this.targetX = tx;
         this.targetY = ty;
     }
 
 
-    /**
-     * When enough time is passed, the method returns true when enemy can shoot.
-     * If the enemy is type sword, it always returns false as they have no shooting mechanics.
-     */
     public boolean canShoot(long now) {
         if (hasSword) return false;
         return now - lastShotTime > SHOOT_COOLDOWN_NS;
     }
 
 
-    /**
-     * It records the time of the last shot by enemy so we can track the shot cooldown.
-     */
     public void markShot(long now) {
         lastShotTime = now;
     }
 
 
-    /**
-     * For damage taken, it reduces enemy hp, and if the hp reaches zero, enemy gets deactivated.
-     */
     public void takeDamage(int damage) {
         hp -= damage;
         if (hp <= 0) active = false;
@@ -207,9 +194,6 @@ public class Enemy extends GameObject {
     }
 
 
-    /**
-     * It records the time of the last contact damage so we can track the contact damage cooldown.
-     */
     public void markContactDamage(long now) {
         lastContactDamageTime = now;
     }

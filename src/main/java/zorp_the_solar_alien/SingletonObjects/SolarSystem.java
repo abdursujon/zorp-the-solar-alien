@@ -6,7 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import zorp_the_solar_alien.GameObject;
 
-
+/**
+ * Renders the Solar System background for game play screen.
+ */
 public class SolarSystem extends GameObject {
     private static SolarSystem instance = null;
     private Image[] planetImages;
@@ -28,23 +30,23 @@ public class SolarSystem extends GameObject {
 
     /**
      * Here we implement singleton pattern by making the solar system pattern private.
-     * It loads all planet images from resource directory and creates 150 starts on the play background
+     * It loads all planet images from resource directory and creates 150 stars on the play background
      * to make it look solar system with stars twinkling. The twinkling effect of star gets random positons,
-     * size and brightness for to make it look realistic.
+     * size and brightness to make it look realistic.
      */
     private SolarSystem(GraphicsContext gc, double x, double y) {
         super(gc, x, y);
 
         planetImages = new Image[9];
-        planetImages[0] = new Image(getClass().getResource("/sun/sun.png").toExternalForm());
-        planetImages[1] = new Image(getClass().getResource("/planets/mercury.png").toExternalForm());
-        planetImages[2] = new Image(getClass().getResource("/planets/venus.png").toExternalForm());
-        planetImages[3] = new Image(getClass().getResource("/planets/earth.png").toExternalForm());
-        planetImages[4] = new Image(getClass().getResource("/planets/mars.png").toExternalForm());
-        planetImages[5] = new Image(getClass().getResource("/planets/jupiter.png").toExternalForm());
-        planetImages[6] = new Image(getClass().getResource("/planets/saturn.jpg").toExternalForm());
-        planetImages[7] = new Image(getClass().getResource("/planets/uranus.png").toExternalForm());
-        planetImages[8] = new Image(getClass().getResource("/planets/neptune.png").toExternalForm());
+        planetImages[0] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/sun/sun.png").toExternalForm());
+        planetImages[1] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/mercury.png").toExternalForm());
+        planetImages[2] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/venus.png").toExternalForm());
+        planetImages[3] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/earth.png").toExternalForm());
+        planetImages[4] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/mars.png").toExternalForm());
+        planetImages[5] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/jupiter.png").toExternalForm());
+        planetImages[6] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/saturn.jpg").toExternalForm());
+        planetImages[7] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/uranus.png").toExternalForm());
+        planetImages[8] = new Image(getClass().getResource("/zorp_the_solar_alien/assets/planets/neptune.png").toExternalForm());
 
         currentScale = MIN_SCALE;
         targetScale = MIN_SCALE;
@@ -68,7 +70,7 @@ public class SolarSystem extends GameObject {
 
 
     /**
-     * Returns the singleton instance of SolarSystem which is by playController to draw the background.
+     * Returns the singleton instance of SolarSystem which is utilised by playController to draw the background.
      */
     public static SolarSystem getInstance(GraphicsContext gc, double x, double y) {
         if (instance == null) {
@@ -79,8 +81,8 @@ public class SolarSystem extends GameObject {
 
 
     /**
-     * This method overrides the base class GameObject method.
-     * In this class it draws a background with twinkling star or the gameplay to
+     * Overrides the base class GameObject method update.
+     * In this implementation it draws a background with twinkling star or the gameplay to
      * make the game play more color full and fun.
      * It also handles animation to the current level background image and place it to the center of the screen.
      * After each fact collected by player, the planet image gets larger in size.

@@ -6,18 +6,12 @@ import zorp_the_solar_alien.SingletonObjects.SolarSystem;
 
 
 /**
- * This class implements the ZorpTheSolarAlienInterface to support the factory design pattern.
- * It creates different game objects based on the type string passed to createProduct method.
- * This allows the game to create bullets, enemies, fact points, the game info bar,
- * and the solar system background without knowing the exact class being created.
+ * Implements the ZorpTheSolarAlienInterface createProduct method which is core to factory design pattern.
  */
 public class ZorpTheSolarAlienFactory implements ZorpTheSolarAlienInterface {
     private GraphicsContext gc;
 
 
-    /**
-     * Creates the factory with a reference to the graphics context used for rendering all game objects.
-     */
     public ZorpTheSolarAlienFactory(GraphicsContext gc) {
         this.gc = gc;
     }

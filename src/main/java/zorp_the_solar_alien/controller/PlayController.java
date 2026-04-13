@@ -25,9 +25,9 @@ import zorp_the_solar_alien.view.PlayView;
 
 
 /**
- * This controller class let us handles gameplay, manages game logic by using classes from gameLogic package.
- * Instead of handling collision, wave spawing, boss logic on it's own, it uses game logic classes and use them to handle game play.
- * The class also designed to support the MVC pattern and it uses playView and playModel to create connection between them.
+ * Handles gameplay, manages game logic by using classes from gameLogic package were we have helper classes.
+ * Instead of handling collision, wave spawning, boss logic all in this class, we use game logic helper classes.
+ * It supports the MVC pattern, and it uses playView and playModel to create connection between them.
  */
 public class PlayController {
     private PlayModel model;
@@ -47,10 +47,10 @@ public class PlayController {
 
 
     /**
-     * This constructor handles zorp the solar alien game play.
+     * Handles zorp the solar alien game play.
      * It uses classes from factory pattern to render different objects on
-     * the screen such as enemey, boss, main character, score manager etc.
-     * It also use gameLogic classes to handle collision, enemey spawn, boss and player logic.
+     * the screen such as enemy, boss, main character, score manager etc.
+     * It also uses gameLogic classes to handle collision, enemy spawn, boss and player logic.
      * Through playView class it also render logic of what to do when game start, restart or pause
      * or when user clicks on done reading.
      */
@@ -85,7 +85,7 @@ public class PlayController {
 
 
     /**
-     * This method helps us load a saved game by reading data through ScoreManager class.
+     * Loads a saved game by reading data through ScoreManager class.
      * If no game is saved, and it's a new game play, it starts a fresh game play.
      */
     public void loadSavedGame(boolean isNewGame) {
@@ -115,11 +115,11 @@ public class PlayController {
 
 
     /**
-     * First this method clear all objects from the screen.
-     * Then we handle game logic by the helper classes on gameLogic package
+     * First clear all objects from the screen.
+     * Then handles game logic by the helper classes through utilising gameLogic package
      * by using PlayHandler class for shooting, BoosHandler for updating different boss actions,
-     * and CollisionHandler for all collision check between differetn objects.
-     * We also handle frame rate problem by using JavaFX timelie, because othewise if someone plays the
+     * and CollisionHandler for all collision check between different objects.
+     * Also manages frame rate problem by using JavaFX timeline, because otherwise if someone plays the
      * game anything other than 60fps monitor, movement becomes unpredictable and way to fast.
      */
     public void startGame() {
@@ -175,7 +175,7 @@ public class PlayController {
 
 
     /**
-     * Instead of handling spawing wave of enemy in this controller this method uses helper class from gameLogic to handle it.
+     * Instead of handling spawning wave of enemy in this controller this method uses helper class from gameLogic to handle it.
      * It uses WaveSpawner class to call spawnWave on the play screen.
      */
     private void spawnWave() {
@@ -185,9 +185,6 @@ public class PlayController {
     }
 
 
-    /**
-     * This helps us implement pause logic of the game through the pause button or by clicking on escape.
-     */
     public void stopGame() {
         if (gameLoop != null) {
             gameLoop.pause();
@@ -197,7 +194,7 @@ public class PlayController {
 
 
     /**
-     * This method declares what happens when game is on pause. If pause, it draws pause overlay text on top of play screen.
+     * This method declares what happens when game is on pause. If paused, it draws pause overlay text on top of play screen.
      */
     public void togglePause() {
         if (gameLoop == null) return;
@@ -210,7 +207,7 @@ public class PlayController {
             double h = view.canvas.getHeight();
             view.gc.setFill(Color.rgb(0, 0, 0, 0.5));
             view.gc.fillRect(0, 0, w, h);
-            view.gc.setFont(Font.font("Arial", FontWeight.BOLD, 56));
+            view.gc.setFont(Font.font("Arial", FontWeight.BOLD, 24));
             view.gc.setFill(Color.WHITE);
             view.gc.fillText("PAUSED", w / 2 - 130, h / 2);
             paused = true;
@@ -221,9 +218,9 @@ public class PlayController {
 
 
     /**
-     * When user collects a fact and done reading the fact, this method handle logic when player click on done reading button.
+     * When user collects a fact and done reading the fact, it handles logic when player click on done reading button.
      * If the level is complete and there is no more fact to collect, show the level complete card. If entire game play is complete,
-     * show game complete screen. Otherwise, it resumes gameplay for next fact.
+     * shows game complete screen. Otherwise, it resumes gameplay for next fact.
      */
     private void onDoneReading() {
         if (model.isLevelComplete()) {
@@ -242,9 +239,9 @@ public class PlayController {
 
 
     /**
-     * This method checks if all enemies in the current wave is killed by zorp.
-     * If all enemies are removed, this method unlock the fact objectives
-     * making it avaiable to collect. It also draws what objective needed on the screen
+     * Checks if all enemies in the current wave is killed by zorp.
+     * If all enemies are removed, it unlocks the fact objectives
+     * making it available to collect. It also draws what objective needed on the screen
      * through calling update method of FactPoint class.
      */
     private void updateObjective() {
@@ -264,8 +261,8 @@ public class PlayController {
      * It uses logic from gameLogic classes to handle how enemy chases main character.
      * Update enemy positon and player position on the screen and draw them.
      * If any enemy is dead it removes the enemy from the screen.
-     * It also checks if shooting cooldown has passed for enemy, if yes, enemey starts shooting
-     * again immidiately.
+     * It also checks if shooting cooldown has passed for enemy, if yes, enemy starts shooting
+     * again immediately.
      */
     private void updateEnemies(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();
@@ -292,10 +289,11 @@ public class PlayController {
         collisionHandler.resolveEnemySeparation();
     }
 
+
     /**
-     * This method tracts if player hp is zero. If yes, it handles game over logic, puases the
+     * Tracts if player hp is zero. If yes, it handles game over logic, pauses the
      * game loop and stop current music to play game over sound. Then it saves the score to cache save txt file.
-     * It also render gameover screen on play scene.
+     * It also renders game over screen on play scene.
      */
     private void checkGameState() {
         if (model.isGameOver()) {
@@ -307,12 +305,13 @@ public class PlayController {
         }
     }
 
+
     /**
      * If player finished the level, this method handle next level button.
      * If entire gameplay is finished, it handles restart the game from level 1 again.
-     * If player finish a level, this method also restart they game to set the level to next level.
-     * And in case the player dies before the complete the level, this method restart from the current fact
-     * where use died not from the begining through reading saved data.
+     * If player finish a level, restarts the game to set the level to next level.
+     * And in case the player dies before the complete the level, restarts from the current fact
+     * where use died not from the beginning through reading saved data.
      */
     private void restartGame() {
         AudioManager.getInstance().playHomeMusic();

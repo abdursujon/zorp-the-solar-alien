@@ -1,7 +1,7 @@
 package zorp_the_solar_alien.model;
 
 /**
- * This is the model class for playController to create MVC pattern.
+ * Model class for playController to create MVC pattern.
  * It stores all game state for the controller and provides education facts.
  */
 public class PlayModel {
@@ -233,10 +233,7 @@ public class PlayModel {
 
 
     /**
-     * This method reduces player hp by a given amount.
-     * If the player was hit less than a second ago damage is ignored.
-     * Through INVINCIBILITY_COOLDOWN we ignore all hit in less than a second
-     * so the player does not die immediately.
+     * Reduces player hp by a given amount.
      */
     public boolean takeDamage(int amount, long now) {
         if (now - lastDamageTime < INVINCIBILITY_COOLDOWN) return false;

@@ -7,7 +7,7 @@ import javafx.scene.text.FontWeight;
 import zorp_the_solar_alien.GameObject;
 
 /**
- * This class extends GameObject base class and is designed to support the factory pattern.
+ * GameInfoBar extends GameObject base class and is designed to support the factory pattern.
  * It renders the game info bar at the top of the play screen showing the player's HP bar,
  * current score, planet name, wave progress, and enemies killed count.
  */
@@ -16,16 +16,12 @@ public class GameInfoBar extends GameObject {
     private String planetName;
     private int currentWave, totalWaves, waveEnemiesKilled, enemiesPerWave;
 
-    /**
-     * Creates the game info bar.
-     */
     public GameInfoBar(GraphicsContext gc, double x, double y) {
         super(gc, 0, 0);
     }
 
-
     /**
-     * This method override the provided update method from GameObject.
+     * Override the provided update method from GameObject.
      * It draws the main character health bar, total score, wave and enemies count.
      */
     @Override

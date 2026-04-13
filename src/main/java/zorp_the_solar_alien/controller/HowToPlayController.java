@@ -5,7 +5,7 @@ import zorp_the_solar_alien.view.HowToPlayView;
 
 
 /**
- * This controller connects how to play view and model.
+ * Connects how to play view and model.
  * When pressed the click on screen for how to play view it shows the view.
  * When user switches screen it hides the view again.
  */

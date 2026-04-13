@@ -11,8 +11,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 /**
- * Handles the view of the home screen of the game. This view class helps us establish the MVC pattern which is used by HomeController.
+ * Builds the home screen of the game. It helps us establish the MVC pattern which is used by HomeController.
  */
 public class HomeView {
     Pane root;
@@ -61,9 +62,9 @@ public class HomeView {
         String buttonStyle =
                 "-fx-background-color: linear-gradient(to bottom, #d4923a, #a0642b, #7a4a1e);" +
                         "-fx-text-fill: black;" +
-                        "-fx-font-size: 30px;" +
+                        "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;" +
-                        "-fx-padding: 10; " +
+                        "-fx-padding: 5 7; " +
                         "-fx-cursor: hand;" +
                         "-fx-shape: 'M 10,0 L 90,5 Q 100,2 100,10 L 95,90 Q 98,100 90,100 L 8,95 Q 0,98 0,90 L 5,10 Q 2,0 10,0 Z';" +
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 2, 2);";
@@ -95,9 +96,9 @@ public class HomeView {
         quitBtn.layoutXProperty().bind(root.widthProperty().subtract(quitBtn.widthProperty()).subtract(10));
         quitBtn.setLayoutY(10);
 
-        backgroundView = new Image(getClass().getResource("/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/zorp_the_solar_alien/assets/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
 
-        zorpAnimation = new Image(getClass().getResource("/home/zorp-sequence.gif").toExternalForm());
+        zorpAnimation = new Image(getClass().getResource("/zorp_the_solar_alien/assets/home/zorp-sequence.gif").toExternalForm());
         zorpImageView = new ImageView(zorpAnimation);
         zorpImageView.setPreserveRatio(true);
         zorpImageView.setSmooth(true);

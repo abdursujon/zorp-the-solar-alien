@@ -9,10 +9,7 @@ import zorp_the_solar_alien.model.PlayModel;
 
 
 /**
- * This game logic class is built to support collision detection logic in gameplay.
- * Some of the collision detection it is responsible for are check if bullet hit enemy or main character,
- * if the player and enemy is in melee range, wether enemy touching the player.
- * It also prevents enemy going on top each other mainting a sense of physics.
+ * Supports collision detection logic in gameplay.
  */
 public class CollisionHandler {
     private PlayModel model;
@@ -67,7 +64,7 @@ public class CollisionHandler {
 
 
     /**
-     * This method prevents enemy from overlapping each other by comparing them in pairs.
+     * Prevents enemy from overlapping each other by comparing them in pairs.
      * When two enemy are too close to each other, it calculates the overlap and pushes the
      * enemy from each other in opposite direction.
      */
@@ -98,7 +95,7 @@ public class CollisionHandler {
 
 
     /**
-     * This method loops through main character bullets to check if any bullets hit an enemy.
+     * Loops through main character bullets to check if any bullets hit an enemy.
      * If bullet hits enemy, it registers 10 damage, and deactivate the bullet.
      * If enemy dies, the method save the kill count and play death sound.
      */
@@ -126,8 +123,7 @@ public class CollisionHandler {
     }
 
     /**
-     * This method is designed to check melee attact range.
-     * It checks if two rectenagles overlap each other by comparing their edges from each other.
+     * Checks melee attact range by measuring if two rectenagles overlap each other by comparing their edges from each other.
      */
     private boolean rectangleOverlapToCheckMeleeDamageAndEnemyContactDamage(double attackerX, double attackerY,
                                                                             double attackerWidth, double attackerHeight,
@@ -139,7 +135,7 @@ public class CollisionHandler {
 
 
     /**
-     * This method handle logic for main character melee attact.
+     * Handle logics for main character melee attact.
      * When player uses melee attact after cooldown has passed, it creates invisible
      * melee range box in front of the player. If any enemy is in the range of player melee attact
      * and player is using melee key, it does 15 damage to the enemy. When any enemy dies,
@@ -179,7 +175,7 @@ public class CollisionHandler {
 
 
     /**
-     * This method check if any enemy touching the main character. If enemy makes any contact with
+     * Checks if any enemy touching the main character. If enemy makes any contact with
      * the player, it registers some damage and play the damage sound.
      * It also pushes the player away from the enemy to prevent all enemy going on top of main character.
      */
@@ -244,8 +240,7 @@ public class CollisionHandler {
 
 
     /**
-     * Checks if the main character melee attack hits the boss. If yes, it does some damage.
-     * When boss dies, it triggers th boss defeated sequence.
+     * Checks if the main character melee attack hits the boss and handles logics to manage damage.
      */
     private void checkMeleeBossCollisions(MainCharacterManager player, double px, double py, long now) {
         if (currentBoss == null || !currentBoss.isActive() || !player.isMelee()) return;
@@ -269,7 +264,7 @@ public class CollisionHandler {
 
 
     /**
-     * This method checks if an enemy or boss bullets hits the player. For each hit, the
+     * Checks if an enemy or boss bullets hits the player. For each hit, the
      * player takes 10 damage, and plays the damage sound. It also removed the hit bullets from the screen.
      */
     private void checkEnemyBulletPlayerCollisions(double px, double py, long now) {
@@ -289,7 +284,7 @@ public class CollisionHandler {
     }
 
     /**
-     * This checks if the bullet overlaps any rectangular target by finding the closest point on the target.
+     * Checks if bullet overlaps any rectangular target by finding the closest point on the target.
      */
     private boolean checkIfBulletOverlapsAnyCharacter(double bulletX, double bulletY, double bulletRadius,
                                                       double targetX, double targetY, double targetWidth, double targetHeight) {
@@ -305,7 +300,7 @@ public class CollisionHandler {
 
 
     /**
-     * First this method gets the player position then runs all the collision check through using different collision methods.
+     * Gets the player position then runs all the collision check through using different collision methods.
      */
     public void checkCollisions(long now) {
         MainCharacterManager player = MainCharacterManager.getInstance();

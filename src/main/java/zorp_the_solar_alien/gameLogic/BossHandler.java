@@ -12,9 +12,8 @@ import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 
 /**
- * This class is designed to handle all boss related game logic for playController.
- * It updates boss movement and shooting. Also handles the sequence what happens when boss
- * is defeated.
+ * Handles all boss related game logic for playController.
+ * It updates boss movement and shooting. Also handles the sequence what happens when boss is defeated.
  */
 public class BossHandler {
     private PlayModel model;
@@ -37,10 +36,9 @@ public class BossHandler {
 
 
     /**
-     * This method check if boss is alive, if yes, this method handle logic so the boss
-     * chase the player and draws the boss on the screen. It also checks if boss shooting
-     * cooldown is finished, if yes it creates boss bullet using factory pattern aiming at the player
-     * central.
+     * Checks if the boss is alive, if yes, the boss chase the player and draws the boss on the screen.
+     * It also checks if boss shooting cooldown is finished, if yes it creates boss bullet
+     * using factory pattern aiming at the player central.
      */
     public void updateBoss(Boss currentBoss, long now) {
         if (currentBoss == null || !currentBoss.isActive()) {
@@ -65,17 +63,17 @@ public class BossHandler {
 
 
     /**
-     * When player defeat the boss, this method help us stoping the boss music audio, and plays defeated sound instead.
+     * When player defeat the boss, it stops the boss music audio, and plays defeated sound instead.
      * Also in the place of where boss was defeated, it creates explosion effect. Then it awards the player 1000 points,
-     * regenerate full hp and register the kills. Then it clears all enemy bullets and boss objects from the screen.
-     * Finally, it unlocks the final facts and make it ready to collect by player.
+     * regenerate full hp and register the kills. Also, it clears all enemy bullets, boss objects from the screen and unlocks
+     * the final facts.
      */
     public void onBossDefeated(Boss currentBoss, FactPoint currentObjective) {
         AudioManager.getInstance().stopBossMusic();
-        AudioManager.getInstance().playBossBiten();
+        AudioManager.getInstance().playBossBitten();
         AudioManager.getInstance().playHomeMusic();
 
-        ImageView explosionView = new ImageView(new Image(getClass().getResource("/enemies/boss/explosion.gif").toExternalForm()));
+        ImageView explosionView = new ImageView(new Image(getClass().getResource("/zorp_the_solar_alien/assets/enemies/boss/explosion.gif").toExternalForm()));
         explosionView.setFitWidth(180);
         explosionView.setFitHeight(180);
         explosionView.setPreserveRatio(true);

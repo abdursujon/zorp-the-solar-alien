@@ -11,11 +11,9 @@ import zorp_the_solar_alien.view.PlayView;
 
 
 /**
- * This controller class is designed to support MVC pattern.
- * This is a controller for the home scree, it handles navigation between different
- * screen such as how to play, play and home.
- * It also manages some actions such as starting the game, starting a new game, continue from saved game
- * and quiting the game by clicking on the quit button.
+ * The class is designed to support model view controller (MVC) pattern.
+ * It works as a controller file which establish communication between
+ * home model and home view.
  */
 public class HomeController {
 	private HomeModel model;
@@ -26,9 +24,8 @@ public class HomeController {
 
 
 	/**
-	 * Through using different classes from the project, this constructor handle button set up.
-	 * It also initialises the home screen with text animation and music.
-	 * When player already in a play through but wants to start a fresh game, this controller creates an alert to ask for
+	 * Through using different classes from the project, the constructor handle button set up, initialises the home screen with text animation and music.
+	 * When player already in a play through but wants to start a fresh game, it creates an alert to ask
 	 * if user is sure about their decision.
 	 */
 	public HomeController(HomeModel model, HomeView view, PlayView playView, PlayController playController, HowToPlayController howToPlayController) {
@@ -123,11 +120,6 @@ public class HomeController {
 	}
 
 
-	/**
-	 * This method help us update play button.
-	 * If the user already started a game, we show continue button
-	 * which user can click to continue where they left of.
-	 */
 	private void updatePlayButtonText() {
 		boolean hasSave = ScoreManager.getInstance().getHighestLevelUnlocked() > 0
 				|| ScoreManager.getInstance().getSavedWave() > 0
@@ -143,18 +135,11 @@ public class HomeController {
 	}
 
 
-	/**
-	 * This helps us to change icon for the music on and off button.
-	 */
 	private void syncMusicBtn() {
 		view.musicBtn.setText(AudioManager.getInstance().isPlaying() ? "🔊" : "🔇");
 	}
 
 
-	/**
-	 * When user is on home, or play screen, if they click on how to play button, this method
-	 * switches to how to play view by calling how to play controller and hide other screens.
-	 */
 	private void handleHowToPlay() {
 		view.stopAnimation();
 		playView.hide();
@@ -163,9 +148,6 @@ public class HomeController {
 	}
 
 
-	/**
-	 * This method help us exit the application.
-	 */
 	private void handleQuit() {
 		System.exit(0);
 	}

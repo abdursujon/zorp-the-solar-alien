@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 
 
 /**
- * This view class is designed to support the view of MVC pattern.
+ * Support the MVC pattern by separating how to play view from model and controller.
  * It renders the helping screen guiding user how to play the game and
  * what are key movements.
  */
@@ -25,7 +25,7 @@ public class HowToPlayView {
 
 
     /**
-     * The constructor handles how to play view with a canvas bound to the window size of the screen.
+     * Handles how to play view with a canvas bound to the window size of the screen.
      * It renders the background image and redraws the view when user resize the window.
      */
     public HowToPlayView(Pane root) {
@@ -38,7 +38,7 @@ public class HowToPlayView {
         canvas.widthProperty().addListener((obs, o, n) -> updateView());
         canvas.heightProperty().addListener((obs, o, n) -> updateView());
 
-        backgroundView = new Image(getClass().getResource("/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
+        backgroundView = new Image(getClass().getResource("/zorp_the_solar_alien/assets/home/solar-system.png").toExternalForm(), 1920, 1080, true, true);
 
         root.getChildren().add(canvas);
     }
@@ -46,7 +46,6 @@ public class HowToPlayView {
 
     /**
      * Sets all the text data needed to render how to play view screen.
-     * This method is called by controller which reads data from the model.
      */
     public void setData(String title, String story, String objectivesTitle, String objectives, String controlsTitle, String[][] controls) {
         this.title = title;
@@ -58,8 +57,8 @@ public class HowToPlayView {
     }
 
     /**
-     * This method draws the how to play view with the background image, a dark overlay box for text content.
-     * Then it renders the story, objectives and controls section from playModel data.
+     * Draws the how to play view with the background image, a dark overlay box for text content and
+     * renders the story, objectives and controls section from playModel data.
      */
     public void updateView() {
         double width = canvas.getWidth();
@@ -100,7 +99,7 @@ public class HowToPlayView {
     /**
      * Since JavaFx has no wrapping utility which wrap text automatically,
      * we use this method to wrap text properly instead of rendering all text in one line.
-     * This method checks if the line of text exceeds the width limit, if so it wraps the line and
+     * If the line of text exceeds the width limit, if so it wraps the line and
      * pushes it to next line. It returns the y position after last line so the next section
      * knows where to start.
      */

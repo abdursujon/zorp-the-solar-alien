@@ -1,7 +1,7 @@
 package zorp_the_solar_alien.model;
 
 /**
- * This HomeModel class provide required data for HomeView to establish MVC pattern.
+ * HomeModel class provides required data for HomeView to establish MVC pattern.
  */
 public class HomeModel {
 

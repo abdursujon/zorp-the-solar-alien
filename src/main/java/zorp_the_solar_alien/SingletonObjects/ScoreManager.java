@@ -6,9 +6,8 @@ import java.util.Scanner;
 
 /**
  * ScoreManager uses singleton pattern because the entire gameplay needs only one instance of score management system.
- * It tracks level progress, and wave progress.
- * When player scored and complete any facts or levels it stores the score to local text file so user can start
- * from where they left off.
+ * It tracks level progress, and wave progress. When player scored and complete any facts or levels it
+ * stores the score to local text file so user can start from where they left off.
  */
 public class ScoreManager {
     private static ScoreManager instance = null;
@@ -30,7 +29,7 @@ public class ScoreManager {
 
 
     /**
-     * Return the singleton instance of ScoreManager for the controller to used.
+     * Returns the singleton instance of ScoreManager for the controller to used.
      * If no score manager exist yet, it creates one.
      */
     public static ScoreManager getInstance() {
@@ -96,7 +95,7 @@ public class ScoreManager {
 
 
     /**
-     * This method handles writing game state data to save-game.txt so player can continue playing
+     * Writes game state data to save-game.txt file so player can continue playing
      * where they left previously instead of having to redo all the progress again.
      */
     public void saveToFile() {
@@ -114,8 +113,8 @@ public class ScoreManager {
 
 
     /**
-     * This method reads the saved data in a sequence of how they were written.
-     * It is used by constructor to determine if any there any saved data exist.
+     * Reads the saved data from cache file in a sequence of how they were written.
+     * It is used by constructor to determine if any saved data exist.
      */
     public void loadFromFile() {
         try (Scanner scanner = new Scanner(new File("cache/save-game.txt"))) {
