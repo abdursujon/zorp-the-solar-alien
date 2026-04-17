@@ -138,4 +138,5 @@ public class Bullet extends GameObject {
     public double getRadius() {
         return RADIUS;
     }
+    
 }

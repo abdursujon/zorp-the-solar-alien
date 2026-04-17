@@ -12,7 +12,8 @@ import javafx.scene.layout.Pane;
  * what are key movements.
  */
 public class HowToPlayView {
-    Pane root;
+   
+	Pane root;
     Canvas canvas;
     GraphicsContext gc;
     Image backgroundView;
@@ -129,10 +130,12 @@ public class HowToPlayView {
 
     public void showHowToPlayView() {
         canvas.setVisible(true);
+        updateView();
     }
 
 
     public void hideHowToPlayView() {
         canvas.setVisible(false);
     }
+    
 }

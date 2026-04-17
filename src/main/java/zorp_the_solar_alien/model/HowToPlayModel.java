@@ -1,5 +1,6 @@
 package zorp_the_solar_alien.model;
 
+
 /**
  * HowToPlayModel class manages data needed by HowToPlayController to create MVC pattern.
  * The class provides different method which is bused to retrieve data by controller
@@ -55,4 +56,5 @@ public class HowToPlayModel {
                 {"Escape", "Pause"}
         };
     }
+    
 }

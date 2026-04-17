@@ -7,5 +7,8 @@ import zorp_the_solar_alien.GameObject;
  * to support factory design pattern used in this project.
  */
 public interface ZorpTheSolarAlienInterface {
-    GameObject createProduct(String levels, double x, double y);
+    
+	GameObject createProduct(String levels, double x, double y);
+	
 }
+

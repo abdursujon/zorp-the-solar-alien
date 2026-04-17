@@ -1,11 +1,13 @@
 package zorp_the_solar_alien.model;
 
+
 /**
  * Model class for playController to create MVC pattern.
  * It stores all game state for the controller and provides education facts.
  */
 public class PlayModel {
-    private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
+    
+	private String[] planetNames = {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
     private int currentPlanet = 0;
     private int factsCollected = 0;
     private int hp = 100;
@@ -21,7 +23,8 @@ public class PlayModel {
     private boolean objectiveUnlocked = false;
 
     private String[][] planetFacts = {
-            {
+            
+    		{
                     "The Sun is the star at the heart of the Solar System. The Sun is so gigantic that its gravity holds the entire Solar System together!",
                     "The Sun is so big that over a million Earths could fit inside it!",
                     "99.8 percent of the total mass of the Solar System is the Sun!",
@@ -150,6 +153,7 @@ public class PlayModel {
             }
 
     };
+    
 
     private String[] planetDescriptions = {
             "AAAA Welcome to the Sun! It's a super bright star that gives all other planets light and most importantly it is one of the core reason why earth has life. Without it, everything would be freezing cold and dark!",
@@ -374,4 +378,5 @@ public class PlayModel {
         gameOver = false;
         lastDamageTime = 0;
     }
+    
 }

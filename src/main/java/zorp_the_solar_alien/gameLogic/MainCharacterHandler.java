@@ -6,13 +6,15 @@ import zorp_the_solar_alien.SingletonObjects.AudioManager;
 import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
 
+
 /**
  * Handles game logic for the main character shooting and bullet updates.
  * It uses the factory pattern to create bullets, manages the shooting cooldown, and update
  * bullets status depending on if the bullet is on or off-screen.
  */
 public class MainCharacterHandler {
-    private ZorpTheSolarAlienFactory factory;
+    
+	private ZorpTheSolarAlienFactory factory;
     private List<Bullet> bullets;
     private static final double PLAYER_SIZE = 80;
     private long lastBulletTime = 0;
@@ -74,4 +76,5 @@ public class MainCharacterHandler {
             if (!eb.isActive()) enemyBulletIterator.remove();
         }
     }
+    
 }

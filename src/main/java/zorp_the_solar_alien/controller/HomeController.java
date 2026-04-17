@@ -16,6 +16,7 @@ import zorp_the_solar_alien.view.PlayView;
  * home model and home view.
  */
 public class HomeController {
+	
 	private HomeModel model;
 	private HomeView view;
 	private PlayView playView;
@@ -144,6 +145,7 @@ public class HomeController {
 		view.stopAnimation();
 		playView.hide();
 		howToPlayController.show();
+		view.canvas.setVisible(false);
 		view.zorpImageView.setVisible(false);
 	}
 
@@ -151,4 +153,5 @@ public class HomeController {
 	private void handleQuit() {
 		System.exit(0);
 	}
+	
 }

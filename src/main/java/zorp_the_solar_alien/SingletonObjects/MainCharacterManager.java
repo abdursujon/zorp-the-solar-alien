@@ -13,7 +13,8 @@ import zorp_the_solar_alien.GameObject;
  * The class also handles keyboard and mouse input to control the character on play screen.
  */
 public class MainCharacterManager extends GameObject {
-    private static MainCharacterManager instance;
+  
+	private static MainCharacterManager instance;
     private Image idleImage;
     private Image shootImage;
     private ImageView imageView;
@@ -67,6 +68,7 @@ public class MainCharacterManager extends GameObject {
         root.getChildren().add(imageView);
     }
 
+    
     /**
      * Returns the single instance of main character which can is used by other class to
      * use create instance of main player. If the character does not exist on the screen, it creates one.
@@ -83,6 +85,7 @@ public class MainCharacterManager extends GameObject {
         return instance;
     }
 
+    
     /**
      * Here we override the provided method from GameObject base class.
      * In this class it moves the player based on key actions. It handles
@@ -245,4 +248,5 @@ public class MainCharacterManager extends GameObject {
     public void setVisible(boolean visible) {
         imageView.setVisible(visible);
     }
+    
 }

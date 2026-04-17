@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+
 /**
  * ScoreManager uses singleton pattern because the entire gameplay needs only one instance of score management system.
  * It tracks level progress, and wave progress. When player scored and complete any facts or levels it
  * stores the score to local text file so user can start from where they left off.
  */
 public class ScoreManager {
-    private static ScoreManager instance = null;
+  
+	private static ScoreManager instance = null;
     private int currentScore = 0;
     private int highScore = 0;
     private int[] levelHighScores = new int[10];
@@ -127,4 +129,5 @@ public class ScoreManager {
             if (scanner.hasNextInt()) savedScore = scanner.nextInt();
         } catch (Exception e) { }
     }
+    
 }

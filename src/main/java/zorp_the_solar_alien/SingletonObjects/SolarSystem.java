@@ -10,7 +10,8 @@ import zorp_the_solar_alien.GameObject;
  * Renders the Solar System background for game play screen.
  */
 public class SolarSystem extends GameObject {
-    private static SolarSystem instance = null;
+    
+	private static SolarSystem instance = null;
     private Image[] planetImages;
     private int currentPlanet = 0;
     private int factsCollected = 0;
@@ -166,4 +167,5 @@ public class SolarSystem extends GameObject {
         currentScale = MIN_SCALE;
         targetScale = MIN_SCALE;
     }
+    
 }
