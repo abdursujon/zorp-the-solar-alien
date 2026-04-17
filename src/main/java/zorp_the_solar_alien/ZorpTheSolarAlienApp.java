@@ -19,6 +19,7 @@ import zorp_the_solar_alien.controller.HowToPlayController;
  * The main application class which launches zorp the solar alien game.
  */
 public class ZorpTheSolarAlienApp extends Application {
+	
 	/**
 	 * It sets up the stage, through creating different components of different class from MVC pattern.
 	 * In the beginning of the application, home screen is set to show, and rest of the view is set to hide.
