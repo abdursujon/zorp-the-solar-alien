@@ -6,25 +6,17 @@ A 2D educational action game built with Java and JavaFX that teaches primary sch
 
 ## Download and Play
 
-1. Install Java 17 or newer. Check with:
+No Java installation is needed; each download includes everything required to run the game.
 
-   ```bash
-   java -version
-   ```
-
-   If Java is missing, download it from [Adoptium](https://adoptium.net/).
-
-2. Download `zorp-the-solar-alien.jar` from the [Releases](../../releases) page.
-
-3. Open a terminal in the folder containing the jar and run:
-
-   ```bash
-   java -jar zorp-the-solar-alien.jar
-   ```
-
-   On Windows and macOS the jar can usually also be started by double-clicking it.
-
-Progress is saved in a `cache` folder created next to wherever the game is launched from, so keep launching it from the same folder to continue a saved game.
+1. Go to the [latest release](https://github.com/abdursujon/zorp-the-solar-alien/releases/latest).
+2. Download the zip for your system:
+   - **Windows:** `ZorpTheSolarAlien-Windows.zip`
+   - **macOS:** `ZorpTheSolarAlien-macOS.zip`
+   - **Linux:** `ZorpTheSolarAlien-Linux.zip`
+3. Unzip it and start the game:
+   - **Windows:** open the `ZorpTheSolarAlien` folder and double-click `ZorpTheSolarAlien.exe`. If Windows SmartScreen appears, click **More info**, then **Run anyway**.
+   - **macOS:** double-click `ZorpTheSolarAlien.app`. If macOS blocks it because the developer cannot be verified, open **System Settings**, go to **Privacy & Security**, and click **Open Anyway**. On Apple Silicon Macs, install Rosetta if prompted.
+   - **Linux:** run `./ZorpTheSolarAlien/bin/ZorpTheSolarAlien` from a terminal.
 
 ---- 
 
@@ -92,10 +84,19 @@ mvn clean package
 
 The runnable jar is written to `target/zorp-the-solar-alien.jar`.
 
+### Publishing a Release
+
+Pushing a version tag starts the GitHub Actions workflow in `.github/workflows/release.yml`. It builds the Windows, macOS and Linux downloads, each with a bundled Java runtime, and attaches them to a GitHub release for that tag.
+
+```bash
+git tag v1.1
+git push origin v1.1
+```
+
 ---- 
 ## Save Data
 
-Progress is saved automatically to `cache/save-game.txt`, relative to the directory the game is launched from. It stores the high score, the highest unlocked level, the current wave and the current score. Choosing **Start New Game** from the home screen resets it.
+Progress is saved automatically to `~/.zorp-the-solar-alien/save-game.txt` (on Windows, `C:\Users\<name>\.zorp-the-solar-alien\save-game.txt`). It stores the high score, the highest unlocked level, the current wave and the current score. Choosing **Start New Game** from the home screen resets it.
 
 ---- 
 ## Design Patterns
