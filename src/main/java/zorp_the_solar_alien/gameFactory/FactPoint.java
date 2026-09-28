@@ -11,8 +11,7 @@ import zorp_the_solar_alien.GameObject;
  * It is designed to handle a fact objective that spawns on the play screen after enemies are cleared.
  */
 public class FactPoint extends GameObject {
-   
-	private boolean active = true;
+    private boolean active = true;
     private boolean locked = true;
     private String factText;
     private int factNumber = 1;
@@ -109,5 +108,4 @@ public class FactPoint extends GameObject {
     public double getRadius() {
         return RADIUS;
     }
-    
 }

@@ -10,8 +10,7 @@ import zorp_the_solar_alien.view.HowToPlayView;
  * When user switches screen it hides the view again.
  */
 public class HowToPlayController {
-   
-	private HowToPlayView view;
+    private HowToPlayView view;
     private HowToPlayModel model;
 
     public HowToPlayController(HowToPlayModel model, HowToPlayView view) {
@@ -28,5 +27,4 @@ public class HowToPlayController {
     public void hide() {
         view.hideHowToPlayView();
     }
-    
 }

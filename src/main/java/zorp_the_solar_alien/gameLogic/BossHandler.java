@@ -11,14 +11,12 @@ import zorp_the_solar_alien.SingletonObjects.MainCharacterManager;
 import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 
-
 /**
  * Handles all boss related game logic for playController.
  * It updates boss movement and shooting. Also handles the sequence what happens when boss is defeated.
  */
 public class BossHandler {
-   
-	private PlayModel model;
+    private PlayModel model;
     private Pane root;
     private ZorpTheSolarAlienFactory factory;
     private List<Bullet> enemyBullets;
@@ -97,5 +95,4 @@ public class BossHandler {
             currentObjective.unlock();
         }
     }
-    
 }

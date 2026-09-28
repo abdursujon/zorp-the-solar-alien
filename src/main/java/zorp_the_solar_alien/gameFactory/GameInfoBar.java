@@ -12,8 +12,7 @@ import zorp_the_solar_alien.GameObject;
  * current score, planet name, wave progress, and enemies killed count.
  */
 public class GameInfoBar extends GameObject {
-    
-	private int hp, maxHp, score;
+    private int hp, maxHp, score;
     private String planetName;
     private int currentWave, totalWaves, waveEnemiesKilled, enemiesPerWave;
 

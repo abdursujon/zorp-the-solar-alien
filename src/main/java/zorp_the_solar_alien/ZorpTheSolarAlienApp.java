@@ -15,7 +15,6 @@ import zorp_the_solar_alien.view.HowToPlayView;
 import zorp_the_solar_alien.model.HowToPlayModel;
 import zorp_the_solar_alien.controller.HowToPlayController;
 
-
 /**
  * The main application class which launches zorp the solar alien game.
  */
@@ -29,7 +28,6 @@ public class ZorpTheSolarAlienApp extends Application {
 	 */
 	@Override
 	public void start(Stage stage) {
-		
 		Pane root = new Pane();
 		root.setStyle("-fx-background-color: black;");
 		Scene scene = new Scene(root);
@@ -79,7 +77,6 @@ public class ZorpTheSolarAlienApp extends Application {
 			MainCharacterManager.getInstance().setMouseInput(e.getButton().toString(), false);
 		});
 	}
-	
 
 	public static void main(String[] args) {
 		launch(args);

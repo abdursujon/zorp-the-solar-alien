@@ -12,13 +12,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-
 /**
  * Builds the home screen of the game. It helps us establish the MVC pattern which is used by HomeController.
  */
 public class HomeView {
-   
-	Pane root;
+    Pane root;
     private String gameTitle;
     private String gameSubtitle;
     GraphicsContext gc;
@@ -194,5 +192,4 @@ public class HomeView {
     public void updateHomeView() {
         renderHome();
     }
-    
 }

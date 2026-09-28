@@ -9,8 +9,7 @@ import zorp_the_solar_alien.SingletonObjects.SolarSystem;
  * Implements the ZorpTheSolarAlienInterface createProduct method which is core to factory design pattern.
  */
 public class ZorpTheSolarAlienFactory implements ZorpTheSolarAlienInterface {
-   
-	private GraphicsContext gc;
+    private GraphicsContext gc;
 
 
     public ZorpTheSolarAlienFactory(GraphicsContext gc) {
@@ -44,5 +43,4 @@ public class ZorpTheSolarAlienFactory implements ZorpTheSolarAlienInterface {
                 return null;
         }
     }
-    
 }

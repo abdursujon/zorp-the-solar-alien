@@ -12,8 +12,7 @@ import zorp_the_solar_alien.model.PlayModel;
  * Supports collision detection logic in gameplay.
  */
 public class CollisionHandler {
-   
-	private PlayModel model;
+    private PlayModel model;
     private List<Bullet> bullets;
     private List<Enemy> enemies;
     private List<Bullet> enemyBullets;
@@ -25,7 +24,6 @@ public class CollisionHandler {
     private Runnable onBossDefeated;
     private Runnable onSpawnWave;
 
-    
     /**
      * The constructor creates collision handler with reference to required class that needs be used to handle collision logic.
      */
@@ -123,7 +121,6 @@ public class CollisionHandler {
         }
         bullets.removeIf(b -> !b.isActive());
     }
-    
 
     /**
      * Checks melee attact range by measuring if two rectenagles overlap each other by comparing their edges from each other.
@@ -136,7 +133,7 @@ public class CollisionHandler {
                 targetHeight && attackerY + attackerHeight > targetY;
     }
 
-    
+
     /**
      * Handle logics for main character melee attact.
      * When player uses melee attact after cooldown has passed, it creates invisible
@@ -286,7 +283,6 @@ public class CollisionHandler {
         enemyBullets.removeIf(eb -> !eb.isActive());
     }
 
-    
     /**
      * Checks if bullet overlaps any rectangular target by finding the closest point on the target.
      */
@@ -338,5 +334,4 @@ public class CollisionHandler {
     public void setOnSpawnWave(Runnable callback) {
         this.onSpawnWave = callback;
     }
-    
 }

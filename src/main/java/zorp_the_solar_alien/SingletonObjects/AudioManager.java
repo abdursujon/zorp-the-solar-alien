@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * Implements singleton pattern which is used in playController
  * and game logic classes to play specific audio.
  */
 public class AudioManager {
-    
-	private static AudioManager instance;
+    private static AudioManager instance;
     private List<Media> homeTracks;
     private MediaPlayer currentPlayer;
     private int currentIndex = 0;
@@ -190,5 +188,4 @@ public class AudioManager {
             currentPlayer = null;
         }
     }
-    
 }

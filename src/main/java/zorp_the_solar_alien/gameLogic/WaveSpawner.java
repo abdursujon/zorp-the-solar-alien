@@ -7,14 +7,12 @@ import zorp_the_solar_alien.gameFactory.*;
 import zorp_the_solar_alien.model.PlayModel;
 import javafx.scene.canvas.GraphicsContext;
 
-
 /**
  * Spawns enemy wave after each fact collected.
  * It used by playController to spawn random number of enemies.
  */
 public class WaveSpawner {
-   
-	private PlayModel model;
+    private PlayModel model;
     private GraphicsContext gc;
     private ZorpTheSolarAlienFactory factory;
     private List<Enemy> enemies;
@@ -24,7 +22,6 @@ public class WaveSpawner {
     private Boss currentBoss;
     private FactPoint currentObjective;
 
-    
     /**
      * The constructor create wave spawner with reference to required classes to handle enemy wave.
      */
@@ -88,5 +85,4 @@ public class WaveSpawner {
             }
         }
     }
-    
 }

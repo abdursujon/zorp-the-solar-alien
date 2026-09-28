@@ -205,5 +205,4 @@ public class Enemy extends GameObject {
     public int getContactDamage() {
         return hasSword ? 15 : 5;
     }
-    
 }

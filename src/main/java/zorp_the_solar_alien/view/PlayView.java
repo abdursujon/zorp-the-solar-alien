@@ -24,8 +24,7 @@ import javafx.scene.text.TextAlignment;
  * When game over it shows relevant UI. Also handle level complete UI, and game complete screens.
  */
 public class PlayView {
-    
-	public Pane root;
+    public Pane root;
     public Canvas canvas;
     public GraphicsContext gc;
     private VBox introCard;
@@ -386,5 +385,4 @@ public class PlayView {
         restartBtn.setVisible(true);
         restartBtn.toFront();
     }
-    
 }

@@ -167,5 +167,4 @@ public class Boss extends GameObject {
     public double getCenterY() {
         return y + DRAW_SIZE / 2.0;
     }
-    
 }
