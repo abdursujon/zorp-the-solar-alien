@@ -6,9 +6,7 @@ A 2D educational action game built with Java and JavaFX that teaches primary sch
 
 ## Download and Play
 
-No Java installation is needed; each download includes everything required to run the game.
-
-1. Go to the [latest release](https://github.com/abdursujon/zorp-the-solar-alien/releases/latest).
+1. View [latest release](https://github.com/abdursujon/zorp-the-solar-alien/releases/latest).
 2. Download the zip for your system:
    - **Windows:** `ZorpTheSolarAlien-Windows.zip`
    - **macOS:** `ZorpTheSolarAlien-macOS.zip`
