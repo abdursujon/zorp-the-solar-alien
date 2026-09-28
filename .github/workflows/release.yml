@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: Windows
+          - os: macos-15-intel
+            platform: macOS
+          - os: ubuntu-latest
+            platform: Linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Build jar
+        run: mvn -B clean package
+
+      - name: Build app with bundled Java
+        shell: bash
+        run: |
+          mkdir dist-input
+          cp target/zorp-the-solar-alien.jar dist-input/
+          jpackage --type app-image \
+            --input dist-input \
+            --main-jar zorp-the-solar-alien.jar \
+            --main-class zorp_the_solar_alien.ZorpTheSolarAlienLauncher \
+            --name ZorpTheSolarAlien \
+            --dest dist
+
+      - name: Zip app
+        shell: bash
+        run: |
+          cd dist
+          if [ "${{ matrix.platform }}" = "Windows" ]; then
+            7z a ../ZorpTheSolarAlien-Windows.zip ZorpTheSolarAlien
+          elif [ "${{ matrix.platform }}" = "macOS" ]; then
+            ditto -c -k --keepParent ZorpTheSolarAlien.app ../ZorpTheSolarAlien-macOS.zip
+          else
+            zip -r ../ZorpTheSolarAlien-Linux.zip ZorpTheSolarAlien
+          fi
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ZorpTheSolarAlien-*.zip

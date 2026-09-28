@@ -17,6 +17,8 @@ public class ScoreManager {
     private int highestLevelUnlocked = 0;
     private int savedWave = 0;
     private int savedScore = 0;
+    private static final File SAVE_DIRECTORY = new File(System.getProperty("user.home"), ".zorp-the-solar-alien");
+    private static final File SAVE_FILE = new File(SAVE_DIRECTORY, "save-game.txt");
 
 
     /**
@@ -99,8 +101,8 @@ public class ScoreManager {
      * where they left previously instead of having to redo all the progress again.
      */
     public void saveToFile() {
-        new File("cache").mkdirs();
-        try (PrintWriter writer = new PrintWriter("cache/save-game.txt")) {
+        SAVE_DIRECTORY.mkdirs();
+        try (PrintWriter writer = new PrintWriter(SAVE_FILE)) {
             writer.println(highScore);
             for (int i = 0; i < 10; i++) {
                 writer.println(levelHighScores[i]);
@@ -117,7 +119,7 @@ public class ScoreManager {
      * It is used by constructor to determine if any saved data exist.
      */
     public void loadFromFile() {
-        try (Scanner scanner = new Scanner(new File("cache/save-game.txt"))) {
+        try (Scanner scanner = new Scanner(SAVE_FILE)) {
             if (scanner.hasNextInt()) highScore = scanner.nextInt();
             for (int i = 0; i < 10; i++) {
                 if (scanner.hasNextInt()) levelHighScores[i] = scanner.nextInt();
